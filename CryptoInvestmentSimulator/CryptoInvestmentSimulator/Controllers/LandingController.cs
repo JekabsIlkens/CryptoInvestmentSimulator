@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace CryptoInvestmentSimulator.Controllers
 {
-    public class HomeController : Controller
+    public class LandingController : Controller
     {
         public IActionResult Index()
         {
