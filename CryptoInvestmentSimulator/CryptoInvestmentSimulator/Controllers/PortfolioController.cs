@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,6 +7,7 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class PortfolioController : Controller
     {
+        [Authorize]
         public IActionResult Index()
         {
             return View();
