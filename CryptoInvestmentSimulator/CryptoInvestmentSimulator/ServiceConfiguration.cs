@@ -17,9 +17,9 @@ namespace CryptoInvestmentSimulator
 
             serviceCollection.AddAuth0WebAppAuthentication(options =>
             {
-                options.Domain = AuthorizationConstants.Auth0Domain;
-                options.ClientId = AuthorizationConstants.Auth0ClientId;
-                options.Scope = AuthorizationConstants.Auth0Scope;
+                options.Domain = AuthenticationConstants.Auth0Domain;
+                options.ClientId = AuthenticationConstants.Auth0ClientId;
+                options.Scope = AuthenticationConstants.Auth0Scope;
             });
 
             return serviceCollection;
