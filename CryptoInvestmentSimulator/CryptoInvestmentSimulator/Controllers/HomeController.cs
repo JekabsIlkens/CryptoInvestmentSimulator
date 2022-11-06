@@ -13,19 +13,8 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var user = new UserModel()
-            {
-                FirstName = User.FindFirst(c => c.Type == ClaimTypes.GivenName)?.Value,
-                LastName = User.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value,
-                EmailAddress = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
-                AvatarUrl = User.FindFirst(c => c.Type == "picture")?.Value
-            };
-
-            var context = new DatabaseContext(DatabaseConstants.Access);
-            var procedure = new UserProcedures(context);
-
-            procedure.InsertNewUser(user);
-
+            NewUserCheck();
+            EmailVerificationCheck();
             return View();
         }
 
@@ -33,6 +22,46 @@ namespace CryptoInvestmentSimulator.Controllers
         public IActionResult Error()
         {
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private void NewUserCheck()
+        {
+            var user = new UserModel()
+            {
+                FirstName = User.FindFirst(c => c.Type == ClaimTypes.GivenName)?.Value,
+                LastName = User.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value,
+                EmailAddress = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
+                AvatarUrl = User.FindFirst(c => c.Type == "picture")?.Value,
+                IsVerified = false
+            };
+
+            var context = new DatabaseContext(DatabaseConstants.Access);
+            var procedure = new UserProcedures(context);
+
+            procedure.InsertNewUser(user);
+        }
+
+        private void EmailVerificationCheck()
+        {
+            var claims = User.Identities.First().Claims;
+            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (email == null || email == "")
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
+            foreach (var claim in claims)
+            {
+                if (claim.Type == "email_verified" && claim.Value == "true")
+                {
+                    var context = new DatabaseContext(DatabaseConstants.Access);
+                    var procedure = new UserProcedures(context);
+
+                    procedure.UpdateUserVerification(email);
+                }
+
+            }
         }
     }
 }

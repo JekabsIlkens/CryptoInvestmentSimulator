@@ -1,7 +1,6 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Models;
 using MySql.Data.MySqlClient;
-using System.Diagnostics;
 
 namespace CryptoInvestmentSimulator.Database
 {
@@ -31,6 +30,45 @@ namespace CryptoInvestmentSimulator.Database
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        /// <summary>
+        /// Updates users verification status.
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        public void UpdateUserVerification(string emailAddress)
+        {
+            if (emailAddress != null && !IsUserVerified(emailAddress))
+            {
+                using (MySqlConnection connection = context.GetConnection())
+                {
+                    connection.Open();
+                    MySqlCommand command = new($"UPDATE users SET is_verified = 1 WHERE email_address = '{emailAddress}'", connection);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private bool IsUserVerified(string emailAddress)
+        {
+            using (MySqlConnection connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT is_verified FROM users WHERE email_address = '{emailAddress}'", connection);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if(reader.GetValue(reader.GetOrdinal("is_verified")).ToString() == "1")
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private bool DoesUserExist(string emailAddress)
