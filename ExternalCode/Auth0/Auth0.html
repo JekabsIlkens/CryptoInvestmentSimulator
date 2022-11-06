@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+		<title>Authentication</title>
+	</head> 
+  
+	<body>
+		<div class="login-container">
+			<div class="col-xs-12 col-sm-4 col-sm-offset-4 login-box">
+
+				<div class="login-header">
+					<img src="https://i.postimg.cc/g0LtGSxX/test-two.png"/>
+					<h3 class="login-h3">Cryptocurrency Investment Simulator</h3>
+					<h4 class="login-h5">Aren't a member yet? Create an account!</h4>
+				</div>
+
+				<div id="error-message" class="alert alert-danger"></div>
+				
+				<form onsubmit="return false;" method="post">
+					<div class="form-group" id="name-field">
+						<label for="given_name">First name</label>
+						<input type="text" class="form-control" id="given_name" autocomplete="off" placeholder="John">
+					</div>
+
+					<div class="form-group" id="surname-field">
+						<label for="family_name">Last name</label>
+						<input type="text" class="form-control" id="family_name" autocomplete="off" placeholder="Doe">
+					</div>
+
+					<div class="form-group">
+						<label for="name">Email address</label>
+						<input type="email" class="form-control" id="email" autocomplete="off" placeholder="Enter your email">
+					</div>
+
+					<div class="form-group">
+						<label for="name">Password</label>
+						<input type="password" class="form-control" id="password" autocomplete="off" placeholder="Enter your password">
+					</div>
+
+					<div class="captcha-container form-group"></div>
+					
+					<button type="submit" id="btn-login" class="btn btn-primary btn-block">Log In</button>
+					<button type="button" id="btn-google" class="btn btn-default btn-danger btn-block">Log In with Google</button>
+					<button type="button" id="btn-signup" class="btn btn-default btn-block">Register</button>
+					
+					<hr>
+					
+					<button onclick="showExtra()" id="switch-to-signup" class="btn btn-default btn-block">Create a new account!</button>
+					<button onclick="hideExtra()" id="switch-to-login" class="btn btn-default btn-block">Already have an account?</button>
+				</form>
+
+			</div>
+		</div>
+	</body>
+</html>
