@@ -1,7 +1,24 @@
-﻿@{
+﻿@using CryptoInvestmentSimulator.Constants
+@using CryptoInvestmentSimulator.Database
+@using System.Security.Claims
+@{
     if (User.Identity == null)
     {
         throw new ArgumentNullException(nameof(User.Identity));
+    }
+
+    var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+    var isVerified = false;
+
+    if (email == null || email == "")
+    {
+        isVerified = false;
+    }
+    else
+    {
+        var context = new DatabaseContext(DatabaseConstants.Access);
+        var procedure = new UserProcedures(context);
+        isVerified = procedure.IsUserVerified(email);
     }
 }
 
@@ -34,8 +51,20 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
+
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Portfolio" asp-action="Index">Portfolio</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Market" asp-action="Index">Market</a></li>
+
+                            @if (isVerified)
+                            {
+                                <li class="nav-item"><a class="nav-link text-dark" asp-controller="Market" asp-action="Index">Market</a></li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Market</a>
+                                </li>
+                            }
+
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Authentication" asp-action="Logout">Logout</a></li>
                         }
                         else

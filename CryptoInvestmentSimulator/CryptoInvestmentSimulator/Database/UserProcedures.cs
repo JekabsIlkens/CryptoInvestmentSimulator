@@ -49,7 +49,12 @@ namespace CryptoInvestmentSimulator.Database
             }
         }
 
-        private bool IsUserVerified(string emailAddress)
+        /// <summary>
+        /// Checks if user has verified their email address.
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <returns>Bool</returns>
+        public bool IsUserVerified(string emailAddress)
         {
             using (MySqlConnection connection = context.GetConnection())
             {
