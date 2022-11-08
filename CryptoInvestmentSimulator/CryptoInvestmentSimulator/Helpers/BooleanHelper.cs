@@ -22,8 +22,9 @@
         /// <returns>Bool</returns>
         public static bool IntToBool(int value)
         {
-            if (value != 0) return true;
-            else return false;
+            if (value == 0) return false;
+
+            return true;
         }
     }
 }

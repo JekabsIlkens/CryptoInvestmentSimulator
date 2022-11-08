@@ -19,7 +19,12 @@ namespace CryptoInvestmentSimulator.Database
         /// <param name="userModel"></param>
         public void InsertNewUser(UserModel userModel)
         {
-            if (userModel.EmailAddress != null && !DoesUserExist(userModel.EmailAddress))
+            if (string.IsNullOrEmpty(userModel.EmailAddress))
+            {
+                throw new ArgumentNullException($"Model property {nameof(userModel.EmailAddress)} is null or empty!");
+            }
+
+            if (!DoesUserExist(userModel.EmailAddress))
             {
                 var valuesString = $"'{userModel.FirstName}', '{userModel.LastName}', '{userModel.EmailAddress}', '{userModel.AvatarUrl}'";
 
