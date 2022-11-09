@@ -1,7 +1,7 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Models;
-using CryptoInvestmentSimulator.Models.Response;
+using CryptoInvestmentSimulator.Models.ResponseModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

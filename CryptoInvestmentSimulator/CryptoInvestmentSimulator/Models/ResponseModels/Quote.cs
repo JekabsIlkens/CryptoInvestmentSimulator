@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CryptoInvestmentSimulator.Models.Response
+namespace CryptoInvestmentSimulator.Models.ResponseModels
 {
     public class Quote
     {

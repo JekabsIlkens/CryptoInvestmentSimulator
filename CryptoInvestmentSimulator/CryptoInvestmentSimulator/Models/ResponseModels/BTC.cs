@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace CryptoInvestmentSimulator.Models.Response
+namespace CryptoInvestmentSimulator.Models.ResponseModels
 {
-    public class ADA
+    public class BTC
     {
         [JsonProperty("id")]
         public int? Id { get; set; }
