@@ -6,6 +6,6 @@
         ETH = 1,
         ATOM = 2,
         ADA = 3,
-        SOL = 4
+        DOGE = 4
     }
 }

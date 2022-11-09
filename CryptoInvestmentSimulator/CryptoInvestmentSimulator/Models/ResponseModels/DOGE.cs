@@ -2,7 +2,7 @@
 
 namespace CryptoInvestmentSimulator.Models.ResponseModels
 {
-    public class SOL
+    public class DOGE
     {
         [JsonProperty("id")]
         public int? Id { get; set; }

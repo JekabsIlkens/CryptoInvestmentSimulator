@@ -16,7 +16,7 @@ namespace CryptoInvestmentSimulator.Models.ResponseModels
         [JsonProperty("ADA")]
         public ADA? Cardano { get; set; }
 
-        [JsonProperty("SOL")]
-        public SOL? Solana { get; set; }
+        [JsonProperty("DOGE")]
+        public DOGE? Dogecoin { get; set; }
     }
 }
