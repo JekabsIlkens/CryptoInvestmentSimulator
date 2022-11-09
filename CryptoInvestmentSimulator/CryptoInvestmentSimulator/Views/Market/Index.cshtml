@@ -24,14 +24,14 @@
             </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>@bitcoin.Symbol</td>
-            <td>@FiatEnum.EUR.ToString()</td>
+            <tr>
+                <th scope="row">1</th>
+                <td>@bitcoin.Symbol</td>
+                <td>@FiatEnum.EUR.ToString()</td>
                 <td>@FloatingPointHelper.FloatingPointToFour(bitcoin.Quote.Euro.Price)</td>
                 <td>@FloatingPointHelper.FloatingPointToTwo(bitcoin.Quote.Euro.PercentChange24h)%</td>
                 <td>@FloatingPointHelper.FloatingPointToTwo(bitcoin.Quote.Euro.PercentChange7d)%</td>
-        </tr>
+            </tr>
         </tbody>
 
     </table>
