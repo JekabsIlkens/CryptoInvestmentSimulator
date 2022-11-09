@@ -1,8 +1,40 @@
-﻿@{
+﻿@using CryptoInvestmentSimulator.Enums
+@using CryptoInvestmentSimulator.Helpers
+@using CryptoInvestmentSimulator.Models.Response;
+@model CryptoInvestmentSimulator.Models.Response.Root;
+@{
     ViewData["Title"] = "Market Page";
+
+    var bitcoin = Model.Data.Bitcoin;
 }
 
 <div class="text-center">
-    <h1 class="display-4">The Market Page</h1>
-    <p>To be continued...</p>
+
+    <h1 class="display-4">Try to request a response!</h1>
+
+    <table class="table table-hover table-dark border-warning">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cryptocurrency</th>
+                <th scope="col">Converted to</th>
+                <th scope="col">Price per unit</th>
+                <th scope="col">Daily change</th>
+                <th scope="col">Weekly change</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>@bitcoin.Symbol</td>
+            <td>@FiatEnum.EUR.ToString()</td>
+                <td>@FloatingPointHelper.FloatingPointToFour(bitcoin.Quote.Euro.Price)</td>
+                <td>@FloatingPointHelper.FloatingPointToTwo(bitcoin.Quote.Euro.PercentChange24h)%</td>
+                <td>@FloatingPointHelper.FloatingPointToTwo(bitcoin.Quote.Euro.PercentChange7d)%</td>
+        </tr>
+        </tbody>
+
+    </table>
+
+    <a class="text-dark" asp-area="" asp-controller="Market" asp-route-selectedCoin="@CryptoEnum.BTC" asp-action="Index">Bitcoin</a>
 </div>
