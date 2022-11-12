@@ -20,6 +20,8 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var marketData = GetMarketData();
 
+            RunChartSimulator();
+
             return View(marketData);
         }
 
@@ -27,6 +29,34 @@ namespace CryptoInvestmentSimulator.Controllers
         public IActionResult Error()
         {
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public void RunChartSimulator()
+        {
+            var randomizer = new Random();
+            var chartPoints = new List<ChartPointModel>();
+
+            // Simulator configuration
+            int updateInterval = 5000;
+            double pricePoint = 16000;
+            var now = DateTime.Now;
+            var mockTime = new DateTime(now.Year, now.Month, now.Day, 9, 30, 00);
+            double timePoint = ((DateTimeOffset)mockTime).ToUnixTimeSeconds() * 1000;
+
+            for (int i = 0; i < 100; i++)
+            {
+                timePoint += updateInterval;
+                double randomChange = .5 + randomizer.NextDouble() * (-.5 - .5);
+
+                // Rounds new price point to two digits and adds it to list 
+                pricePoint = Math.Round((pricePoint + randomChange) * 100) / 100;
+                chartPoints.Add(new ChartPointModel(timePoint, pricePoint));
+            }
+
+            ViewBag.ChartPoints = JsonConvert.SerializeObject(chartPoints);
+            ViewBag.PricePoint = pricePoint;
+            ViewBag.TimePoint = timePoint;
+            ViewBag.UpdateInterval = updateInterval;
         }
 
         /// <summary>
@@ -97,7 +127,8 @@ namespace CryptoInvestmentSimulator.Controllers
             };
             modelList.Add(dogeMDM);
 
-            InsertMarketData(modelList);
+            // TODO: Uncomment before merge
+            // InsertMarketData(modelList);
 
             return modelList;
         }
