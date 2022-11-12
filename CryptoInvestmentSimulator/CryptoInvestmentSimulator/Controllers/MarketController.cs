@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models;
@@ -41,6 +42,7 @@ namespace CryptoInvestmentSimulator.Controllers
             {
                 CryptoSymbol = btcFullData.Data.Bitcoin.Symbol,
                 FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now,
                 FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
                 PercentChange24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h),
                 PercentChange7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d),
@@ -52,6 +54,7 @@ namespace CryptoInvestmentSimulator.Controllers
             {
                 CryptoSymbol = ethFullData.Data.Etherium.Symbol,
                 FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now,
                 FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
                 PercentChange24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h),
                 PercentChange7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d),
@@ -63,6 +66,7 @@ namespace CryptoInvestmentSimulator.Controllers
             {
                 CryptoSymbol = atomFullData.Data.Cosmos.Symbol,
                 FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now,
                 FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
                 PercentChange24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h),
                 PercentChange7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d),
@@ -74,6 +78,7 @@ namespace CryptoInvestmentSimulator.Controllers
             {
                 CryptoSymbol = adaFullData.Data.Cardano.Symbol,
                 FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now,
                 FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
                 PercentChange24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h),
                 PercentChange7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d),
@@ -85,11 +90,14 @@ namespace CryptoInvestmentSimulator.Controllers
             {
                 CryptoSymbol = dogeFullData.Data.Dogecoin.Symbol,
                 FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now,
                 FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
                 PercentChange24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h),
                 PercentChange7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d),
             };
             modelList.Add(dogeMDM);
+
+            InsertMarketData(modelList);
 
             return modelList;
         }
@@ -118,6 +126,17 @@ namespace CryptoInvestmentSimulator.Controllers
             }
 
             return responseModel;
+        }
+
+        private static void InsertMarketData(List<MarketDataModel> modelList)
+        {
+            var context = new DatabaseContext(DatabaseConstants.Access);
+            var procedure = new MarketDataProcedures(context);
+
+            foreach (var model in modelList)
+            {
+                procedure.InsertNewMarketDataEntry(model);
+            }
         }
     }
 }
