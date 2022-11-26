@@ -1,0 +1,88 @@
+﻿@{
+	ViewData["Title"] = "ATOM/EUR";
+}
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+	window.onload = function () {
+		// Gets pre generated mock chart points
+		var chartPoints = @Html.Raw(ViewBag.ChartPoints);
+
+		// Creates and configures renderable chart
+		var chart = new CanvasJS.Chart("chartContainer",
+			{
+				zoomEnabled: false,
+				axisX:
+				{
+					title: "",
+					crosshair:
+					{
+						enabled: true,
+						snapToDataPoint: true
+					}
+				},
+				axisY:
+				{
+					crosshair:
+					{
+						enabled: true,
+						snapToDataPoint: true,
+						valueFormatString: "#,###0"
+					}
+				},
+				toolTip:
+				{
+					shared: true
+				},
+				legend:
+				{
+					dockInsidePlotArea: true,
+					verticalAlign: "top",
+					horizontalAlign: "right"
+				},
+				data:
+					[{
+						type: "line",
+						markerType: "none",
+						xValueType: "dateTime",
+						xValueFormatString: "hh:mm:ss",
+						name: "Cosmos",
+						showInLegend: true,
+						dataPoints: chartPoints
+					}]
+			});
+
+		chart.render();
+
+		var updateInterval = @Html.Raw(ViewBag.UpdateInterval);
+		var pricePoint = @Html.Raw(ViewBag.PricePoint);
+		var timePoint = new Date(@Html.Raw(ViewBag.TimePoint));
+
+		function updateChart(count) {
+			count = count || 1;
+
+			for (var i = 0; i < count; i++) {
+				timePoint.setTime(timePoint.getTime() + updateInterval);
+				var randomChange = 2.5 + Math.random() * (-2.5 - 2.5);
+
+				pricePoint = Math.round((pricePoint + randomChange) * 100) / 100;
+
+				chartPoints.push({ x: timePoint.getTime(), y: pricePoint });
+			}
+
+			chart.render();
+		}
+
+		setInterval(function () { updateChart() }, updateInterval);
+	}
+</script>
+
+<div class="text-center">
+
+	<h1 class="display-4">Cosmos / Euro</h1>
+
+	<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+
+	<a class="text-danger" asp-controller="Market" asp-action="Index">Back</a>
+
+</div>

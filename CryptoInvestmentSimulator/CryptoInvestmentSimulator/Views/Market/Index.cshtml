@@ -96,6 +96,7 @@
 				<th scope="col">Price per unit</th>
 				<th scope="col">Daily change</th>
 				<th scope="col">Weekly change</th>
+				<th scope="col">Chart</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -105,8 +106,9 @@
 				<td>@Model[0].FiatSymbol</td>
 				<td>@Model[0].CollectionDateTime</td>
 				<td>@Model[0].FiatPricePerUnit</td>
-				<td>@Model[0].PercentChange24h</td>
-				<td>@Model[0].PercentChange7d</td>
+				<td>@Model[0].PercentChange24h%</td>
+				<td>@Model[0].PercentChange7d%</td>
+				<td><a class="text-danger" asp-controller="Market" asp-action="Bitcoin">BTC/EUR</a></td>
 			</tr>
 			<tr>
 				<th scope="row">2</th>
@@ -114,8 +116,9 @@
 				<td>@Model[1].FiatSymbol</td>
 				<td>@Model[1].CollectionDateTime</td>
 				<td>@Model[1].FiatPricePerUnit</td>
-				<td>@Model[1].PercentChange24h</td>
-				<td>@Model[1].PercentChange7d</td>
+				<td>@Model[1].PercentChange24h%</td>
+				<td>@Model[1].PercentChange7d%</td>
+				<td><a class="text-danger" asp-controller="Market" asp-action="Etherium">ETH/EUR</a></td>
 			</tr>
 			<tr>
 				<th scope="row">3</th>
@@ -123,8 +126,9 @@
 				<td>@Model[2].FiatSymbol</td>
 				<td>@Model[2].CollectionDateTime</td>
 				<td>@Model[2].FiatPricePerUnit</td>
-				<td>@Model[2].PercentChange24h</td>
-				<td>@Model[2].PercentChange7d</td>
+				<td>@Model[2].PercentChange24h%</td>
+				<td>@Model[2].PercentChange7d%</td>
+				<td><a class="text-danger" asp-controller="Market" asp-action="Cardano">ADA/EUR</a></td>
 			</tr>
 			<tr>
 				<th scope="row">4</th>
@@ -132,8 +136,9 @@
 				<td>@Model[3].FiatSymbol</td>
 				<td>@Model[3].CollectionDateTime</td>
 				<td>@Model[3].FiatPricePerUnit</td>
-				<td>@Model[3].PercentChange24h</td>
-				<td>@Model[3].PercentChange7d</td>
+				<td>@Model[3].PercentChange24h%</td>
+				<td>@Model[3].PercentChange7d%</td>
+				<td><a class="text-danger" asp-controller="Market" asp-action="Cosmos">ATOM/EUR</a></td>
 			</tr>
 			<tr>
 				<th scope="row">5</th>
@@ -141,8 +146,9 @@
 				<td>@Model[4].FiatSymbol</td>
 				<td>@Model[4].CollectionDateTime</td>
 				<td>@Model[4].FiatPricePerUnit</td>
-				<td>@Model[4].PercentChange24h</td>
-				<td>@Model[4].PercentChange7d</td>
+				<td>@Model[4].PercentChange24h%</td>
+				<td>@Model[4].PercentChange7d%</td>
+				<td><a class="text-danger" asp-controller="Market" asp-action="Dogecoin">DOGE/EUR</a></td>
 			</tr>
 		</tbody>
 
