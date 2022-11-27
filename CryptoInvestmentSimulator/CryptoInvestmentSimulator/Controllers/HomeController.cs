@@ -28,9 +28,8 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var user = new UserModel()
             {
-                FirstName = User.FindFirst(c => c.Type == ClaimTypes.GivenName)?.Value,
-                LastName = User.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value,
-                EmailAddress = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
+                Username = "TestName",
+                Email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
                 AvatarUrl = User.FindFirst(c => c.Type == "picture")?.Value,
                 IsVerified = false
             };

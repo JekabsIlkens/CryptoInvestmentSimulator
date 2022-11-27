@@ -19,14 +19,14 @@ namespace CryptoInvestmentSimulator.Database
         /// <param name="userModel"></param>
         public void InsertNewUser(UserModel userModel)
         {
-            if (string.IsNullOrEmpty(userModel.EmailAddress))
+            if (string.IsNullOrEmpty(userModel.Email))
             {
-                throw new ArgumentNullException($"Model property {nameof(userModel.EmailAddress)} is null or empty!");
+                throw new ArgumentNullException($"Model property {nameof(userModel.Email)} is null or empty!");
             }
 
-            if (!DoesUserExist(userModel.EmailAddress))
+            if (!DoesUserExist(userModel.Email))
             {
-                var valuesString = $"'{userModel.FirstName}', '{userModel.LastName}', '{userModel.EmailAddress}', '{userModel.AvatarUrl}'";
+                var valuesString = $"'{userModel.Username}', '{userModel.Email}', '{userModel.AvatarUrl}'";
 
                 using (MySqlConnection connection = context.GetConnection())
                 {
@@ -48,7 +48,7 @@ namespace CryptoInvestmentSimulator.Database
                 using (MySqlConnection connection = context.GetConnection())
                 {
                     connection.Open();
-                    MySqlCommand command = new($"UPDATE users SET is_verified = 1 WHERE email_address = '{emailAddress}'", connection);
+                    MySqlCommand command = new($"UPDATE users SET is_verified = 1 WHERE email = '{emailAddress}'", connection);
                     command.ExecuteNonQuery();
                 }
             }
@@ -64,7 +64,7 @@ namespace CryptoInvestmentSimulator.Database
             using (MySqlConnection connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"SELECT is_verified FROM users WHERE email_address = '{emailAddress}'", connection);
+                MySqlCommand command = new($"SELECT is_verified FROM users WHERE email = '{emailAddress}'", connection);
 
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
@@ -86,7 +86,7 @@ namespace CryptoInvestmentSimulator.Database
             using (MySqlConnection connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new ($"SELECT * FROM users WHERE email_address = '{emailAddress}'", connection);
+                MySqlCommand command = new ($"SELECT * FROM users WHERE email = '{emailAddress}'", connection);
 
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {                 
