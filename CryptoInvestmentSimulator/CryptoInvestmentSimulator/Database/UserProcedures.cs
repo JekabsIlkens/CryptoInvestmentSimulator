@@ -14,6 +14,34 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
+        /// Queries database for a specific user by email.
+        /// </summary>
+        /// <returns>User model</returns>
+        public UserModel GetSpecificUser(string email)
+        {
+            var user = new UserModel();
+
+            using (MySqlConnection connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT * FROM users WHERE email = '{email}'", connection);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        user.UserId = reader.GetInt32("user_id");
+                        user.Username = reader.GetString("username");
+                        user.Email = reader.GetString("email");
+                        user.AvatarUrl = reader.GetString("avatar_url");
+                    }
+                }
+            }
+
+            return user;
+        }
+
+        /// <summary>
         /// Checks if user already exists. If not, inserts it into database.
         /// </summary>
         /// <param name="userModel"></param>
@@ -32,6 +60,23 @@ namespace CryptoInvestmentSimulator.Database
                 {
                     connection.Open();
                     MySqlCommand command = new($"INSERT INTO users ({DatabaseConstants.UserColumns}) VALUES ({valuesString})", connection);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates users username.
+        /// </summary>
+        /// <param name="username"></param>
+        public void UpdateUserUsername(string email, string username)
+        {
+            if (email != null && !string.IsNullOrEmpty(email))
+            {
+                using (MySqlConnection connection = context.GetConnection())
+                {
+                    connection.Open();
+                    MySqlCommand command = new($"UPDATE users SET username = '{username}' WHERE email = '{email}'", connection);
                     command.ExecuteNonQuery();
                 }
             }

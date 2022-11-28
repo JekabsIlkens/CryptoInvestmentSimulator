@@ -1,4 +1,6 @@
-﻿using CryptoInvestmentSimulator.Models;
+﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Database;
+using CryptoInvestmentSimulator.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -23,18 +25,11 @@ namespace CryptoInvestmentSimulator.Controllers
 
         private UserModel GetUserData()
         {
-            if (!User.HasClaim(c => c.Type == ClaimTypes.Email) || !User.HasClaim(c => c.Type == "picture"))
-            {
-                throw new ArgumentNullException(nameof(User));
-            }
+            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            var context = new DatabaseContext(DatabaseConstants.Access);
+            var procedure = new UserProcedures(context);
 
-
-            return new UserModel()
-            {
-                Username = "TestName",
-                Email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
-                AvatarUrl = User.FindFirst(c => c.Type == "picture")?.Value
-            };
+            return procedure.GetSpecificUser(email);
         }
     }
 }

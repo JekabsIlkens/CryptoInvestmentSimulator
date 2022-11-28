@@ -18,6 +18,17 @@ namespace CryptoInvestmentSimulator.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult SetUsername(string username)
+        {
+            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            var context = new DatabaseContext(DatabaseConstants.Access);
+            var procedure = new UserProcedures(context);
+
+            procedure.UpdateUserUsername(email, username);
+            return View("Index");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
