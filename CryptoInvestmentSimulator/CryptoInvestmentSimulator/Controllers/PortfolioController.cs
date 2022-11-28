@@ -24,7 +24,9 @@ namespace CryptoInvestmentSimulator.Controllers
             var context = new DatabaseContext(DatabaseConstants.Access);
             var procedure = new UserProcedures(context);
 
-            procedure.UpdateUserDetails(email, username, avatar);
+            procedure.UpdateUsername(email, username);
+            procedure.UpdateAvatar(email, avatar);
+
             var user = GetUserData();
             return View("Index", user);
         }
@@ -41,7 +43,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var context = new DatabaseContext(DatabaseConstants.Access);
             var procedure = new UserProcedures(context);
 
-            return procedure.GetSpecificUser(email);
+            return procedure.GetUserDetails(email);
         }
     }
 }
