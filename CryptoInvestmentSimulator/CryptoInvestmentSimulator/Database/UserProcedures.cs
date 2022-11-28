@@ -83,6 +83,25 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
+        /// Updates users full details.
+        /// </summary>
+        /// <param name="username"></param>
+        public void UpdateUserDetails(string email, string username, string avatar)
+        {
+            if (email != null && !string.IsNullOrEmpty(email))
+            {
+                using (MySqlConnection connection = context.GetConnection())
+                {
+                    connection.Open();
+                    MySqlCommand command1 = new($"UPDATE users SET username = '{username}' WHERE email = '{email}'", connection);
+                    command1.ExecuteNonQuery();
+                    MySqlCommand command2 = new($"UPDATE users SET avatar_url = '{avatar}' WHERE email = '{email}'", connection);
+                    command2.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates users verification status.
         /// </summary>
         /// <param name="emailAddress"></param>
