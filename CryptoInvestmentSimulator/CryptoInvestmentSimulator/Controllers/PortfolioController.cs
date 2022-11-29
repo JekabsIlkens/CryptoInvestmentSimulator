@@ -10,26 +10,8 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class PortfolioController : Controller
     {
-        [Authorize]
-        public IActionResult Index()
-        {
-            var user = GetUserData();
-            return View(user);
-        }
-
-        [HttpPost]
-        public IActionResult UpdateDetails(string username, string avatar)
-        {
-            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            var context = new DatabaseContext(DatabaseConstants.Access);
-            var procedure = new UserProcedures(context);
-
-            procedure.UpdateUsername(email, username);
-            procedure.UpdateAvatar(email, avatar);
-
-            var user = GetUserData();
-            return View("Index", user);
-        }
+        private static readonly DatabaseContext context = new(DatabaseConstants.Access);
+        private static readonly UserProcedures procedures = new(context);
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -37,13 +19,45 @@ namespace CryptoInvestmentSimulator.Controllers
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private UserModel GetUserData()
+        /// <summary>
+        /// Index view for portfolio page.
+        /// </summary>
+        /// <returns>Portfolio view with user view model</returns>
+        [Authorize]
+        public IActionResult Index()
+        {
+            var user = GetUserDetails();
+
+            return View(user);
+        }
+
+        /// <summary>
+        /// Performs username and avatar update procedures after user
+        /// fills in the details editing popup.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="avatar"></param>
+        /// <returns>Portfolio view with user view model</returns>
+        [HttpPost]
+        public IActionResult UpdateDetails(string username, string avatar)
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            var context = new DatabaseContext(DatabaseConstants.Access);
-            var procedure = new UserProcedures(context);
+            procedures.UpdateUsername(email, username);
+            procedures.UpdateAvatar(email, avatar);
 
-            return procedure.GetUserDetails(email);
+            var user = GetUserDetails();
+
+            return View("Index", user);
+        }
+
+        /// <summary>
+        /// Fills a user model for use in other methods.
+        /// </summary>
+        /// <returns>Filled user model</returns>
+        private UserModel GetUserDetails()
+        {
+            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            return procedures.GetUserDetails(email);
         }
     }
 }

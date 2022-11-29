@@ -2,50 +2,26 @@
 @model UserModel
 @{
     ViewData["Title"] = "Portfolio Page";
+
+    await Html.RenderPartialAsync("_EditDetails");
 }
 
-<!-- User detail editing popup form -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <form method="post" asp-controller="Portfolio" asp-action="UpdateDetails">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Change your profile details:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>New username</label>
-                        <input type="text" class="form-control" required="required" placeholder="@Model.Username" name="username" />
-                        <label>New avatar url (150px/150px)</label>
-                        <input type="text" class="form-control" required="required" placeholder="https://www.example.com/...jpg" name="avatar" />
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button id="saveUsername" type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<script src="~/js/portfolio.js"></script>
 
 <div class="text-center">
-    <h1 class="display-4">Your Portfolio Page</h1>
-    
+    <h1 class="display-4">Your Portfolio Page</h1>  
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-
                 <div class="col-md-4">
                     <img src="@Model.AvatarUrl" width="150" height="150" />
+
                     <h3>Your account details</h3>
+
                     <p> <strong>Username:</strong> @Model.Username </p>
                     <p> <strong>Email:</strong> @Model.Email </p>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
+
+                    <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
                 </div>
             </div>
         </div>

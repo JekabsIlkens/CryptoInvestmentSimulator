@@ -5,8 +5,10 @@
 @using System.Security.Claims;
 @model UserModel
 
-<!-- Displays popup only for new users with default username -->
 @{
+    ViewData["Title"] = "Home Page";
+
+    // Displays popup only for new users with default username
     if (Model.Username == "NewUser"){
         await Html.RenderPartialAsync("_SetUsername");
     }
