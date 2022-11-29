@@ -34,6 +34,7 @@ namespace CryptoInvestmentSimulator.Database
                         user.Username = reader.GetString("username");
                         user.Email = reader.GetString("email");
                         user.AvatarUrl = reader.GetString("avatar_url");
+                        user.TimeZone = reader.GetString("time_zone");
                     }
                 }
             }
@@ -56,7 +57,7 @@ namespace CryptoInvestmentSimulator.Database
 
             if (!DoesUserExist(userModel.Email))
             {
-                var valuesString = $"'{userModel.Username}', '{userModel.Email}', '{userModel.AvatarUrl}'";
+                var valuesString = $"'{userModel.Username}', '{userModel.Email}', '{userModel.AvatarUrl}', '{userModel.TimeZone}'";
 
                 using (var connection = context.GetConnection())
                 {
@@ -105,6 +106,27 @@ namespace CryptoInvestmentSimulator.Database
             {
                 connection.Open();
                 MySqlCommand command = new($"UPDATE users SET avatar_url = '{avatar}' WHERE email = '{email}'", connection);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Updates given users timezone.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="timezone"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void UpdateTimeZone(string email, string timezone)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException($"Received {nameof(timezone)} is null or empty!");
+            }
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"UPDATE users SET time_zone = '{timezone}' WHERE email = '{email}'", connection);
                 command.ExecuteNonQuery();
             }
         }

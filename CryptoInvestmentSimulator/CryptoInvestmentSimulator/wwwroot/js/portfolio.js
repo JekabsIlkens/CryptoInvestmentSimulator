@@ -18,3 +18,16 @@ $(document).ready(function ()
     document.getElementById("cancel").addEventListener("click", hideEditDetailsModal);
     document.getElementById("save").addEventListener("click", hideEditDetailsModal);
 });
+
+window.addEventListener('DOMContentLoaded', (event) =>
+{
+    var timezoneSelect = document.getElementById("time-zone-select");
+
+    for (let i in time_zones) {
+        let newOption = document.createElement('option');
+        newOption.innerHTML = time_zones[i];
+        newOption.value = time_zones[i];
+
+        timezoneSelect.appendChild(newOption);
+    }
+});

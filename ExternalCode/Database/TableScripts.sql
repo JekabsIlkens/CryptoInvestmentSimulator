@@ -8,5 +8,6 @@ CREATE TABLE `users` (
   `email` varchar(45) NOT NULL,
   `avatar_url` varchar(512) DEFAULT NULL,
   `is_verified` int NOT NULL DEFAULT '0',
+  `time_zone` varchar(10) NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci

@@ -3,6 +3,7 @@ using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -39,11 +40,12 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="avatar"></param>
         /// <returns>Portfolio view with user view model</returns>
         [HttpPost]
-        public IActionResult UpdateDetails(string username, string avatar)
+        public IActionResult UpdateDetails(string username, string avatar, string timezone)
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             procedures.UpdateUsername(email, username);
             procedures.UpdateAvatar(email, avatar);
+            procedures.UpdateTimeZone(email, timezone);
 
             var user = GetUserDetails();
 

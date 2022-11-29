@@ -61,7 +61,8 @@ namespace CryptoInvestmentSimulator.Controllers
                 Username = "NewUser",
                 Email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
                 AvatarUrl = User.FindFirst(c => c.Type == "picture")?.Value,
-                IsVerified = false
+                IsVerified = false,
+                TimeZone = "GMT+02:00"
             };
 
             procedures.InsertNewUser(user);

@@ -7,7 +7,7 @@
         public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         // Table constants
-        public static readonly string UserColumns = "username, email, avatar_url";
+        public static readonly string UserColumns = "username, email, avatar_url, time_zone";
         public static readonly string MarketDataColumns = "crypto_symbol, fiat_symbol, date_time, value_fiat, daily_change, weekly_change";
     }
 }
