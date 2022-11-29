@@ -1,8 +1,10 @@
-﻿<!-- Username creation popup for new users -->
-
+﻿
+<!-- Username creation popup for new users -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+
+            <!-- Sends form data to SetUsername method in Home Controller -->
             <form method="post" asp-controller="Home" asp-action="SetUsername">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">What should we call you?</h5>

@@ -1,32 +1,18 @@
-﻿@using CryptoInvestmentSimulator.Constants
-@using CryptoInvestmentSimulator.Controllers
-@using System.Security.Claims
-@using CryptoInvestmentSimulator.Database
+﻿@using CryptoInvestmentSimulator.Constants;
+@using CryptoInvestmentSimulator.Controllers;
+@using CryptoInvestmentSimulator.Database;
+@using CryptoInvestmentSimulator.Models.ViewModels;
+@using System.Security.Claims;
+@model UserModel
+
+<!-- Displays popup only for new users with default username -->
 @{
-    ViewData["Title"] = "Home Page";
-
-    var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-    var context = new DatabaseContext(DatabaseConstants.Access);
-    var procedure = new UserProcedures(context);
-    var user = procedure.GetUserDetails(email);
-}
-
-<script type="text/javascript">
-    function hideUsernameModal(){
-        $('#exampleModalCenter').modal('hide');
-    }
-    
-    $(document).ready(function () {
-        $('#exampleModalCenter').modal('show');
-        document.getElementById("saveUsername").addEventListener("click", hideUsernameModal);
-    });
-</script>
-
-@{
-    if (user.Username == "TestName"){
+    if (Model.Username == "NewUser"){
         await Html.RenderPartialAsync("_SetUsername");
     }
 }
+
+<script src="~/js/home.js"></script>
 
 <div class="text-center">
     <h1 class="display-4">The Home Page</h1>
