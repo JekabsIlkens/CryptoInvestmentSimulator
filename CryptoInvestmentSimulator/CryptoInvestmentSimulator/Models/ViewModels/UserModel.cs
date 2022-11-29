@@ -1,4 +1,4 @@
-﻿namespace CryptoInvestmentSimulator.Models
+﻿namespace CryptoInvestmentSimulator.Models.ViewModels
 {
     public class UserModel
     {

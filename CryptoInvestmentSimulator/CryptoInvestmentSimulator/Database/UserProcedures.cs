@@ -1,5 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
-using CryptoInvestmentSimulator.Models;
+using CryptoInvestmentSimulator.Models.ViewModels;
 using MySql.Data.MySqlClient;
 
 namespace CryptoInvestmentSimulator.Database

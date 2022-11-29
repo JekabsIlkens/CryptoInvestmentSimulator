@@ -1,6 +1,6 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Database;
-using CryptoInvestmentSimulator.Models;
+using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;

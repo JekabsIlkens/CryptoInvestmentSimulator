@@ -1,4 +1,4 @@
-﻿using CryptoInvestmentSimulator.Models;
+﻿using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
