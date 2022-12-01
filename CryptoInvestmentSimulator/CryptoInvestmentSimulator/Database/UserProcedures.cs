@@ -19,6 +19,11 @@ namespace CryptoInvestmentSimulator.Database
         /// <returns>Filled user model</returns>
         public UserModel GetUserDetails(string email)
         {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
             var user = new UserModel();
 
             using (var connection = context.GetConnection())
@@ -52,7 +57,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (string.IsNullOrEmpty(userModel.Email))
             {
-                throw new ArgumentNullException($"Model property {nameof(userModel.Email)} is null or empty!");
+                throw new ArgumentNullException(nameof(userModel.Email));
             }
 
             if (!DoesUserExist(userModel.Email))
@@ -78,7 +83,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException($"Received {nameof(email)} is null or empty!");
+                throw new ArgumentNullException(nameof(email));
             }
 
             using (MySqlConnection connection = context.GetConnection())
@@ -99,7 +104,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException($"Received {nameof(avatar)} is null or empty!");
+                throw new ArgumentNullException(nameof(email));
             }
 
             using (var connection = context.GetConnection())
@@ -120,7 +125,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException($"Received {nameof(timezone)} is null or empty!");
+                throw new ArgumentNullException(nameof(email));
             }
 
             using (var connection = context.GetConnection())
@@ -141,7 +146,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException($"Received {nameof(email)} is null or empty!");
+                throw new ArgumentNullException(nameof(email));
             }
 
             if (!IsUserVerified(email))
@@ -165,7 +170,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException($"Received {nameof(email)} is null or empty!");
+                throw new ArgumentNullException(nameof(email));
             }
 
             using (var connection = context.GetConnection())
@@ -194,11 +199,11 @@ namespace CryptoInvestmentSimulator.Database
         /// <param name="email"></param>
         /// <returns>User existance status</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private bool DoesUserExist(string email)
+        public bool DoesUserExist(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException($"Received {nameof(email)} is null or empty!");
+                throw new ArgumentNullException(nameof(email));
             }
 
             using (var connection = context.GetConnection())

@@ -8,19 +8,6 @@ namespace UnitTests.DatabaseTests
     public class DatabaseContextTests
     {
         [Fact]
-        public void GetConnection_ConnectionStringValid_Success()
-        {
-            // Arrange
-            var databaseContext = new DatabaseContext(DatabaseConstants.Access);
-
-            // Act
-            var result = databaseContext.GetConnection();
-
-            // Assert
-            result.Should().NotBe(null);
-        }
-
-        [Fact]
         public void GetConnection_ConnectionStringNull_Exception()
         {
             // Arrange
@@ -31,6 +18,19 @@ namespace UnitTests.DatabaseTests
 
             // Assert
             act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void GetConnection_ConnectionStringValid_Success()
+        {
+            // Arrange
+            var databaseContext = new DatabaseContext(DatabaseConstants.Access);
+
+            // Act
+            var result = databaseContext.GetConnection();
+
+            // Assert
+            result.Should().NotBe(null);
         }
     }
 }

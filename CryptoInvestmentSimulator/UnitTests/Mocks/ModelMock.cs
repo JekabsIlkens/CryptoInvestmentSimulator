@@ -5,19 +5,36 @@ namespace UnitTests.Mocks
     public class ModelMock
     {
         /// <summary>
-        /// Creates a user model with valid data
+        /// Creates a user model filled with valid mock data.
         /// </summary>
-        /// <returns>UserModel</returns>
+        /// <returns>Filled user model</returns>
         public static UserModel GetValidUserModel()
         {
             return new UserModel()
             {
                 UserId = 1,
-                FirstName = "John",
-                LastName = "Doe",
-                EmailAddress = "JohnDoe@gmail.com",
-                AvatarUrl = "https://mockurl.com/avatar",
-                IsVerified = true
+                Username = "mock-name",
+                Email = "mock-email",
+                AvatarUrl = "mock-url",
+                IsVerified = false,
+                TimeZone = "mock-zone"
+            };
+        }
+
+        /// <summary>
+        /// Creates a user model filled with invalid values.
+        /// </summary>
+        /// <returns>Filled user model</returns>
+        public static UserModel GetInvalidUserModel()
+        {
+            return new UserModel()
+            {
+                UserId = -15,
+                Username = "",
+                Email = "",
+                AvatarUrl = "",
+                IsVerified = false,
+                TimeZone = ""
             };
         }
     }
