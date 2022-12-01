@@ -29,7 +29,7 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var user = GetUserDetails();
 
-            return View(user);
+            return View("Index", user);
         }
 
         /// <summary>

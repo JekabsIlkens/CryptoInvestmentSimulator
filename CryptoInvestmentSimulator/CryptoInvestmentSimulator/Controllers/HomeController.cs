@@ -31,7 +31,7 @@ namespace CryptoInvestmentSimulator.Controllers
             EmailVerificationCheck();
             var user = GetUserDetails();
 
-            return View(user);
+            return View("Index", user);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace CryptoInvestmentSimulator.Controllers
             {
                 Username = "NewUser",
                 Email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
-                AvatarUrl = User.FindFirst(c => c.Type == "picture")?.Value,
+                AvatarUrl = "https://i.postimg.cc/N0cRgFj7/missing-avtr.png",
                 IsVerified = false,
                 TimeZone = "GMT+02:00"
             };
