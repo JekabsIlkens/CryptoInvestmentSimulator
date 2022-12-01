@@ -1,28 +1,31 @@
-﻿@model CryptoInvestmentSimulator.Models.UserModel
+﻿@using CryptoInvestmentSimulator.Models.ViewModels;
+@model UserModel
 @{
     ViewData["Title"] = "Portfolio Page";
+
+    await Html.RenderPartialAsync("_EditDetails");
 }
 
+<script src="~/js/time_zones.js"></script>
+<script src="~/js/portfolio.js"></script>
+
 <div class="text-center">
-    <h1 class="display-4">Your Portfolio Page</h1>
-    <p>To be continued...</p>
-</div>
+    <h1 class="display-4">Your Portfolio Page</h1>  
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="@Model.AvatarUrl" width="150" height="150" />
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
+                    <h3>Your account details</h3>
 
-            <div class="col-md-3">
-                <img src="@Model.AvatarUrl" alt="" class="img-rounded img-responsive" />
+                    <p> <strong>Username:</strong> @Model.Username </p>
+                    <p> <strong>Email:</strong> @Model.Email </p>
+                    <p> <strong>Time zone:</strong> @Model.TimeZone </p>
+
+                    <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
+                </div>
             </div>
-
-            <div class="col-md-4">
-                <h3>Your account details</h3>
-                <p> <strong>First name:</strong> @Model.FirstName </p>
-                <p> <strong>Last name:</strong> @Model.LastName </p>
-                <p> <strong>Email address:</strong> @Model.EmailAddress </p>
-            </div>
-
         </div>
     </div>
 </div>

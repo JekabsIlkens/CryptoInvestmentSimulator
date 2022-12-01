@@ -1,6 +1,20 @@
-﻿@{
+﻿@using CryptoInvestmentSimulator.Constants;
+@using CryptoInvestmentSimulator.Controllers;
+@using CryptoInvestmentSimulator.Database;
+@using CryptoInvestmentSimulator.Models.ViewModels;
+@using System.Security.Claims;
+@model UserModel
+
+@{
     ViewData["Title"] = "Home Page";
+
+    // Displays popup only for new users with default username
+    if (Model.Username == "NewUser"){
+        await Html.RenderPartialAsync("_SetUsername");
+    }
 }
+
+<script src="~/js/home.js"></script>
 
 <div class="text-center">
     <h1 class="display-4">The Home Page</h1>

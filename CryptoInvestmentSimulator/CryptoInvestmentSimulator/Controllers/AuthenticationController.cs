@@ -10,13 +10,28 @@ namespace CryptoInvestmentSimulator.Controllers
     public class AuthenticationController : Controller
     {
         /// <summary>
-        /// Triggers the authentication process.
+        /// Triggers the authentication process forwarding user to login page.
+        /// After authentication sends user to the home page.
         /// </summary>
-        /// <returns>Home page view</returns>
         public async Task Login()
         {
             var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
                 .WithRedirectUri(AuthenticationConstants.LoginRedirect)
+                .WithParameter("screen_hint", "signin")
+                .Build();
+
+            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+        }
+
+        /// <summary>
+        /// Triggers the authentication register process forwarding user to registration page.
+        /// After authentication sends user to the home page.
+        /// </summary>
+        public async Task Register()
+        {
+            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+                .WithRedirectUri(AuthenticationConstants.LoginRedirect)
+                .WithParameter("screen_hint", "signup")
                 .Build();
 
             await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
@@ -24,8 +39,8 @@ namespace CryptoInvestmentSimulator.Controllers
 
         /// <summary>
         /// Triggers the logout process by destroying Auth0 and local session.
+        /// Returns user to the landing page.
         /// </summary>
-        /// <returns>Landing page view</returns>
         [Authorize]
         public async Task Logout()
         {

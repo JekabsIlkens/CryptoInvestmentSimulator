@@ -1,0 +1,31 @@
+﻿
+<!-- User detail editing popup form -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <!-- Sends form data to UpdateDetails method in Portfolio Controller -->
+            <form method="post" asp-controller="Portfolio" asp-action="UpdateDetails">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Change your profile details:</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>New username</label>
+                        <input type="text" class="form-control" required="required" value="@Model.Username" name="username" />
+                        <label for="time-zone-select">New time zone</label>
+                        <select id="time-zone-select" type="text" class="form-control" name="timezone"></select>
+                        <label>New avatar url (150px/150px)</label>
+                        <input type="text" class="form-control" required="required" value="@Model.AvatarUrl" name="avatar" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="save" type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
