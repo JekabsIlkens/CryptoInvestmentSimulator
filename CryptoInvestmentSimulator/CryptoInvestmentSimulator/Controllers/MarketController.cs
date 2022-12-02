@@ -157,7 +157,6 @@ namespace CryptoInvestmentSimulator.Controllers
             };
             modelList.Add(dogeMDM);
 
-            // TODO: Uncomment before merge
             // InsertMarketData(modelList);
 
             return modelList;
@@ -189,7 +188,7 @@ namespace CryptoInvestmentSimulator.Controllers
             return responseModel;
         }
 
-        private static void InsertMarketData(List<MarketDataModel> modelList)
+        public void InsertMarketData(List<MarketDataModel> modelList)
         {
             var context = new DatabaseContext(DatabaseConstants.Access);
             var procedure = new MarketDataProcedures(context);
