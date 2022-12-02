@@ -2,7 +2,6 @@
 using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
-using CryptoInvestmentSimulator.Models;
 using CryptoInvestmentSimulator.Models.ResponseModels;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +14,12 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class MarketController : Controller
     {
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
         [Authorize]
         public IActionResult Index()
         {
@@ -55,12 +60,6 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             RunChartSimulator(0.0388);
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         public void RunChartSimulator(double pricePoint)
