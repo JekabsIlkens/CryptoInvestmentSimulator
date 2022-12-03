@@ -33,76 +33,51 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult Bitcoin()
         {
-            RunChartSimulator();
+            SetupMarketHistory(CryptoEnum.BTC);
             return View();
         }
 
         [Authorize]
         public IActionResult Etherium()
         {
-            RunChartSimulator(2050);
+            SetupMarketHistory(CryptoEnum.ETH);
             return View();
         }
 
         [Authorize]
         public IActionResult Cardano()
         {
-            RunChartSimulator(434);
+            SetupMarketHistory(CryptoEnum.ADA);
             return View();
         }
 
         [Authorize]
         public IActionResult Cosmos()
         {
-            RunChartSimulator(39);
+            SetupMarketHistory(CryptoEnum.ATOM);
             return View();
         }
 
         [Authorize]
         public IActionResult Dogecoin()
         {
-            RunChartSimulator(0.0388);
+            SetupMarketHistory(CryptoEnum.DOGE);
             return View();
         }
 
-        // Real chart (in progress)
-        public void RunChartSimulator()
+        /// <summary>
+        /// Retrieves specified amount of historical chart points for specified cryptocurrency.
+        /// Sets chart update interval and places everything in view bag for chart rendering.
+        /// </summary>
+        /// <param name="crypto"></param>
+        public void SetupMarketHistory(CryptoEnum crypto)
         {
-            // Simulator configuration
-            int updateInterval = 2000;
-            int historyPoints = 6;
-
-            var chartPoints = procedures.GetMarketHistory(CryptoEnum.BTC, historyPoints);
+            int historyPoints = 10;
+            var chartPoints = procedures.GetMarketHistory(crypto, historyPoints);
             var pricePoint = chartPoints[historyPoints - 1].PricePoint;
             var timePoint = chartPoints[historyPoints - 1].TimePoint;
 
-            ViewBag.ChartPoints = JsonConvert.SerializeObject(chartPoints);
-            ViewBag.PricePoint = pricePoint;
-            ViewBag.TimePoint = timePoint;
-            ViewBag.UpdateInterval = updateInterval;
-        }
-
-        // Fake mock chart
-        public void RunChartSimulator(double pricePoint)
-        {
-            var randomizer = new Random();
-            var chartPoints = new List<ChartPointModel>();
-
-            // Simulator configuration
-            int updateInterval = 5000;
-            var now = DateTime.Now;
-            var mockTime = new DateTime(now.Year, now.Month, now.Day, 16, 25, 00);
-            double timePoint = ((DateTimeOffset)mockTime).ToUnixTimeSeconds() * 1000;
-
-            for (int i = 0; i < 100; i++)
-            {
-                timePoint += updateInterval;
-                double randomChange = 2.5 + randomizer.NextDouble() * (-2.5 - 2.5);
-
-                // Rounds new price point to two digits and adds it to list 
-                pricePoint = Math.Round((pricePoint + randomChange) * 100) / 100;
-                chartPoints.Add(new ChartPointModel(timePoint, pricePoint));
-            }
+            int updateInterval = 2000;
 
             ViewBag.ChartPoints = JsonConvert.SerializeObject(chartPoints);
             ViewBag.PricePoint = pricePoint;
@@ -177,8 +152,6 @@ namespace CryptoInvestmentSimulator.Controllers
                 PercentChange7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
             };
             modelList.Add(dogeMDM);
-
-            // InsertMarketData(modelList);
 
             return modelList;
         }

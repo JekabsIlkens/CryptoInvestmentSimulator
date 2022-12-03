@@ -61,10 +61,9 @@ namespace CryptoInvestmentSimulator.Database
             {
                 connection.Open();
                 MySqlCommand command = new(
-                    $"SELECT date_time, unit_value FROM market_data " +
-                    $"WHERE crypto_symbol = '{crypto}' " +
-                    $"ORDER BY data_id ASC " +
-                    $"LIMIT {rowCount}", 
+                    $"SELECT date_time, unit_value FROM " +
+                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
+                    $"ORDER BY data_id ASC ", 
                     connection);
 
                 using (var reader = command.ExecuteReader())
