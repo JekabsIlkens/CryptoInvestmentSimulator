@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using MySql.Data.MySqlClient;
@@ -23,7 +24,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (marketDataModel == null)
             {
-                throw new ArgumentNullException($"Model {nameof(marketDataModel)} is null or empty!");
+                throw new ArgumentNullException(nameof(marketDataModel));
             }
 
             var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(marketDataModel.CollectionDateTime);
@@ -37,6 +38,51 @@ namespace CryptoInvestmentSimulator.Database
                 MySqlCommand command = new($"INSERT INTO market_data ({DatabaseConstants.MarketDataColumns}) VALUES ({valuesString})", connection);
                 command.ExecuteNonQuery();
             }
+        }
+
+        /// <summary>
+        /// Collects specified amount of historical chart points
+        /// into a list for specified cryptocurrency.
+        /// </summary>
+        /// <param name="crypto"></param>
+        /// <param name="rowCount"></param>
+        /// <returns>List of <see cref="ChartPointModel"/>s</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public List<ChartPointModel> GetMarketHistory(CryptoEnum crypto, int rowCount)
+        {
+            if (rowCount <= 0)
+            {
+                throw new ArgumentException($"Requested {rowCount} rows! Invalid!");
+            }
+
+            var chartPoints = new List<ChartPointModel>();
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new(
+                    $"SELECT date_time, unit_value FROM market_data " +
+                    $"WHERE crypto_symbol = '{crypto}' " +
+                    $"ORDER BY data_id ASC " +
+                    $"LIMIT {rowCount}", 
+                    connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var timePointStr = reader.GetValue(reader.GetOrdinal("date_time")).ToString();
+                        var timePoint = ((DateTimeOffset)DateTime.Parse(timePointStr)).ToUnixTimeSeconds() * 1000;
+
+                        var pricePointStr = reader.GetValue(reader.GetOrdinal("unit_value")).ToString();
+                        var pricePoint = double.Parse(pricePointStr);
+
+                        chartPoints.Add(new ChartPointModel(timePoint, pricePoint));
+                    }
+                }
+            }
+
+            return chartPoints;
         }
     }
 }

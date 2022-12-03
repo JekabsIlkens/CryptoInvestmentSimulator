@@ -14,6 +14,9 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class MarketController : Controller
     {
+        private static readonly DatabaseContext context = new(DatabaseConstants.Access);
+        private static readonly MarketDataProcedures procedures = new(context);
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -30,7 +33,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult Bitcoin()
         {
-            RunChartSimulator(19200);
+            RunChartSimulator();
             return View();
         }
 
@@ -62,13 +65,31 @@ namespace CryptoInvestmentSimulator.Controllers
             return View();
         }
 
+        // Real chart (in progress)
+        public void RunChartSimulator()
+        {
+            // Simulator configuration
+            int updateInterval = 2000;
+            int historyPoints = 6;
+
+            var chartPoints = procedures.GetMarketHistory(CryptoEnum.BTC, historyPoints);
+            var pricePoint = chartPoints[historyPoints - 1].PricePoint;
+            var timePoint = chartPoints[historyPoints - 1].TimePoint;
+
+            ViewBag.ChartPoints = JsonConvert.SerializeObject(chartPoints);
+            ViewBag.PricePoint = pricePoint;
+            ViewBag.TimePoint = timePoint;
+            ViewBag.UpdateInterval = updateInterval;
+        }
+
+        // Fake mock chart
         public void RunChartSimulator(double pricePoint)
         {
             var randomizer = new Random();
             var chartPoints = new List<ChartPointModel>();
 
             // Simulator configuration
-            int updateInterval = 1500;
+            int updateInterval = 5000;
             var now = DateTime.Now;
             var mockTime = new DateTime(now.Year, now.Month, now.Day, 16, 25, 00);
             double timePoint = ((DateTimeOffset)mockTime).ToUnixTimeSeconds() * 1000;
