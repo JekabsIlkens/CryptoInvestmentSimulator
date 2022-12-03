@@ -3,55 +3,12 @@
 }
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="~/js/chart.js"></script>
 <script>
 	window.onload = function () {
-		// Gets pre generated mock chart points
-		var chartPoints = @Html.Raw(ViewBag.ChartPoints);
-
-		// Creates and configures renderable chart
-		var chart = new CanvasJS.Chart("chartContainer",
-			{
-				zoomEnabled: false,
-				axisX:
-				{
-					title: "",
-					crosshair:
-					{
-						enabled: true,
-						snapToDataPoint: true
-					}
-				},
-				axisY:
-				{
-					crosshair:
-					{
-						enabled: true,
-						snapToDataPoint: true,
-						valueFormatString: "#,###0"
-					}
-				},
-				toolTip:
-				{
-					shared: true
-				},
-				legend:
-				{
-					dockInsidePlotArea: true,
-					verticalAlign: "top",
-					horizontalAlign: "right"
-				},
-				data:
-					[{
-						type: "line",
-						markerType: "none",
-						xValueType: "dateTime",
-						xValueFormatString: "hh:mm:ss",
-						name: "Etherium",
-						showInLegend: true,
-						dataPoints: chartPoints
-					}]
-			});
-
+		// Gets price/time point history and renders chart.
+		var history = @Html.Raw(ViewBag.ChartPoints);
+		var chart = getChart("Etherium", history);
 		chart.render();
 
 		var updateInterval = @Html.Raw(ViewBag.UpdateInterval);
@@ -67,7 +24,7 @@
 
 				pricePoint = Math.round((pricePoint + randomChange) * 100) / 100;
 
-				chartPoints.push({ x: timePoint.getTime(), y: pricePoint });
+				history.push({ x: timePoint.getTime(), y: pricePoint });
 			}
 
 			chart.render();
