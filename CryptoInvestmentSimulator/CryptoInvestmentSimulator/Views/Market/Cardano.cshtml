@@ -2,43 +2,20 @@
 	ViewData["Title"] = "ADA/EUR";
 }
 
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<script src="~/js/chart.js"></script>
-<script>
-	window.onload = function () {
-		// Gets price/time point history and renders chart.
-		var history = @Html.Raw(ViewBag.ChartPoints);
-		var chart = getChart("Cardano", history);
-		chart.render();
-
-		var updateInterval = @Html.Raw(ViewBag.UpdateInterval);
-		var pricePoint = @Html.Raw(ViewBag.PricePoint);
-		var timePoint = new Date(@Html.Raw(ViewBag.TimePoint));
-
-		function updateChart(count) {
-			count = count || 1;
-
-			for (var i = 0; i < count; i++) {
-				timePoint.setTime(timePoint.getTime() + updateInterval);
-				var randomChange = 2.5 + Math.random() * (-2.5 - 2.5);
-
-				pricePoint = Math.round((pricePoint + randomChange) * 100) / 100;
-
-				history.push({ x: timePoint.getTime(), y: pricePoint });
-			}
-
-			chart.render();
-		}
-
-		setInterval(function () { updateChart() }, updateInterval);
-	}
-</script>
+@section Scripts 
+{
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+		$('#chartZone').load("/Market/ChartADA")
+		setInterval(function () { $('#chartZone').load("/Market/ChartADA") }, 60000);
+	</script>
+}
 
 <div class="text-center">
 
 	<h1 class="display-4">Cardano / Euro</h1>
 
-	<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+	<div id="chartZone"></div>
 
 	<a class="text-danger" asp-controller="Market" asp-action="Index">Back</a>
 

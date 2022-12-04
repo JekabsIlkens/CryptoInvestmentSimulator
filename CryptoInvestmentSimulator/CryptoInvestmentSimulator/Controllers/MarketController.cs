@@ -23,6 +23,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        /// <summary>
+        /// Index view for market page.
+        /// Collects latest market data for each cryptocurrency.
+        /// </summary>
+        /// <returns>Index view with a list of market data models</returns>
         [Authorize]
         public IActionResult Index()
         {
@@ -30,7 +35,43 @@ namespace CryptoInvestmentSimulator.Controllers
             return View(marketData);
         }
 
-        public IActionResult Chart()
+        [Authorize]
+        public IActionResult Bitcoin()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Etherium()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Cardano()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Cosmos()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Dogecoin()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in view.
+        /// </summary>
+        /// <returns>Partial view that renders chart</returns>
+        [Authorize]
+        public IActionResult ChartBTC()
         {
             var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 80);
             var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 80);
@@ -41,64 +82,78 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart");
         }
 
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in view.
+        /// </summary>
+        /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult Bitcoin()
+        public IActionResult ChartETH()
         {
-            SetupMarketHistory(CryptoEnum.BTC);
-            return View();
-        }
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 80);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 80);
 
-        [Authorize]
-        public IActionResult Etherium()
-        {
-            SetupMarketHistory(CryptoEnum.ETH);
-            return View();
-        }
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
 
-        [Authorize]
-        public IActionResult Cardano()
-        {
-            SetupMarketHistory(CryptoEnum.ADA);
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Cosmos()
-        {
-            SetupMarketHistory(CryptoEnum.ATOM);
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Dogecoin()
-        {
-            SetupMarketHistory(CryptoEnum.DOGE);
-            return View();
+            return PartialView("_Chart");
         }
 
         /// <summary>
-        /// Retrieves specified amount of historical chart points for specified cryptocurrency.
-        /// Sets chart update interval and places everything in view bag for chart rendering.
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in view.
         /// </summary>
-        /// <param name="crypto"></param>
-        public void SetupMarketHistory(CryptoEnum crypto)
+        /// <returns>Partial view that renders chart</returns>
+        [Authorize]
+        public IActionResult ChartADA()
         {
-            var chartPoints = 0;
-            var pricePoint = 0;
-            var timePoint = 0;
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 80);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 80);
 
-            int updateInterval = 2000;
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
 
-            ViewBag.ChartPoints = JsonConvert.SerializeObject(chartPoints);
-            ViewBag.PricePoint = pricePoint;
-            ViewBag.TimePoint = timePoint;
-            ViewBag.UpdateInterval = updateInterval;
+            return PartialView("_Chart");
+        }
+
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in view.
+        /// </summary>
+        /// <returns>Partial view that renders chart</returns>
+        [Authorize]
+        public IActionResult ChartATOM()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 80);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 80);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart");
+        }
+
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in view.
+        /// </summary>
+        /// <returns>Partial view that renders chart</returns>
+        [Authorize]
+        public IActionResult ChartDOGE()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 80);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 80);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart");
         }
 
         /// <summary>
         /// Gets market data for all supported cryptos and creates view models for them.
         /// </summary>
-        /// <returns>List of models</returns>
+        /// <returns>List of <see cref="MarketDataModel"/>s</returns>
         public List<MarketDataModel> GetMarketData()
         {
             var modelList = new List<MarketDataModel>();
@@ -166,6 +221,13 @@ namespace CryptoInvestmentSimulator.Controllers
             return modelList;
         }
 
+        /// <summary>
+        /// Makes a Coin Market Cap API request for specified cryptocurrency.
+        /// Executes request and deserializes response into models.
+        /// </summary>
+        /// <param name="crypto"></param>
+        /// <returns>Filled <see cref="Root"/> response model</returns>
+        /// <exception cref="Exception"></exception>
         private static Root GetCryptoToEuroData(CryptoEnum crypto)
         {
             var request = new RestRequest(CoinMarketCapApiConstants.LatestQuotesTest, Method.Get);
@@ -192,14 +254,16 @@ namespace CryptoInvestmentSimulator.Controllers
             return responseModel;
         }
 
+        /// <summary>
+        /// Iterates trough each model in received list 
+        /// and calls insert procedure for each model to insert data into database.
+        /// </summary>
+        /// <param name="modelList"></param>
         public void InsertMarketData(List<MarketDataModel> modelList)
         {
-            var context = new DatabaseContext(DatabaseConstants.Access);
-            var procedure = new MarketDataProcedures(context);
-
             foreach (var model in modelList)
             {
-                procedure.InsertNewMarketDataEntry(model);
+                procedures.InsertNewMarketDataEntry(model);
             }
         }
     }

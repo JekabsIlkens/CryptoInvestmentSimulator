@@ -2,12 +2,12 @@
 	ViewData["Title"] = "BTC/EUR";
 }
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-@section Scripts {
+@section Scripts 
+{
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
-		$('#chartZone').load("/Market/Chart")
-		setInterval(function () { $('#chartZone').load("/Market/Chart") }, 60000);
+		$('#chartZone').load("/Market/ChartBTC")
+		setInterval(function () { $('#chartZone').load("/Market/ChartBTC") }, 60000);
 	</script>
 }
 
