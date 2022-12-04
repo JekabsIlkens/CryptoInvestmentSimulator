@@ -30,6 +30,17 @@ namespace CryptoInvestmentSimulator.Controllers
             return View(marketData);
         }
 
+        public IActionResult Chart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 80);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 80);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart");
+        }
+
         [Authorize]
         public IActionResult Bitcoin()
         {
@@ -72,10 +83,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="crypto"></param>
         public void SetupMarketHistory(CryptoEnum crypto)
         {
-            int historyPoints = 10;
-            var chartPoints = procedures.GetMarketHistory(crypto, historyPoints);
-            var pricePoint = chartPoints[historyPoints - 1].PricePoint;
-            var timePoint = chartPoints[historyPoints - 1].TimePoint;
+            var chartPoints = 0;
+            var pricePoint = 0;
+            var timePoint = 0;
 
             int updateInterval = 2000;
 

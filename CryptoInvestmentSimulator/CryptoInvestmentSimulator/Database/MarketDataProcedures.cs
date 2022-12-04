@@ -41,47 +41,89 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Collects specified amount of historical chart points
-        /// into a list for specified cryptocurrency.
+        /// Collects specified amount of historical price points
+        /// into an array for specified cryptocurrency.
         /// </summary>
         /// <param name="crypto"></param>
         /// <param name="rowCount"></param>
-        /// <returns>List of <see cref="ChartPointModel"/>s</returns>
+        /// <returns>Array of price points of type double</returns>
         /// <exception cref="ArgumentException"></exception>
-        public List<ChartPointModel> GetMarketHistory(CryptoEnum crypto, int rowCount)
+        public double[] GetPricePointHistory(CryptoEnum crypto, int rowCount)
         {
             if (rowCount <= 0)
             {
                 throw new ArgumentException($"Requested {rowCount} rows! Invalid!");
             }
 
-            var chartPoints = new List<ChartPointModel>();
+            double[] pricePoints = new double[rowCount];
 
             using (var connection = context.GetConnection())
             {
                 connection.Open();
                 MySqlCommand command = new(
-                    $"SELECT date_time, unit_value FROM " +
+                    $"SELECT unit_value FROM " +
                     $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
                     $"ORDER BY data_id ASC ", 
                     connection);
 
                 using (var reader = command.ExecuteReader())
                 {
+                    var num = 0;
+                    while (reader.Read())
+                    {
+                        var pricePointStr = reader.GetValue(reader.GetOrdinal("unit_value")).ToString();
+                        var pricePoint = double.Parse(pricePointStr);
+
+                        pricePoints[num] = pricePoint;
+                        num++;
+                    }
+                }
+            }
+
+            return pricePoints;
+        }
+
+        /// <summary>
+        /// Collects specified amount of historical date/time points
+        /// into an array for specified cryptocurrency.
+        /// </summary>
+        /// <param name="crypto"></param>
+        /// <param name="rowCount"></param>
+        /// <returns>Array of date/time points of type long</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public long[] GetTimePointHistory(CryptoEnum crypto, int rowCount)
+        {
+            if (rowCount <= 0)
+            {
+                throw new ArgumentException($"Requested {rowCount} rows! Invalid!");
+            }
+
+            long[] timePoints = new long[rowCount];
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new(
+                    $"SELECT date_time FROM " +
+                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
+                    $"ORDER BY data_id ASC ",
+                    connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var num = 0;
                     while (reader.Read())
                     {
                         var timePointStr = reader.GetValue(reader.GetOrdinal("date_time")).ToString();
                         var timePoint = ((DateTimeOffset)DateTime.Parse(timePointStr)).ToUnixTimeSeconds() * 1000;
 
-                        var pricePointStr = reader.GetValue(reader.GetOrdinal("unit_value")).ToString();
-                        var pricePoint = double.Parse(pricePointStr);
-
-                        chartPoints.Add(new ChartPointModel(timePoint, pricePoint));
+                        timePoints[num] = timePoint;
+                        num++;
                     }
                 }
             }
 
-            return chartPoints;
+            return timePoints;
         }
     }
 }
