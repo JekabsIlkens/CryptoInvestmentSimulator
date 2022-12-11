@@ -23,7 +23,7 @@ internal class Program
     /// <param name="elapsedEvent"></param>
     static void GetNewMarketData(object sender, System.Timers.ElapsedEventArgs elapsedEvent)
     {
-        marketController.InsertMarketData(marketController.GetMarketData());
+        marketController.InsertMarketData(marketController.GetNewMarketData());
         Console.WriteLine("New market data collected! Collection time: " + DateTime.Now.ToString());
     }
 

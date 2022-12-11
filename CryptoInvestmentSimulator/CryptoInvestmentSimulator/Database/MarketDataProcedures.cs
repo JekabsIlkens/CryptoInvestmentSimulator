@@ -41,6 +41,47 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
+        /// Collects the latest record of data for specified cryptocurrency.
+        /// </summary>
+        /// <param name="crypto">Currency to collect data for</param>
+        /// <returns>Filled <see cref="MarketDataModel"/></returns>
+        public MarketDataModel GetLatestMarketData(CryptoEnum crypto)
+        {
+            MarketDataModel marketDataModel = new MarketDataModel();
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new(
+                    $"SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT 1",
+                    connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        marketDataModel.CryptoSymbol = reader.GetValue(reader.GetOrdinal("crypto_symbol")).ToString();
+                        marketDataModel.FiatSymbol = reader.GetValue(reader.GetOrdinal("fiat_symbol")).ToString();
+
+                        var unitValue = reader.GetValue(reader.GetOrdinal("unit_value")).ToString();
+                        marketDataModel.FiatPricePerUnit = decimal.Parse(unitValue);
+
+                        var dateTime = reader.GetValue(reader.GetOrdinal("date_time")).ToString();
+                        marketDataModel.CollectionDateTime = DateTime.Parse(dateTime);
+
+                        var dailyChange = reader.GetValue(reader.GetOrdinal("daily_change")).ToString();
+                        marketDataModel.PercentChange24h = decimal.Parse(dailyChange);
+
+                        var weeklyChange = reader.GetValue(reader.GetOrdinal("weekly_change")).ToString();
+                        marketDataModel.PercentChange7d = decimal.Parse(weeklyChange);
+                    }
+                }
+            }
+
+            return marketDataModel;
+        }
+
+        /// <summary>
         /// Collects specified amount of historical price points
         /// into an array for specified cryptocurrency.
         /// </summary>

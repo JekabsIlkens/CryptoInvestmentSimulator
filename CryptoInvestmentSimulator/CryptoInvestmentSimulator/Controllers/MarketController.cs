@@ -31,7 +31,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var marketData = GetMarketData();
+            var marketData = GetLatestMarketRecords();
             return View(marketData);
         }
 
@@ -311,10 +311,28 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
+        /// Collects latest market data records from database.
+        /// </summary>
+        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
+        public List<MarketDataModel> GetLatestMarketRecords()
+        {
+            var modelList = new List<MarketDataModel>
+            {
+                procedures.GetLatestMarketData(CryptoEnum.BTC),
+                procedures.GetLatestMarketData(CryptoEnum.ETH),
+                procedures.GetLatestMarketData(CryptoEnum.ADA),
+                procedures.GetLatestMarketData(CryptoEnum.ATOM),
+                procedures.GetLatestMarketData(CryptoEnum.DOGE)
+            };
+
+            return modelList;
+        }
+
+        /// <summary>
         /// Gets market data for all supported cryptos and creates view models for them.
         /// </summary>
         /// <returns>List of <see cref="MarketDataModel"/>s</returns>
-        public List<MarketDataModel> GetMarketData()
+        public List<MarketDataModel> GetNewMarketData()
         {
             var modelList = new List<MarketDataModel>();
 
