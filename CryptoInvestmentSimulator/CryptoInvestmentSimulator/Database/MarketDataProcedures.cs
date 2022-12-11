@@ -16,9 +16,9 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Inserts new market data into database.
+        /// Inserts received market data into database.
         /// </summary>
-        /// <param name="marketDataModel"></param>
+        /// <param name="marketDataModel">Filled <see cref="MarketDataModel"/></param>
         /// <exception cref="ArgumentNullException"></exception>
         public void InsertNewMarketDataEntry(MarketDataModel marketDataModel)
         {

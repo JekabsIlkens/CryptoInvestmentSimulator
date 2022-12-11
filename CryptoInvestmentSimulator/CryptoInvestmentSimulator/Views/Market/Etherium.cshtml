@@ -13,16 +13,19 @@
 
 	<h1 class="display-4">Etherium / Euro</h1>
 
+		<!-- Buttons for switching chart time frames. -->
 		<button id="1h" type="button" class="btn btn-info">1H</button>
 		<button id="4h" type="button" class="btn btn-success">4H</button>
 		<button id="8h" type="button" class="btn btn-warning">8H</button>
 		<button id="24h" type="button" class="btn btn-danger">24H</button>
 
+		<!-- Designated containers for each time frame chart. -->
 		<div id="chartZone1h"></div>
 		<div id="chartZone4h"></div>
 		<div id="chartZone8h"></div>
 		<div id="chartZone24h"></div>
 
+	<!-- Navigates user back to market page. -->
 	<a class="text-danger" asp-controller="Market" asp-action="Index">Back</a>
 
 </div>

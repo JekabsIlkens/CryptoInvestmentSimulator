@@ -1,6 +1,10 @@
 ﻿
-// Loads all dogecoin charts, adds a refresh interval and switch buttons
-window.addEventListener("load", (event) => {
+// Loads all Dogecoin chart partial views in designated chartZone divs.
+// Sets refresh intervals (with small delay) for dynamic chart updates when new data is collected.
+// Adds event listeners for chart switching buttons.
+
+window.addEventListener("load", (event) =>
+{
 	$('#chartZone1h').load("/Market/DOGE1hChart");
 	setInterval(function () { $('#chartZone1h').load("/Market/DOGE1hChart"); }, 60000);
 	document.getElementById("chartZone1h").style.display = "block";

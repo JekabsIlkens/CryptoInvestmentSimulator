@@ -1,6 +1,10 @@
 ﻿
-// Loads all cardano charts, adds a refresh interval and switch buttons
-window.addEventListener("load", (event) => {
+// Loads all Cardano chart partial views in designated chartZone divs.
+// Sets refresh intervals (with small delay) for dynamic chart updates when new data is collected.
+// Adds event listeners for chart switching buttons.
+
+window.addEventListener("load", (event) =>
+{
 	$('#chartZone1h').load("/Market/ADA1hChart");
 	setInterval(function () { $('#chartZone1h').load("/Market/ADA1hChart"); }, 60000);
 	document.getElementById("chartZone1h").style.display = "block";

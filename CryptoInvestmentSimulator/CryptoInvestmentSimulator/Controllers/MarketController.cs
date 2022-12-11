@@ -23,18 +23,48 @@ namespace CryptoInvestmentSimulator.Controllers
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        /// <summary>
-        /// Index view for market page.
-        /// Collects latest market data for each cryptocurrency.
-        /// </summary>
-        /// <returns>Index view with a list of market data models</returns>
         [Authorize]
         public IActionResult Index()
         {
-            var marketData = GetLatestMarketRecords();
-            return View(marketData);
+            return View("Index");
         }
 
+        [Authorize]
+        public IActionResult Bitcoin()
+        {
+            return View("Bitcoin");
+        }
+
+        [Authorize]
+        public IActionResult Etherium()
+        {
+            return View("Etherium");
+        }
+
+        [Authorize]
+        public IActionResult Cardano()
+        {
+            return View("Cardano");
+        }
+
+        [Authorize]
+        public IActionResult Cosmos()
+        {
+            return View("Cosmos");
+        }
+
+        [Authorize]
+        public IActionResult Dogecoin()
+        {
+            return View("Dogecoin");
+        }
+
+        /// <summary>
+        /// Partial view for market page data table.
+        /// Gets list of lates marked data view models for each crypto.
+        /// Passes list to ViewBag for dynamic data display.
+        /// </summary>
+        /// <returns>_DataTable partial view with filled ViewBag</returns>
         [Authorize]
         public IActionResult DataTable()
         {
@@ -43,41 +73,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_DataTable");
         }
 
-        [Authorize]
-        public IActionResult Bitcoin()
-        {
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Etherium()
-        {
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Cardano()
-        {
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Cosmos()
-        {
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Dogecoin()
-        {
-            return View();
-        }
-
         /// <summary>
         /// Collects Bitcoin market data history for given cryptocurrency
-        /// and prepares view bags for use in view.
+        /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders chart</returns>
+        /// <returns>Partial view that renders 1h chart</returns>
         [Authorize]
         public IActionResult BTC1hChart()
         {
@@ -90,6 +90,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart1h");
         }
 
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
         [Authorize]
         public IActionResult BTC4hChart()
         {
@@ -102,6 +107,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart4h");
         }
 
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
         [Authorize]
         public IActionResult BTC8hChart()
         {
@@ -114,6 +124,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart8h");
         }
 
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
         [Authorize]
         public IActionResult BTC24hChart()
         {
@@ -126,6 +141,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart24h");
         }
 
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
         [Authorize]
         public IActionResult ETH1hChart()
         {
@@ -138,6 +158,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart1h");
         }
 
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
         [Authorize]
         public IActionResult ETH4hChart()
         {
@@ -150,6 +175,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart4h");
         }
 
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
         [Authorize]
         public IActionResult ETH8hChart()
         {
@@ -162,6 +192,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart8h");
         }
 
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
         [Authorize]
         public IActionResult ETH24hChart()
         {
@@ -174,6 +209,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart24h");
         }
 
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
         [Authorize]
         public IActionResult ADA1hChart()
         {
@@ -186,6 +226,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart1h");
         }
 
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
         [Authorize]
         public IActionResult ADA4hChart()
         {
@@ -198,6 +243,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart4h");
         }
 
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
         [Authorize]
         public IActionResult ADA8hChart()
         {
@@ -210,6 +260,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart8h");
         }
 
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
         [Authorize]
         public IActionResult ADA24hChart()
         {
@@ -222,6 +277,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart24h");
         }
 
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
         [Authorize]
         public IActionResult ATOM1hChart()
         {
@@ -234,6 +294,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart1h");
         }
 
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
         [Authorize]
         public IActionResult ATOM4hChart()
         {
@@ -246,6 +311,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart4h");
         }
 
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
         [Authorize]
         public IActionResult ATOM8hChart()
         {
@@ -258,6 +328,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart8h");
         }
 
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
         [Authorize]
         public IActionResult ATOM24hChart()
         {
@@ -270,6 +345,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart24h");
         }
 
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
         [Authorize]
         public IActionResult DOGE1hChart()
         {
@@ -282,6 +362,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart1h");
         }
 
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
         [Authorize]
         public IActionResult DOGE4hChart()
         {
@@ -294,6 +379,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart4h");
         }
 
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
         [Authorize]
         public IActionResult DOGE8hChart()
         {
@@ -306,6 +396,11 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart8h");
         }
 
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
         [Authorize]
         public IActionResult DOGE24hChart()
         {
@@ -319,7 +414,7 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
-        /// Collects latest market data records from database.
+        /// Collects latest market data records from database for all supported cryptos.
         /// </summary>
         /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
         public List<MarketDataModel> GetLatestMarketRecords()
@@ -337,9 +432,11 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
-        /// Gets market data for all supported cryptos and creates view models for them.
+        /// Makes a new market data request to CMC API for each supported crypto.
+        /// Places collected data into <see cref="MarketDataModel"/>s.
+        /// Makes a list of collected models.
         /// </summary>
-        /// <returns>List of <see cref="MarketDataModel"/>s</returns>
+        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
         public List<MarketDataModel> GetNewMarketData()
         {
             var modelList = new List<MarketDataModel>();
@@ -409,9 +506,9 @@ namespace CryptoInvestmentSimulator.Controllers
 
         /// <summary>
         /// Makes a Coin Market Cap API request for specified cryptocurrency.
-        /// Executes request and deserializes response into models.
+        /// Executes request and deserializes response into request models.
         /// </summary>
-        /// <param name="crypto"></param>
+        /// <param name="crypto">Data will be collected for this crypto.</param>
         /// <returns>Filled <see cref="Root"/> response model</returns>
         /// <exception cref="Exception"></exception>
         private static Root GetCryptoToEuroData(CryptoEnum crypto)
@@ -441,10 +538,10 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
-        /// Iterates trough each model in received list 
+        /// Iterates trough each model in received model list 
         /// and calls insert procedure for each model to insert data into database.
         /// </summary>
-        /// <param name="modelList"></param>
+        /// <param name="modelList">List of filled <see cref="MarketDataModel"/>s</param>
         public void InsertMarketData(List<MarketDataModel> modelList)
         {
             foreach (var model in modelList)
