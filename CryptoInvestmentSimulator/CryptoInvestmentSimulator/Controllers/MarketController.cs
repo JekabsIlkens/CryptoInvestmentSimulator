@@ -417,7 +417,7 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects latest market data records from database for all supported cryptos.
         /// </summary>
         /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
-        public List<MarketDataModel> GetLatestMarketRecords()
+        private static List<MarketDataModel> GetLatestMarketRecords()
         {
             var modelList = new List<MarketDataModel>
             {
