@@ -5,71 +5,18 @@
 @section Scripts 
 {
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script>
-
-		function get1hChart()
-		{
-			document.getElementById("chartZone1h").style.display = "block";
-			document.getElementById("chartZone4h").style.display = "none";
-			document.getElementById("chartZone8h").style.display = "none";
-			document.getElementById("chartZone24h").style.display = "none";
-		}
-
-		function get4hChart() {
-			document.getElementById("chartZone1h").style.display = "none";
-			document.getElementById("chartZone4h").style.display = "block";
-			document.getElementById("chartZone8h").style.display = "none";
-			document.getElementById("chartZone24h").style.display = "none";
-		}
-
-		function get8hChart() {
-			document.getElementById("chartZone1h").style.display = "none";
-			document.getElementById("chartZone4h").style.display = "none";
-			document.getElementById("chartZone8h").style.display = "block";
-			document.getElementById("chartZone24h").style.display = "none";
-		}
-
-		function get24hChart() {
-			document.getElementById("chartZone1h").style.display = "none";
-			document.getElementById("chartZone4h").style.display = "none";
-			document.getElementById("chartZone8h").style.display = "none";
-			document.getElementById("chartZone24h").style.display = "block";
-		}
-
-		window.addEventListener("load", (event) => 
-		{
-			$('#chartZone1h').load("/Market/BTC1hChart");
-			setInterval(function () { $('#chartZone1h').load("/Market/BTC1hChart"); }, 60000);
-			document.getElementById("chartZone1h").style.display = "block";
-
-			$('#chartZone4h').load("/Market/BTC4hChart");
-			setInterval(function () { $('#chartZone4h').load("/Market/BTC4hChart"); }, 60250);
-			document.getElementById("chartZone4h").style.display = "none";
-
-			$('#chartZone8h').load("/Market/BTC8hChart");
-			setInterval(function () { $('#chartZone8h').load("/Market/BTC8hChart"); }, 60500);
-			document.getElementById("chartZone8h").style.display = "none";
-
-			$('#chartZone24h').load("/Market/BTC24hChart");
-			setInterval(function () { $('#chartZone24h').load("/Market/BTC24hChart"); }, 60750);
-			document.getElementById("chartZone24h").style.display = "none";
-
-			document.getElementById("1h").addEventListener("click", get1hChart);
-			document.getElementById("4h").addEventListener("click", get4hChart);
-			document.getElementById("8h").addEventListener("click", get8hChart);
-			document.getElementById("24h").addEventListener("click", get24hChart);
-		});
-	</script>
+	<script src="~/js/chart_switch.js"></script>
+	<script src="~/js/btc_frames.js"></script>	
 }
 
 <div class="text-center">
 
 	<h1 class="display-4">Bitcoin / Euro</h1>
 
-		<button id="1h" type="button" onclick="get1hChart()" class="btn btn-info">1H</button>
-		<button id="4h" type="button" onclick="get4hChart()" class="btn btn-success">4H</button>
-		<button id="8h" type="button" onclick="get8hChart()" class="btn btn-warning">8H</button>
-		<button id="24h" type="button" onclick="get24hChart()" class="btn btn-danger">24H</button>
+		<button id="1h" type="button" class="btn btn-info">1H</button>
+		<button id="4h" type="button" class="btn btn-success">4H</button>
+		<button id="8h" type="button" class="btn btn-warning">8H</button>
+		<button id="24h" type="button" class="btn btn-danger">24H</button>
 
 		<div id="chartZone1h"></div>
 		<div id="chartZone4h"></div>

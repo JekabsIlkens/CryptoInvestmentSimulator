@@ -118,72 +118,196 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_ChartFour");
         }
 
-        /// <summary>
-        /// Collects Etherium market data history for given cryptocurrency
-        /// and prepares view bags for use in view.
-        /// </summary>
-        /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartETH(CryptoEnum crypto, int rowCount, int everyNth)
+        public IActionResult ETH1hChart()
         {
-            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
-            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 60, 1);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_Chart");
+            return PartialView("_ChartOne");
         }
 
-        /// <summary>
-        /// Collects Cardano market data history for given cryptocurrency
-        /// and prepares view bags for use in view.
-        /// </summary>
-        /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartADA(CryptoEnum crypto, int rowCount, int everyNth)
+        public IActionResult ETH4hChart()
         {
-            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
-            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 240, 4);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_Chart");
+            return PartialView("_ChartTwo");
         }
 
-        /// <summary>
-        /// Collects Cosmos market data history for given cryptocurrency
-        /// and prepares view bags for use in view.
-        /// </summary>
-        /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartATOM(CryptoEnum crypto, int rowCount, int everyNth)
+        public IActionResult ETH8hChart()
         {
-            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
-            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 480, 8);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_Chart");
+            return PartialView("_ChartThree");
         }
 
-        /// <summary>
-        /// Collects Dogecoin market data history for given cryptocurrency
-        /// and prepares view bags for use in view.
-        /// </summary>
-        /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartDOGE(CryptoEnum crypto, int rowCount, int everyNth)
+        public IActionResult ETH24hChart()
         {
-            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
-            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 1440, 24);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_Chart");
+            return PartialView("_ChartFour");
+        }
+
+        [Authorize]
+        public IActionResult ADA1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartOne");
+        }
+
+        [Authorize]
+        public IActionResult ADA4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartTwo");
+        }
+
+        [Authorize]
+        public IActionResult ADA8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartThree");
+        }
+
+        [Authorize]
+        public IActionResult ADA24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartFour");
+        }
+
+        [Authorize]
+        public IActionResult ATOM1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartOne");
+        }
+
+        [Authorize]
+        public IActionResult ATOM4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartTwo");
+        }
+
+        [Authorize]
+        public IActionResult ATOM8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartThree");
+        }
+
+        [Authorize]
+        public IActionResult ATOM24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartFour");
+        }
+
+        [Authorize]
+        public IActionResult DOGE1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartOne");
+        }
+
+        [Authorize]
+        public IActionResult DOGE4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartTwo");
+        }
+
+        [Authorize]
+        public IActionResult DOGE8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartThree");
+        }
+
+        [Authorize]
+        public IActionResult DOGE24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartFour");
         }
 
         /// <summary>
