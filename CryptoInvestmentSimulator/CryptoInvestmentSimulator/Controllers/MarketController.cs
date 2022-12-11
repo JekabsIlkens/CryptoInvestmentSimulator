@@ -36,6 +36,14 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         [Authorize]
+        public IActionResult DataTable()
+        {
+            ViewBag.MarketData = GetLatestMarketRecords();
+
+            return PartialView("_DataTable");
+        }
+
+        [Authorize]
         public IActionResult Bitcoin()
         {
             return View();
