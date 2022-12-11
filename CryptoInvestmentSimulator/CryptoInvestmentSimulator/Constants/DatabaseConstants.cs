@@ -8,6 +8,6 @@
 
         // Table constants
         public static readonly string UserColumns = "username, email, avatar_url, time_zone";
-        public static readonly string MarketDataColumns = "crypto_symbol, fiat_symbol, date_time, value_fiat, daily_change, weekly_change";
+        public static readonly string MarketDataColumns = "crypto_symbol, fiat_symbol, date_time, unit_value, daily_change, weekly_change";
     }
 }

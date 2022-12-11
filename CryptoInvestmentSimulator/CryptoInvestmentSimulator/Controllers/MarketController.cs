@@ -2,7 +2,6 @@
 using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
-using CryptoInvestmentSimulator.Models;
 using CryptoInvestmentSimulator.Models.ResponseModels;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,47 +14,8 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class MarketController : Controller
     {
-        [Authorize]
-        public IActionResult Index()
-        {
-            var marketData = GetMarketData();
-            return View(marketData);
-        }
-
-        [Authorize]
-        public IActionResult Bitcoin()
-        {
-            RunChartSimulator(19200);
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Etherium()
-        {
-            RunChartSimulator(2050);
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Cardano()
-        {
-            RunChartSimulator(434);
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Cosmos()
-        {
-            RunChartSimulator(39);
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Dogecoin()
-        {
-            RunChartSimulator(0.0388);
-            return View();
-        }
+        private static readonly DatabaseContext context = new(DatabaseConstants.Access);
+        private static readonly MarketDataProcedures procedures = new(context);
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -63,38 +23,421 @@ namespace CryptoInvestmentSimulator.Controllers
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public void RunChartSimulator(double pricePoint)
+        [Authorize]
+        public IActionResult Index()
         {
-            var randomizer = new Random();
-            var chartPoints = new List<ChartPointModel>();
+            return View("Index");
+        }
 
-            // Simulator configuration
-            int updateInterval = 1500;
-            var now = DateTime.Now;
-            var mockTime = new DateTime(now.Year, now.Month, now.Day, 16, 25, 00);
-            double timePoint = ((DateTimeOffset)mockTime).ToUnixTimeSeconds() * 1000;
+        [Authorize]
+        public IActionResult Bitcoin()
+        {
+            return View("Bitcoin");
+        }
 
-            for (int i = 0; i < 100; i++)
-            {
-                timePoint += updateInterval;
-                double randomChange = 2.5 + randomizer.NextDouble() * (-2.5 - 2.5);
+        [Authorize]
+        public IActionResult Etherium()
+        {
+            return View("Etherium");
+        }
 
-                // Rounds new price point to two digits and adds it to list 
-                pricePoint = Math.Round((pricePoint + randomChange) * 100) / 100;
-                chartPoints.Add(new ChartPointModel(timePoint, pricePoint));
-            }
+        [Authorize]
+        public IActionResult Cardano()
+        {
+            return View("Cardano");
+        }
 
-            ViewBag.ChartPoints = JsonConvert.SerializeObject(chartPoints);
-            ViewBag.PricePoint = pricePoint;
-            ViewBag.TimePoint = timePoint;
-            ViewBag.UpdateInterval = updateInterval;
+        [Authorize]
+        public IActionResult Cosmos()
+        {
+            return View("Cosmos");
+        }
+
+        [Authorize]
+        public IActionResult Dogecoin()
+        {
+            return View("Dogecoin");
         }
 
         /// <summary>
-        /// Gets market data for all supported cryptos and creates view models for them.
+        /// Partial view for market page data table.
+        /// Gets list of lates marked data view models for each crypto.
+        /// Passes list to ViewBag for dynamic data display.
         /// </summary>
-        /// <returns>List of models</returns>
-        public List<MarketDataModel> GetMarketData()
+        /// <returns>_DataTable partial view with filled ViewBag</returns>
+        [Authorize]
+        public IActionResult DataTable()
+        {
+            ViewBag.MarketData = GetLatestMarketRecords();
+
+            return PartialView("_DataTable");
+        }
+
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
+        [Authorize]
+        public IActionResult BTC1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart1h");
+        }
+
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
+        [Authorize]
+        public IActionResult BTC4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart4h");
+        }
+
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
+        [Authorize]
+        public IActionResult BTC8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart8h");
+        }
+
+        /// <summary>
+        /// Collects Bitcoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
+        [Authorize]
+        public IActionResult BTC24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart24h");
+        }
+
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
+        [Authorize]
+        public IActionResult ETH1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart1h");
+        }
+
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
+        [Authorize]
+        public IActionResult ETH4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart4h");
+        }
+
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
+        [Authorize]
+        public IActionResult ETH8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart8h");
+        }
+
+        /// <summary>
+        /// Collects Etherium market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
+        [Authorize]
+        public IActionResult ETH24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart24h");
+        }
+
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
+        [Authorize]
+        public IActionResult ADA1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart1h");
+        }
+
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
+        [Authorize]
+        public IActionResult ADA4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart4h");
+        }
+
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
+        [Authorize]
+        public IActionResult ADA8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart8h");
+        }
+
+        /// <summary>
+        /// Collects Cardano market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
+        [Authorize]
+        public IActionResult ADA24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart24h");
+        }
+
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
+        [Authorize]
+        public IActionResult ATOM1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart1h");
+        }
+
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
+        [Authorize]
+        public IActionResult ATOM4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart4h");
+        }
+
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
+        [Authorize]
+        public IActionResult ATOM8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart8h");
+        }
+
+        /// <summary>
+        /// Collects Cosmos market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
+        [Authorize]
+        public IActionResult ATOM24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart24h");
+        }
+
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 1h chart</returns>
+        [Authorize]
+        public IActionResult DOGE1hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 60, 1);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart1h");
+        }
+
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 4h chart</returns>
+        [Authorize]
+        public IActionResult DOGE4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart4h");
+        }
+
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 8h chart</returns>
+        [Authorize]
+        public IActionResult DOGE8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart8h");
+        }
+
+        /// <summary>
+        /// Collects Dogecoin market data history for given cryptocurrency
+        /// and prepares view bags for use in dynamic chart generation.
+        /// </summary>
+        /// <returns>Partial view that renders 24h chart</returns>
+        [Authorize]
+        public IActionResult DOGE24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_Chart24h");
+        }
+
+        /// <summary>
+        /// Collects latest market data records from database for all supported cryptos.
+        /// </summary>
+        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
+        private static List<MarketDataModel> GetLatestMarketRecords()
+        {
+            var modelList = new List<MarketDataModel>
+            {
+                procedures.GetLatestMarketData(CryptoEnum.BTC),
+                procedures.GetLatestMarketData(CryptoEnum.ETH),
+                procedures.GetLatestMarketData(CryptoEnum.ADA),
+                procedures.GetLatestMarketData(CryptoEnum.ATOM),
+                procedures.GetLatestMarketData(CryptoEnum.DOGE)
+            };
+
+            return modelList;
+        }
+
+        /// <summary>
+        /// Makes a new market data request to CMC API for each supported crypto.
+        /// Places collected data into <see cref="MarketDataModel"/>s.
+        /// Makes a list of collected models.
+        /// </summary>
+        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
+        public List<MarketDataModel> GetNewMarketData()
         {
             var modelList = new List<MarketDataModel>();
 
@@ -158,12 +501,16 @@ namespace CryptoInvestmentSimulator.Controllers
             };
             modelList.Add(dogeMDM);
 
-            // TODO: Uncomment before merge
-            // InsertMarketData(modelList);
-
             return modelList;
         }
 
+        /// <summary>
+        /// Makes a Coin Market Cap API request for specified cryptocurrency.
+        /// Executes request and deserializes response into request models.
+        /// </summary>
+        /// <param name="crypto">Data will be collected for this crypto.</param>
+        /// <returns>Filled <see cref="Root"/> response model</returns>
+        /// <exception cref="Exception"></exception>
         private static Root GetCryptoToEuroData(CryptoEnum crypto)
         {
             var request = new RestRequest(CoinMarketCapApiConstants.LatestQuotesTest, Method.Get);
@@ -190,14 +537,16 @@ namespace CryptoInvestmentSimulator.Controllers
             return responseModel;
         }
 
-        private static void InsertMarketData(List<MarketDataModel> modelList)
+        /// <summary>
+        /// Iterates trough each model in received model list 
+        /// and calls insert procedure for each model to insert data into database.
+        /// </summary>
+        /// <param name="modelList">List of filled <see cref="MarketDataModel"/>s</param>
+        public void InsertMarketData(List<MarketDataModel> modelList)
         {
-            var context = new DatabaseContext(DatabaseConstants.Access);
-            var procedure = new MarketDataProcedures(context);
-
             foreach (var model in modelList)
             {
-                procedure.InsertNewMarketDataEntry(model);
+                procedures.InsertNewMarketDataEntry(model);
             }
         }
     }

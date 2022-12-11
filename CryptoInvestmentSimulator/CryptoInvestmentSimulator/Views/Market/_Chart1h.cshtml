@@ -1,0 +1,46 @@
+﻿
+<script>
+	// Collects time and price point arrays from ViewBag.
+	// Converts them into JavaScript compatible arrays.
+	// Generates new chart by using timeArray as x and priceArray as y.
+
+	var prices = @Html.Raw(Json.Serialize(ViewBag.PricePoints));
+	var priceArray = [];
+	for (var i = 0; i < 60; i++) {
+		priceArray[i] = prices[i];
+	}
+
+	var times = @Html.Raw(Json.Serialize(ViewBag.TimePoints));
+	var timeArray = [];
+	for (var i = 0; i < 60; i++) {
+		let date = new Date(times[i]);
+		timeArray[i] = date.toLocaleTimeString();
+	}
+
+	var ctx = document.getElementById("chart1h");
+
+	new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: timeArray,
+			datasets: [{
+				label: 'Euro',
+				data: priceArray,
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			},
+			animation: {
+				duration: 0
+			}
+		}
+	});
+</script>
+
+<!-- Display area for generated chart canvas. -->
+<div><canvas id="chart1h"></canvas></div>

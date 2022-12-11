@@ -1,13 +1,14 @@
-﻿using CryptoInvestmentSimulator.Models.ViewModels;
+﻿using CryptoInvestmentSimulator.Enums;
+using CryptoInvestmentSimulator.Models.ViewModels;
 
 namespace UnitTests.Mocks
 {
     public class ModelMock
     {
         /// <summary>
-        /// Creates a user model filled with valid mock data.
+        /// Creates a <see cref="UserModel"/> filled with valid mock data.
         /// </summary>
-        /// <returns>Filled user model</returns>
+        /// <returns>Filled <see cref="UserModel"/></returns>
         public static UserModel GetValidUserModel()
         {
             return new UserModel()
@@ -22,9 +23,9 @@ namespace UnitTests.Mocks
         }
 
         /// <summary>
-        /// Creates a user model filled with invalid values.
+        /// Creates a <see cref="UserModel"/> filled with invalid values.
         /// </summary>
-        /// <returns>Filled user model</returns>
+        /// <returns>Filled <see cref="UserModel"/></returns>
         public static UserModel GetInvalidUserModel()
         {
             return new UserModel()
@@ -35,6 +36,42 @@ namespace UnitTests.Mocks
                 AvatarUrl = "",
                 IsVerified = false,
                 TimeZone = ""
+            };
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MarketDataModel"/> filled with valid values.
+        /// Sets collection to date time in past.
+        /// </summary>
+        /// <returns>Filled <see cref="MarketDataModel"/></returns>
+        public static MarketDataModel GetValidMarketDataModelOld()
+        {
+            return new MarketDataModel()
+            {
+                CryptoSymbol = CryptoEnum.BTC.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now.AddDays(-1),
+                FiatPricePerUnit = 0.021599M,
+                PercentChange24h = 25.00M,
+                PercentChange7d = 45.00M
+            };
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MarketDataModel"/> filled with valid values.
+        /// Sets collection date to current date time.
+        /// </summary>
+        /// <returns>Filled <see cref="MarketDataModel"/></returns>
+        public static MarketDataModel GetValidMarketDataModelNew()
+        {
+            return new MarketDataModel()
+            {
+                CryptoSymbol = CryptoEnum.BTC.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
+                CollectionDateTime = DateTime.Now,
+                FiatPricePerUnit = 0.091599M,
+                PercentChange24h = 15.00M,
+                PercentChange7d = 85.00M
             };
         }
     }
