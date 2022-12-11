@@ -87,7 +87,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartOne");
+            return PartialView("_Chart1h");
         }
 
         [Authorize]
@@ -99,7 +99,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartTwo");
+            return PartialView("_Chart4h");
         }
 
         [Authorize]
@@ -111,7 +111,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartThree");
+            return PartialView("_Chart8h");
         }
 
         [Authorize]
@@ -123,7 +123,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartFour");
+            return PartialView("_Chart24h");
         }
 
         [Authorize]
@@ -135,7 +135,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartOne");
+            return PartialView("_Chart1h");
         }
 
         [Authorize]
@@ -147,7 +147,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartTwo");
+            return PartialView("_Chart4h");
         }
 
         [Authorize]
@@ -159,7 +159,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartThree");
+            return PartialView("_Chart8h");
         }
 
         [Authorize]
@@ -171,7 +171,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartFour");
+            return PartialView("_Chart24h");
         }
 
         [Authorize]
@@ -183,7 +183,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartOne");
+            return PartialView("_Chart1h");
         }
 
         [Authorize]
@@ -195,7 +195,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartTwo");
+            return PartialView("_Chart4h");
         }
 
         [Authorize]
@@ -207,7 +207,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartThree");
+            return PartialView("_Chart8h");
         }
 
         [Authorize]
@@ -219,7 +219,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartFour");
+            return PartialView("_Chart24h");
         }
 
         [Authorize]
@@ -231,7 +231,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartOne");
+            return PartialView("_Chart1h");
         }
 
         [Authorize]
@@ -243,7 +243,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartTwo");
+            return PartialView("_Chart4h");
         }
 
         [Authorize]
@@ -255,7 +255,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartThree");
+            return PartialView("_Chart8h");
         }
 
         [Authorize]
@@ -267,7 +267,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartFour");
+            return PartialView("_Chart24h");
         }
 
         [Authorize]
@@ -279,7 +279,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartOne");
+            return PartialView("_Chart1h");
         }
 
         [Authorize]
@@ -291,7 +291,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartTwo");
+            return PartialView("_Chart4h");
         }
 
         [Authorize]
@@ -303,7 +303,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartThree");
+            return PartialView("_Chart8h");
         }
 
         [Authorize]
@@ -315,7 +315,7 @@ namespace CryptoInvestmentSimulator.Controllers
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_ChartFour");
+            return PartialView("_Chart24h");
         }
 
         /// <summary>
