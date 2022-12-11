@@ -71,15 +71,51 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </summary>
         /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartBTC()
+        public IActionResult BTC1hChart()
         {
-            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 80);
-            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 80);
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 60, 1);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 60, 1);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
 
-            return PartialView("_Chart");
+            return PartialView("_ChartOne");
+        }
+
+        [Authorize]
+        public IActionResult BTC4hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 240, 4);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 240, 4);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartTwo");
+        }
+
+        [Authorize]
+        public IActionResult BTC8hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 480, 8);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 480, 8);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartThree");
+        }
+
+        [Authorize]
+        public IActionResult BTC24hChart()
+        {
+            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.BTC, 1440, 24);
+            var timePoints = procedures.GetTimePointHistory(CryptoEnum.BTC, 1440, 24);
+
+            ViewBag.PricePoints = pricePoints;
+            ViewBag.TimePoints = timePoints;
+
+            return PartialView("_ChartFour");
         }
 
         /// <summary>
@@ -88,10 +124,10 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </summary>
         /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartETH()
+        public IActionResult ChartETH(CryptoEnum crypto, int rowCount, int everyNth)
         {
-            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ETH, 80);
-            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ETH, 80);
+            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
+            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
@@ -105,10 +141,10 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </summary>
         /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartADA()
+        public IActionResult ChartADA(CryptoEnum crypto, int rowCount, int everyNth)
         {
-            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ADA, 80);
-            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ADA, 80);
+            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
+            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
@@ -122,10 +158,10 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </summary>
         /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartATOM()
+        public IActionResult ChartATOM(CryptoEnum crypto, int rowCount, int everyNth)
         {
-            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.ATOM, 80);
-            var timePoints = procedures.GetTimePointHistory(CryptoEnum.ATOM, 80);
+            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
+            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
@@ -139,10 +175,10 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </summary>
         /// <returns>Partial view that renders chart</returns>
         [Authorize]
-        public IActionResult ChartDOGE()
+        public IActionResult ChartDOGE(CryptoEnum crypto, int rowCount, int everyNth)
         {
-            var pricePoints = procedures.GetPricePointHistory(CryptoEnum.DOGE, 80);
-            var timePoints = procedures.GetTimePointHistory(CryptoEnum.DOGE, 80);
+            var pricePoints = procedures.GetPricePointHistory(crypto, rowCount, everyNth);
+            var timePoints = procedures.GetTimePointHistory(crypto, rowCount, everyNth);
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;

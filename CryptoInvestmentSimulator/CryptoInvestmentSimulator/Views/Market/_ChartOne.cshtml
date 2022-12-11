@@ -1,0 +1,41 @@
+﻿
+<script>
+	var prices = @Html.Raw(Json.Serialize(ViewBag.PricePoints));
+	var priceArray = [];
+	for (var i = 0; i < 60; i++) {
+		priceArray[i] = prices[i];
+	}
+
+	var times = @Html.Raw(Json.Serialize(ViewBag.TimePoints));
+	var timeArray = [];
+	for (var i = 0; i < 60; i++) {
+		let date = new Date(times[i]);
+		timeArray[i] = date.toLocaleTimeString();
+	}
+
+	var ctx = document.getElementById("myChart1");
+
+	new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: timeArray,
+			datasets: [{
+				label: 'Euro: ',
+				data: priceArray,
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			},
+			animation: {
+				duration: 0
+			}
+		}
+	});
+</script>
+
+<div><canvas id="myChart1"></canvas></div>

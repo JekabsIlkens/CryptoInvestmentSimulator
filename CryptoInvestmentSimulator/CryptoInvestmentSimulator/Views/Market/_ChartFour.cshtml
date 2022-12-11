@@ -2,18 +2,18 @@
 <script>
 	var prices = @Html.Raw(Json.Serialize(ViewBag.PricePoints));
 	var priceArray = [];
-	for (var i = 0; i < 80; i++) {
+	for (var i = 0; i < 60; i++) {
 		priceArray[i] = prices[i];
 	}
 
 	var times = @Html.Raw(Json.Serialize(ViewBag.TimePoints));
 	var timeArray = [];
-	for (var i = 0; i < 80; i++) {
+	for (var i = 0; i < 60; i++) {
 		let date = new Date(times[i]);
 		timeArray[i] = date.toLocaleTimeString();
 	}
 
-	var ctx = document.getElementById("myChart");
+	var ctx = document.getElementById("myChart4");
 
 	new Chart(ctx, {
 		type: 'line',
@@ -38,5 +38,4 @@
 	});
 </script>
 
-<div><canvas id="myChart" width="600" height="300"></canvas></div>
-
+<div><canvas id="myChart4"></canvas></div>

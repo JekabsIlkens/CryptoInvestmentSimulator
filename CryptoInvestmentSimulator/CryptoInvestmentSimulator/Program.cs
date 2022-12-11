@@ -11,7 +11,7 @@ internal class Program
     /// </summary>
     static void OnStartedActions()
     {
-        var timer = new System.Timers.Timer { Interval = 5000 };
+        var timer = new System.Timers.Timer { Interval = 60000 };
         timer.Elapsed += GetNewMarketData;
         timer.Start();
     }

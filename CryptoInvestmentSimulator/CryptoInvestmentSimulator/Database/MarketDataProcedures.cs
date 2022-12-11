@@ -44,11 +44,12 @@ namespace CryptoInvestmentSimulator.Database
         /// Collects specified amount of historical price points
         /// into an array for specified cryptocurrency.
         /// </summary>
-        /// <param name="crypto"></param>
-        /// <param name="rowCount"></param>
+        /// <param name="crypto">Which crpto data</param>
+        /// <param name="rowCount">How many rows to return</param>
+        /// <param name="everyNth">Will use evert nth row</param>
         /// <returns>Array of price points of type double</returns>
         /// <exception cref="ArgumentException"></exception>
-        public double[] GetPricePointHistory(CryptoEnum crypto, int rowCount)
+        public double[] GetPricePointHistory(CryptoEnum crypto, int rowCount, int everyNth)
         {
             if (rowCount <= 0)
             {
@@ -62,7 +63,7 @@ namespace CryptoInvestmentSimulator.Database
                 connection.Open();
                 MySqlCommand command = new(
                     $"SELECT unit_value FROM " +
-                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
+                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' AND data_id mod {everyNth} = 0 ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
                     $"ORDER BY data_id ASC ", 
                     connection);
 
@@ -87,11 +88,12 @@ namespace CryptoInvestmentSimulator.Database
         /// Collects specified amount of historical date/time points
         /// into an array for specified cryptocurrency.
         /// </summary>
-        /// <param name="crypto"></param>
-        /// <param name="rowCount"></param>
+        /// <param name="crypto">Which crpto data</param>
+        /// <param name="rowCount">How many rows to return</param>
+        /// <param name="everyNth">Will use evert nth row</param>
         /// <returns>Array of date/time points of type long</returns>
         /// <exception cref="ArgumentException"></exception>
-        public long[] GetTimePointHistory(CryptoEnum crypto, int rowCount)
+        public long[] GetTimePointHistory(CryptoEnum crypto, int rowCount, int everyNth)
         {
             if (rowCount <= 0)
             {
@@ -105,7 +107,7 @@ namespace CryptoInvestmentSimulator.Database
                 connection.Open();
                 MySqlCommand command = new(
                     $"SELECT date_time FROM " +
-                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
+                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' AND data_id mod {everyNth} = 0 ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
                     $"ORDER BY data_id ASC ",
                     connection);
 
