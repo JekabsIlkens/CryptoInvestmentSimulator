@@ -1,5 +1,6 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Database;
+using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,11 +59,11 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var user = new UserModel()
             {
-                Username = "NewUser",
                 Email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value,
-                AvatarUrl = "https://i.postimg.cc/N0cRgFj7/missing-avtr.png",
-                IsVerified = false,
-                TimeZone = "GMT+02:00"
+                Verified = 0,
+                Username = "NewUser",
+                Avatar = "https://i.postimg.cc/N0cRgFj7/missing-avtr.png",
+                TimeZone = (int)TimeZoneEnum.Plus02
             };
 
             procedures.InsertNewUser(user);

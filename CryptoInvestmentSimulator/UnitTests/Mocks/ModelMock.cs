@@ -13,11 +13,11 @@ namespace UnitTests.Mocks
         {
             return new UserModel()
             {
-                UserId = 1,
+                Id = 1,
                 Username = "mock-name",
                 Email = "mock-email",
-                AvatarUrl = "mock-url",
-                IsVerified = false,
+                Avatar = "mock-url",
+                Verified = 0,
                 TimeZone = "mock-zone"
             };
         }
@@ -30,11 +30,11 @@ namespace UnitTests.Mocks
         {
             return new UserModel()
             {
-                UserId = -15,
+                Id = -15,
                 Username = "",
                 Email = "",
-                AvatarUrl = "",
-                IsVerified = false,
+                Avatar = "",
+                Verified = -4,
                 TimeZone = ""
             };
         }

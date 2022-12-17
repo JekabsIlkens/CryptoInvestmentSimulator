@@ -1,9 +1,9 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Database;
+using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -45,7 +45,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             procedures.UpdateUsername(email, username);
             procedures.UpdateAvatar(email, avatar);
-            procedures.UpdateTimeZone(email, timezone);
+            procedures.UpdateTimeZone(email, ForeignKeyConversionHelper.TimeZoneStringToFK(timezone));
 
             var user = GetUserDetails();
 

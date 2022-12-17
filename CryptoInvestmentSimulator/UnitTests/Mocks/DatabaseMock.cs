@@ -52,7 +52,7 @@ namespace UnitTests.Mocks
 
             // Create a insertable value strings for conveniance.
             var mockUser = ModelMock.GetValidUserModel();
-            var userValues = $"{mockUser.UserId}, '{mockUser.Username}', '{mockUser.Email}', '{mockUser.AvatarUrl}', 0, '{mockUser.TimeZone}'";
+            var userValues = $"{mockUser.Id}, '{mockUser.Username}', '{mockUser.Email}', '{mockUser.Avatar}', 0, '{mockUser.TimeZone}'";
 
             var mockMarketDataOld = ModelMock.GetValidMarketDataModelOld();
             var formatedDateOld = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataOld.CollectionDateTime);

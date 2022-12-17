@@ -2,10 +2,10 @@
 {
     public enum CryptoEnum
     {
-        BTC = 0,
-        ETH = 1,
-        ATOM = 2,
-        ADA = 3,
-        DOGE = 4
+        BTC = 1,
+        ETH = 2,
+        ATOM = 3,
+        ADA = 4,
+        DOGE = 5
     }
 }

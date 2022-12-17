@@ -14,9 +14,9 @@ CREATE TABLE `time_zone` (
 CREATE TABLE `user` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(45) NOT NULL,
-  `username` varchar(16) NOT NULL,
-  `avatar_url` varchar(512) NOT NULL,
   `verified` int NOT NULL,
+  `username` varchar(16) NOT NULL,
+  `avatar` varchar(512) NOT NULL,
   `zone_id` int NOT NULL,
   PRIMARY KEY (`user_id`),
   KEY `fk_user_time_zone_idx` (`zone_id`),
