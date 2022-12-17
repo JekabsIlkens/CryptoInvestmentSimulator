@@ -55,14 +55,14 @@ namespace UnitTests.Mocks
             var userValues = $"{mockUser.Id}, '{mockUser.Username}', '{mockUser.Email}', '{mockUser.Avatar}', 0, '{mockUser.TimeZone}'";
 
             var mockMarketDataOld = ModelMock.GetValidMarketDataModelOld();
-            var formatedDateOld = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataOld.CollectionDateTime);
+            var formatedDateOld = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataOld.CollectionTime);
             var marketDataValuesOld = $"1, '{mockMarketDataOld.CryptoSymbol}', '{mockMarketDataOld.FiatSymbol}', '{formatedDateOld}', " +
-                $"{mockMarketDataOld.FiatPricePerUnit}, {mockMarketDataOld.PercentChange24h}, {mockMarketDataOld.PercentChange7d}";
+                $"{mockMarketDataOld.UnitValue}, {mockMarketDataOld.Change24h}, {mockMarketDataOld.Change7d}";
 
             var mockMarketDataNew = ModelMock.GetValidMarketDataModelNew();
-            var formatedDateNew = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataNew.CollectionDateTime);
+            var formatedDateNew = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataNew.CollectionTime);
             var marketDataValuesNew = $"2, '{mockMarketDataNew.CryptoSymbol}', '{mockMarketDataNew.FiatSymbol}', '{formatedDateNew}', " +
-                $"{mockMarketDataNew.FiatPricePerUnit}, {mockMarketDataNew.PercentChange24h}, {mockMarketDataNew.PercentChange7d}";
+                $"{mockMarketDataNew.UnitValue}, {mockMarketDataNew.Change24h}, {mockMarketDataNew.Change7d}";
 
             // Insert mock data
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),

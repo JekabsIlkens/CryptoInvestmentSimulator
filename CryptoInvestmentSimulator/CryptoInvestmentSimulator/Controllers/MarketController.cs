@@ -444,60 +444,60 @@ namespace CryptoInvestmentSimulator.Controllers
             var btcFullData = GetCryptoToEuroData(CryptoEnum.BTC);
             var btcMDM = new MarketDataModel()
             {
-                CryptoSymbol = btcFullData.Data.Bitcoin.Symbol,
-                FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
-                PercentChange24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
-                PercentChange7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
+                CollectionTime = DateTime.Now,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
+                Crypto = (int)CryptoEnum.BTC,
+                Fiat = (int)FiatEnum.EUR,
             };
             modelList.Add(btcMDM);
 
             var ethFullData = GetCryptoToEuroData(CryptoEnum.ETH);
             var ethMDM = new MarketDataModel()
             {
-                CryptoSymbol = ethFullData.Data.Etherium.Symbol,
-                FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
-                PercentChange24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
-                PercentChange7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
+                CollectionTime = DateTime.Now,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
+                Crypto = (int)CryptoEnum.ETH,
+                Fiat = (int)FiatEnum.EUR,
             };
             modelList.Add(ethMDM);
-
-            var atomFullData = GetCryptoToEuroData(CryptoEnum.ATOM);
-            var atomMDM = new MarketDataModel()
-            {
-                CryptoSymbol = atomFullData.Data.Cosmos.Symbol,
-                FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
-                PercentChange24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
-                PercentChange7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
-            };
-            modelList.Add(atomMDM);
 
             var adaFullData = GetCryptoToEuroData(CryptoEnum.ADA);
             var adaMDM = new MarketDataModel()
             {
-                CryptoSymbol = adaFullData.Data.Cardano.Symbol,
-                FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
-                PercentChange24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
-                PercentChange7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
+                CollectionTime = DateTime.Now,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
+                Crypto = (int)CryptoEnum.ADA,
+                Fiat = (int)FiatEnum.EUR,
             };
             modelList.Add(adaMDM);
+
+            var atomFullData = GetCryptoToEuroData(CryptoEnum.ATOM);
+            var atomMDM = new MarketDataModel()
+            {
+                CollectionTime = DateTime.Now,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
+                Crypto = (int)CryptoEnum.ATOM,
+                Fiat = (int)FiatEnum.EUR,
+            };
+            modelList.Add(atomMDM);
 
             var dogeFullData = GetCryptoToEuroData(CryptoEnum.DOGE);
             var dogeMDM = new MarketDataModel()
             {
-                CryptoSymbol = dogeFullData.Data.Dogecoin.Symbol,
-                FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
-                PercentChange24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
-                PercentChange7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
+                CollectionTime = DateTime.Now,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
+                Crypto = (int)CryptoEnum.DOGE,
+                Fiat = (int)FiatEnum.EUR,
             };
             modelList.Add(dogeMDM);
 

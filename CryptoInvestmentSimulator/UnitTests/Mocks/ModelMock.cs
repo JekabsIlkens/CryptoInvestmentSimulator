@@ -50,10 +50,10 @@ namespace UnitTests.Mocks
             {
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now.AddDays(-1),
-                FiatPricePerUnit = 0.021599M,
-                PercentChange24h = 25.00M,
-                PercentChange7d = 45.00M
+                CollectionTime = DateTime.Now.AddDays(-1),
+                UnitValue = 0.021599M,
+                Change24h = 25.00M,
+                Change7d = 45.00M
             };
         }
 
@@ -68,10 +68,10 @@ namespace UnitTests.Mocks
             {
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = 0.091599M,
-                PercentChange24h = 15.00M,
-                PercentChange7d = 85.00M
+                CollectionTime = DateTime.Now,
+                UnitValue = 0.091599M,
+                Change24h = 15.00M,
+                Change7d = 85.00M
             };
         }
     }
