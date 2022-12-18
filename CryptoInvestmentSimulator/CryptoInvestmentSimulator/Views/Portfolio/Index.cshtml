@@ -11,21 +11,52 @@
 
 <div class="text-center">
     <h1 class="display-4">Your Portfolio Page</h1>  
+
     <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="@Model.Avatar" width="150" height="150" />
+        <div class="col-4">
+            <img src="@Model.Avatar" width="150" height="150" />
 
-                    <h3>Your account details</h3>
+            <h3>Your account details</h3>
+            <p> <strong>Username:</strong> @Model.Username </p>
+            <p> <strong>Email:</strong> @Model.Email </p>
+            <p> <strong>Time zone:</strong> @Model.TimeZone </p>
 
-                    <p> <strong>Username:</strong> @Model.Username </p>
-                    <p> <strong>Email:</strong> @Model.Email </p>
-                    <p> <strong>Time zone:</strong> @Model.TimeZone </p>
+            <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
+        </div>
 
-                    <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
+        @if (Model.Verified == 1)
+        {
+            <div class="col-8">
+                <div class="bg-info">Capital growth!</div>
+            </div>
+        }
+        else
+        {
+            <div class="col-8">
+                <div class="bg-danger">
+                    <h2>LOCKED</h2>
+                    <p>Please verify your email address to unlock your portfolio!</p>
+                    <ol>
+                        <li>Logout of Cryptocurrency Investment Simulator</li>
+                        <li>Go to the email asociated with this account</li>
+                        <li>Accept the verification email by clicking the button or opening link</li>
+                        <li>Reconnect to Cryptocurrency Investment Simulator</li>
+                    </ol>
                 </div>
             </div>
-        </div>
+        }
     </div>
+
+    @if (Model.Verified == 1)
+    {
+        <div class="row">
+            <div class="col-4">
+                <div class="bg-warning">Wallet pie!</div>
+            </div>
+
+            <div class="col-8">
+                <div class="bg-success">Investment list!</div>
+            </div>
+        </div>
+    }
 </div>
