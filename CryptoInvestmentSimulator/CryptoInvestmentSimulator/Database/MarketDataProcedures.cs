@@ -28,9 +28,11 @@ namespace CryptoInvestmentSimulator.Database
             }
 
             var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(marketDataModel.CollectionTime);
+            var cryptoKey = DbKeyConversionHelper.CryptoSymbolToDbKey(marketDataModel.CryptoSymbol);
+            var fiatKey = DbKeyConversionHelper.FiatSymbolToDbKey(marketDataModel.FiatSymbol);
 
             var valuesString = $"'{formattedDateTime}', {marketDataModel.UnitValue}, {marketDataModel.Change24h}, " +
-                $"{marketDataModel.Change7d}, {marketDataModel.Crypto}, {marketDataModel.Fiat}";
+                $"{marketDataModel.Change7d}, {cryptoKey}, {fiatKey}";
 
             using (MySqlConnection connection = context.GetConnection())
             {
@@ -72,8 +74,11 @@ namespace CryptoInvestmentSimulator.Database
                         var weeklyChange = reader.GetValue(reader.GetOrdinal("weekly_change")).ToString();
                         marketDataModel.Change7d = decimal.Parse(weeklyChange);
 
-                        marketDataModel.Crypto = (int)reader.GetValue(reader.GetOrdinal("crypto_id"));
-                        marketDataModel.Fiat = (int)reader.GetValue(reader.GetOrdinal("fiat_id"));
+                        var cryptoSymbol = DbKeyConversionHelper.CryptoKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("crypto_id")));
+                        var fiatSymbol = DbKeyConversionHelper.FiatKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("fiat_id")));
+
+                        marketDataModel.CryptoSymbol = cryptoSymbol;
+                        marketDataModel.FiatSymbol = fiatSymbol;
                     }
                 }
             }

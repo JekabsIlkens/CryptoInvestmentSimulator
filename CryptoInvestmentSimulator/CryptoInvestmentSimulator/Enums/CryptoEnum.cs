@@ -4,8 +4,8 @@
     {
         BTC = 1,
         ETH = 2,
-        ATOM = 3,
-        ADA = 4,
+        ADA = 3,
+        ATOM = 4,
         DOGE = 5
     }
 }

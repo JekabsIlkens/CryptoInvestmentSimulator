@@ -63,7 +63,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 Verified = 0,
                 Username = "NewUser",
                 Avatar = "https://i.postimg.cc/N0cRgFj7/missing-avtr.png",
-                TimeZone = (int)TimeZoneEnum.Plus02
+                TimeZone = "GMT-02:00"
             };
 
             procedures.InsertNewUser(user);

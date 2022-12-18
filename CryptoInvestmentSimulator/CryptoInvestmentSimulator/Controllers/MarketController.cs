@@ -448,8 +448,8 @@ namespace CryptoInvestmentSimulator.Controllers
                 UnitValue = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
-                Crypto = (int)CryptoEnum.BTC,
-                Fiat = (int)FiatEnum.EUR,
+                CryptoSymbol = CryptoEnum.BTC.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(btcMDM);
 
@@ -460,8 +460,8 @@ namespace CryptoInvestmentSimulator.Controllers
                 UnitValue = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
-                Crypto = (int)CryptoEnum.ETH,
-                Fiat = (int)FiatEnum.EUR,
+                CryptoSymbol = CryptoEnum.ETH.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(ethMDM);
 
@@ -472,8 +472,8 @@ namespace CryptoInvestmentSimulator.Controllers
                 UnitValue = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
-                Crypto = (int)CryptoEnum.ADA,
-                Fiat = (int)FiatEnum.EUR,
+                CryptoSymbol = CryptoEnum.ADA.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(adaMDM);
 
@@ -484,8 +484,8 @@ namespace CryptoInvestmentSimulator.Controllers
                 UnitValue = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
-                Crypto = (int)CryptoEnum.ATOM,
-                Fiat = (int)FiatEnum.EUR,
+                CryptoSymbol = CryptoEnum.ATOM.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(atomMDM);
 
@@ -496,8 +496,8 @@ namespace CryptoInvestmentSimulator.Controllers
                 UnitValue = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
-                Crypto = (int)CryptoEnum.DOGE,
-                Fiat = (int)FiatEnum.EUR,
+                CryptoSymbol = CryptoEnum.DOGE.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(dogeMDM);
 

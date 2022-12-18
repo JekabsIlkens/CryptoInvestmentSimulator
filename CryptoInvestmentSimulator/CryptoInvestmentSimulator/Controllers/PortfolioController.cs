@@ -45,7 +45,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             procedures.UpdateUsername(email, username);
             procedures.UpdateAvatar(email, avatar);
-            procedures.UpdateTimeZone(email, ForeignKeyConversionHelper.TimeZoneStringToFK(timezone));
+            procedures.UpdateTimeZone(email, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
 
             var user = GetUserDetails();
 

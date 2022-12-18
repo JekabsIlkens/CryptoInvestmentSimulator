@@ -12,6 +12,6 @@
 
         public string Avatar { get; set; }
 
-        public int TimeZone { get; set; }
+        public string TimeZone { get; set; }
     }
 }

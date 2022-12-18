@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using MySql.Data.MySqlClient;
 
@@ -40,7 +41,9 @@ namespace CryptoInvestmentSimulator.Database
                         user.Verified = reader.GetInt32("verified");
                         user.Username = reader.GetString("username");
                         user.Avatar = reader.GetString("avatar");
-                        user.TimeZone = reader.GetInt32("zone_id");
+
+                        var timeZoneString = DbKeyConversionHelper.TimeZoneKeyToString(reader.GetInt32("zone_id"));
+                        user.TimeZone = timeZoneString;
                     }
                 }
             }
@@ -63,7 +66,8 @@ namespace CryptoInvestmentSimulator.Database
 
             if (!DoesUserExist(userModel.Email))
             {
-                var valuesString = $"'{userModel.Email}', {userModel.Verified}, '{userModel.Username}', '{userModel.Avatar}', {userModel.TimeZone}";
+                var timeZoneKey = DbKeyConversionHelper.TimeZoneToDbKey(userModel.TimeZone);
+                var valuesString = $"'{userModel.Email}', {userModel.Verified}, '{userModel.Username}', '{userModel.Avatar}', {timeZoneKey}";
 
                 using (var connection = context.GetConnection())
                 {
