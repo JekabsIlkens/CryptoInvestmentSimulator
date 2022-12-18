@@ -14,11 +14,11 @@ namespace UnitTests.Mocks
             return new UserModel()
             {
                 Id = 1,
-                Username = "mock-name",
                 Email = "mock-email",
-                Avatar = "mock-url",
                 Verified = 0,
-                TimeZone = "mock-zone"
+                Username = "mock-name",
+                Avatar = "mock-url",
+                TimeZone = "GMT-09:00"
             };
         }
 
@@ -31,10 +31,10 @@ namespace UnitTests.Mocks
             return new UserModel()
             {
                 Id = -15,
-                Username = "",
                 Email = "",
-                Avatar = "",
                 Verified = -4,
+                Username = "",
+                Avatar = "",
                 TimeZone = ""
             };
         }
@@ -48,12 +48,13 @@ namespace UnitTests.Mocks
         {
             return new MarketDataModel()
             {
-                CryptoSymbol = CryptoEnum.BTC.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
+                Id = 1,
                 CollectionTime = DateTime.Now.AddDays(-1),
                 UnitValue = 0.021599M,
                 Change24h = 25.00M,
-                Change7d = 45.00M
+                Change7d = 45.00M,
+                CryptoSymbol = CryptoEnum.BTC.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
         }
 
@@ -66,12 +67,13 @@ namespace UnitTests.Mocks
         {
             return new MarketDataModel()
             {
-                CryptoSymbol = CryptoEnum.BTC.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
+                Id = 2,
                 CollectionTime = DateTime.Now,
                 UnitValue = 0.091599M,
                 Change24h = 15.00M,
-                Change7d = 85.00M
+                Change7d = 85.00M,
+                CryptoSymbol = CryptoEnum.BTC.ToString(),
+                FiatSymbol = FiatEnum.EUR.ToString(),
             };
         }
     }

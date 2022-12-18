@@ -1,4 +1,5 @@
-﻿using CryptoInvestmentSimulator.Helpers;
+﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Helpers;
 using MySql.Data.MySqlClient;
 using MySql.Server;
 
@@ -23,56 +24,98 @@ namespace UnitTests.Mocks
             // Creates a mock database.
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString(), "CREATE DATABASE test;");
 
-            // Creates a mock users table.
+            // Creates a mock time zone table.
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
-                "CREATE TABLE `users` (" +
-                "`user_id` int NOT NULL AUTO_INCREMENT, " +
-                "`username` varchar(45) NOT NULL, " +
-                "`email` varchar(45) NOT NULL, " +
-                "`avatar_url` varchar(512) DEFAULT NULL, " +
-                "`is_verified` int NOT NULL DEFAULT '0', " +
-                "`time_zone` varchar(10) NOT NULL, " +
-                "PRIMARY KEY (`user_id`))");
+                "CREATE TABLE `time_zone` (" +
+                "`zone_id` int NOT NULL AUTO_INCREMENT, " +
+                "`change` int NOT NULL, " +
+                "PRIMARY KEY (`zone_id`))");
 
-            // Creates a mock market_data table.
+            // Creates a mock user table.
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
+                "CREATE TABLE `user` (" +
+                "`user_id` int NOT NULL AUTO_INCREMENT, " +
+                "`email` varchar(45) NOT NULL, " +
+                "`verified` int NOT NULL, " +
+                "`username` varchar(16) NOT NULL, " +
+                "`avatar` varchar(512) NOT NULL, " +
+                "`zone_id` int NOT NULL, " +
+                "PRIMARY KEY (`user_id`), " +
+                "KEY `fk_user_time_zone_idx` (`zone_id`), " +
+                "CONSTRAINT `fk_user_time_zone` FOREIGN KEY (`zone_id`) REFERENCES `time_zone` (`zone_id`))");
+
+            // Creates a mock crypto symbol table.
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
+                "CREATE TABLE `crypto_symbol` (" +
+                "`crypto_id` int NOT NULL AUTO_INCREMENT, " +
+                "`symbol` varchar(4) NOT NULL, " +
+                "PRIMARY KEY (`crypto_id`))");
+
+            // Creates a mock fiat symbol table.
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
+                "CREATE TABLE `fiat_symbol` (" +
+                "`fiat_id` int NOT NULL AUTO_INCREMENT, " +
+                "`symbol` varchar(4) NOT NULL, " +
+                "PRIMARY KEY (`fiat_id`))");
+
+            // Creates a mock market data table.
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
                 "CREATE TABLE `market_data` (" +
                 "`data_id` int NOT NULL AUTO_INCREMENT, " +
-                "`crypto_symbol` varchar(4) NOT NULL, " +
-                "`fiat_symbol` varchar(4) NOT NULL, " +
                 "`date_time` datetime NOT NULL, " +
                 "`unit_value` decimal(12,6) NOT NULL, " +
                 "`daily_change` decimal(6,2) NOT NULL, " +
                 "`weekly_change` decimal(6,2) NOT NULL, " +
-                "PRIMARY KEY (`data_id`))");
+                "`crypto_id` int NOT NULL, " +
+                "`fiat_id` int NOT NULL, " +
+                "PRIMARY KEY (`data_id`), " +
+                "KEY `fk_market_data_crypto_symbol1_idx` (`crypto_id`), " +
+                "KEY `fk_market_data_fiat_symbol1_idx` (`fiat_id`), " +
+                "CONSTRAINT `fk_market_data_crypto_symbol1` FOREIGN KEY(`crypto_id`) REFERENCES `crypto_symbol` (`crypto_id`), " +
+                "CONSTRAINT `fk_market_data_fiat_symbol1` FOREIGN KEY(`fiat_id`) REFERENCES `fiat_symbol` (`fiat_id`))");
 
-            // Create table column strings for conveniance.
-            var userColumns = "`user_id`, `username`, `email`, `avatar_url`, `is_verified`, `time_zone`";
-            var marketDataColumns = "`data_id`, `crypto_symbol`, `fiat_symbol`, `date_time`, `unit_value`, `daily_change`, `weekly_change`";
+            // Populate helper tables with necessary data
+            for(int i = -12; i <= 12; i++)
+            {
+                MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
+                    $"INSERT INTO time_zone (time_zone.change) VALUES ({i})");
+            }
+
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO crypto_symbol (crypto_symbol.symbol) VALUES ('BTC')");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO crypto_symbol (crypto_symbol.symbol) VALUES ('ETH')");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO crypto_symbol (crypto_symbol.symbol) VALUES ('ADA')");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO crypto_symbol (crypto_symbol.symbol) VALUES ('ATOM')");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO crypto_symbol (crypto_symbol.symbol) VALUES ('DOGE')");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO fiat_symbol (fiat_symbol.symbol) VALUES ('EUR')");
 
             // Create a insertable value strings for conveniance.
             var mockUser = ModelMock.GetValidUserModel();
-            var userValues = $"{mockUser.Id}, '{mockUser.Username}', '{mockUser.Email}', '{mockUser.Avatar}', 0, '{mockUser.TimeZone}'";
+            var timeZoneKey = DbKeyConversionHelper.TimeZoneToDbKey(mockUser.TimeZone);
+            var userValues = $"'{mockUser.Email}', {mockUser.Verified}, '{mockUser.Username}', '{mockUser.Avatar}', '{timeZoneKey}'";
 
             var mockMarketDataOld = ModelMock.GetValidMarketDataModelOld();
             var formatedDateOld = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataOld.CollectionTime);
-            var marketDataValuesOld = $"1, '{mockMarketDataOld.CryptoSymbol}', '{mockMarketDataOld.FiatSymbol}', '{formatedDateOld}', " +
-                $"{mockMarketDataOld.UnitValue}, {mockMarketDataOld.Change24h}, {mockMarketDataOld.Change7d}";
+            var cryptoKeyOld = DbKeyConversionHelper.CryptoSymbolToDbKey(mockMarketDataOld.CryptoSymbol);
+            var fiatKeyOld = DbKeyConversionHelper.FiatSymbolToDbKey(mockMarketDataOld.FiatSymbol);
+            var marketDataValuesOld = $"'{formatedDateOld}', {mockMarketDataOld.UnitValue}, {mockMarketDataOld.Change24h}, " +
+                $"{mockMarketDataOld.Change7d}, {cryptoKeyOld}, {fiatKeyOld}";
 
             var mockMarketDataNew = ModelMock.GetValidMarketDataModelNew();
             var formatedDateNew = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataNew.CollectionTime);
-            var marketDataValuesNew = $"2, '{mockMarketDataNew.CryptoSymbol}', '{mockMarketDataNew.FiatSymbol}', '{formatedDateNew}', " +
-                $"{mockMarketDataNew.UnitValue}, {mockMarketDataNew.Change24h}, {mockMarketDataNew.Change7d}";
+            var cryptoKeyNew = DbKeyConversionHelper.CryptoSymbolToDbKey(mockMarketDataNew.CryptoSymbol);
+            var fiatKeyNew = DbKeyConversionHelper.FiatSymbolToDbKey(mockMarketDataNew.FiatSymbol);
+            var marketDataValuesNew = $"'{formatedDateNew}', {mockMarketDataNew.UnitValue}, {mockMarketDataNew.Change24h}, " +
+                $"{mockMarketDataNew.Change7d}, {cryptoKeyNew}, {fiatKeyNew}";
 
             // Insert mock data
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
-                $"INSERT INTO users ({userColumns}) VALUES ({userValues})");
+                $"INSERT INTO user ({DatabaseConstants.UserColumns}) VALUES ({userValues})");
 
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
-                $"INSERT INTO market_data ({marketDataColumns}) VALUES ({marketDataValuesOld})");
+                $"INSERT INTO market_data ({DatabaseConstants.MarketDataColumns}) VALUES ({marketDataValuesOld})");
 
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
-                $"INSERT INTO market_data ({marketDataColumns}) VALUES ({marketDataValuesNew})");
+                $"INSERT INTO market_data ({DatabaseConstants.MarketDataColumns}) VALUES ({marketDataValuesNew})");
 
             return dbServer;
         }
@@ -118,7 +161,7 @@ namespace UnitTests.Mocks
             var result = MySqlHelper.ExecuteReader(connectionString, query);
             result.Read();
 
-            var ordinal = result.GetOrdinal("avatar_url");
+            var ordinal = result.GetOrdinal("avatar");
             var value = result.GetFieldValue<string>(ordinal);
 
             return value;
@@ -136,8 +179,8 @@ namespace UnitTests.Mocks
             var result = MySqlHelper.ExecuteReader(connectionString, query);
             result.Read();
 
-            var ordinal = result.GetOrdinal("time_zone");
-            var value = result.GetFieldValue<string>(ordinal);
+            var ordinal = result.GetOrdinal("zone_id");
+            var value = DbKeyConversionHelper.TimeZoneKeyToString(result.GetFieldValue<int>(ordinal));
 
             return value;
         }
@@ -153,7 +196,7 @@ namespace UnitTests.Mocks
             var result = MySqlHelper.ExecuteReader(connectionString, query);
             result.Read();
 
-            var ordinal = result.GetOrdinal("is_verified");
+            var ordinal = result.GetOrdinal("verified");
             var value = result.GetFieldValue<int>(ordinal);
 
             return "" + value;
