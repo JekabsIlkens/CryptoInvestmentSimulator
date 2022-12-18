@@ -2,23 +2,15 @@
 @using CryptoInvestmentSimulator.Database
 @using System.Security.Claims
 @{
-    if (User.Identity == null)
-    {
-        throw new ArgumentNullException(nameof(User.Identity));
-    }
-
     var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-    var isVerified = false;
+    var verified = false;
 
-    if (email == null || email == "")
-    {
-        isVerified = false;
-    }
+    if (email == null) verified = false;    
     else
     {
         var context = new DatabaseContext(DatabaseConstants.Access);
         var procedure = new UserProcedures(context);
-        isVerified = procedure.IsUserVerified(email);
+        verified = procedure.GetUserDetails(email).Verified == 1 ? true : false;
     }
 }
 
@@ -64,7 +56,7 @@
 
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Portfolio" asp-action="Index">Portfolio</a></li>
 
-                            @if (isVerified)
+                            @if (verified)
                             {
                                 <li class="nav-item"><a class="nav-link text-dark" asp-controller="Market" asp-action="Index">Market</a></li>
                             }
