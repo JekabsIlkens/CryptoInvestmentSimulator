@@ -24,8 +24,8 @@ namespace UnitTests.DatabaseTests
             Action act1 = () => userProcedures.GetUserDetails(mockUser.Email);
             Action act2 = () => userProcedures.InsertNewUser(mockUser);
             Action act3 = () => userProcedures.UpdateUsername(mockUser.Email, mockUser.Username);
-            Action act4 = () => userProcedures.UpdateAvatar(mockUser.Email, mockUser.AvatarUrl);
-            Action act5 = () => userProcedures.UpdateTimeZone(mockUser.Email, mockUser.TimeZone);
+            Action act4 = () => userProcedures.UpdateAvatar(mockUser.Email, mockUser.Avatar);
+            Action act5 = () => userProcedures.UpdateTimeZone(mockUser.Email, 1);
             Action act6 = () => userProcedures.UpdateVerification(mockUser.Email);
             Action act7 = () => userProcedures.IsUserVerified(mockUser.Email);
             Action act8 = () => userProcedures.DoesUserExist(mockUser.Email);
@@ -103,16 +103,16 @@ namespace UnitTests.DatabaseTests
             var procedures = new UserProcedures(mockContext);
             var newUser = new UserModel()
             {
-                UserId = 2,
+                Id = 2,
                 Username = "mock-username",
                 Email = "mock-email",
-                AvatarUrl = "mock-url",
-                IsVerified = false,
+                Avatar = "mock-url",
+                Verified = 0,
                 TimeZone = "mock-timezone"
             };
 
             procedures.InsertNewUser(newUser);
-            var query = $"SELECT * FROM users WHERE email = '{newUser.Email}'";
+            var query = $"SELECT * FROM user WHERE email = '{newUser.Email}'";
 
             // Act
             var result = DatabaseMock.QueryHasRows(mockConnection, query);
@@ -138,7 +138,7 @@ namespace UnitTests.DatabaseTests
             mockUser.Username = "Spongebob";
 
             procedures.UpdateUsername(mockUser.Email, mockUser.Username);
-            var query = $"SELECT * FROM users WHERE email = '{mockUser.Email}'";
+            var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
             var result = DatabaseMock.GetUsernameValue(mockConnection, query);
@@ -161,17 +161,17 @@ namespace UnitTests.DatabaseTests
 
             var procedures = new UserProcedures(mockContext);
             var mockUser = ModelMock.GetValidUserModel();
-            mockUser.AvatarUrl = "new-url";
+            mockUser.Avatar = "new-url";
 
-            procedures.UpdateAvatar(mockUser.Email, mockUser.AvatarUrl);
-            var query = $"SELECT * FROM users WHERE email = '{mockUser.Email}'";
+            procedures.UpdateAvatar(mockUser.Email, mockUser.Avatar);
+            var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
             var result = DatabaseMock.GetAvatarValue(mockConnection, query);
             testServer.ShutDown();
 
             // Assert
-            Assert.Equal(mockUser.AvatarUrl, result);
+            Assert.Equal(mockUser.Avatar, result);
         }
 
         /// <summary>
@@ -187,10 +187,10 @@ namespace UnitTests.DatabaseTests
 
             var procedures = new UserProcedures(mockContext);
             var mockUser = ModelMock.GetValidUserModel();
-            mockUser.TimeZone = "new-zone";
+            mockUser.TimeZone = "GMT+02:00";
 
-            procedures.UpdateTimeZone(mockUser.Email, mockUser.TimeZone);
-            var query = $"SELECT * FROM users WHERE email = '{mockUser.Email}'";
+            procedures.UpdateTimeZone(mockUser.Email, 15);
+            var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
             var result = DatabaseMock.GetTimeZoneValue(mockConnection, query);
@@ -213,17 +213,17 @@ namespace UnitTests.DatabaseTests
 
             var procedures = new UserProcedures(mockContext);
             var mockUser = ModelMock.GetValidUserModel();
-            var oldStatus = mockUser.IsVerified ? "1" : "0";
+            var oldStatus = mockUser.Verified;
 
             procedures.UpdateVerification(mockUser.Email);
-            var query = $"SELECT * FROM users WHERE email = '{mockUser.Email}'";
+            var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
             var result = DatabaseMock.GetVerificationValue(mockConnection, query);
             testServer.ShutDown();
 
             // Assert
-            Assert.NotEqual(oldStatus, result);
+            Assert.NotEqual(oldStatus.ToString(), result);
         }
 
         /// <summary>

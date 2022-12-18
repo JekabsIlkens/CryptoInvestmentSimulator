@@ -27,10 +27,12 @@ namespace CryptoInvestmentSimulator.Database
                 throw new ArgumentNullException(nameof(marketDataModel));
             }
 
-            var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(marketDataModel.CollectionDateTime);
+            var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(marketDataModel.CollectionTime);
+            var cryptoKey = DbKeyConversionHelper.CryptoSymbolToDbKey(marketDataModel.CryptoSymbol);
+            var fiatKey = DbKeyConversionHelper.FiatSymbolToDbKey(marketDataModel.FiatSymbol);
 
-            var valuesString = $"'{marketDataModel.CryptoSymbol}', '{marketDataModel.FiatSymbol}', '{formattedDateTime}'," +
-                $" {marketDataModel.FiatPricePerUnit}, {marketDataModel.PercentChange24h}, {marketDataModel.PercentChange7d}";
+            var valuesString = $"'{formattedDateTime}', {marketDataModel.UnitValue}, {marketDataModel.Change24h}, " +
+                $"{marketDataModel.Change7d}, {cryptoKey}, {fiatKey}";
 
             using (MySqlConnection connection = context.GetConnection())
             {
@@ -53,27 +55,30 @@ namespace CryptoInvestmentSimulator.Database
             {
                 connection.Open();
                 MySqlCommand command = new(
-                    $"SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' ORDER BY data_id DESC LIMIT 1",
+                    $"SELECT * FROM market_data WHERE crypto_id = {(int)crypto} ORDER BY data_id DESC LIMIT 1",
                     connection);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        marketDataModel.CryptoSymbol = reader.GetValue(reader.GetOrdinal("crypto_symbol")).ToString();
-                        marketDataModel.FiatSymbol = reader.GetValue(reader.GetOrdinal("fiat_symbol")).ToString();
+                        var dateTime = reader.GetValue(reader.GetOrdinal("date_time")).ToString();
+                        marketDataModel.CollectionTime = DateTime.Parse(dateTime);
 
                         var unitValue = reader.GetValue(reader.GetOrdinal("unit_value")).ToString();
-                        marketDataModel.FiatPricePerUnit = decimal.Parse(unitValue);
-
-                        var dateTime = reader.GetValue(reader.GetOrdinal("date_time")).ToString();
-                        marketDataModel.CollectionDateTime = DateTime.Parse(dateTime);
+                        marketDataModel.UnitValue = decimal.Parse(unitValue);
 
                         var dailyChange = reader.GetValue(reader.GetOrdinal("daily_change")).ToString();
-                        marketDataModel.PercentChange24h = decimal.Parse(dailyChange);
+                        marketDataModel.Change24h = decimal.Parse(dailyChange);
 
                         var weeklyChange = reader.GetValue(reader.GetOrdinal("weekly_change")).ToString();
-                        marketDataModel.PercentChange7d = decimal.Parse(weeklyChange);
+                        marketDataModel.Change7d = decimal.Parse(weeklyChange);
+
+                        var cryptoSymbol = DbKeyConversionHelper.CryptoKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("crypto_id")));
+                        var fiatSymbol = DbKeyConversionHelper.FiatKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("fiat_id")));
+
+                        marketDataModel.CryptoSymbol = cryptoSymbol;
+                        marketDataModel.FiatSymbol = fiatSymbol;
                     }
                 }
             }
@@ -104,7 +109,7 @@ namespace CryptoInvestmentSimulator.Database
                 connection.Open();
                 MySqlCommand command = new(
                     $"SELECT unit_value FROM " +
-                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' AND data_id mod {everyNth} = 0 ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
+                    $"(SELECT * FROM market_data WHERE crypto_id = {(int)crypto} AND data_id mod {everyNth} = 0 ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
                     $"ORDER BY data_id ASC ", 
                     connection);
 
@@ -148,7 +153,7 @@ namespace CryptoInvestmentSimulator.Database
                 connection.Open();
                 MySqlCommand command = new(
                     $"SELECT date_time FROM " +
-                    $"(SELECT * FROM market_data WHERE crypto_symbol = '{crypto}' AND data_id mod {everyNth} = 0 ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
+                    $"(SELECT * FROM market_data WHERE crypto_id = {(int)crypto} AND data_id mod {everyNth} = 0 ORDER BY data_id DESC LIMIT {rowCount}) AS sub " +
                     $"ORDER BY data_id ASC ",
                     connection);
 

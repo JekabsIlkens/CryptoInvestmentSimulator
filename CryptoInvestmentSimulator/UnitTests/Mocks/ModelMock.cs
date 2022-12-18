@@ -13,12 +13,12 @@ namespace UnitTests.Mocks
         {
             return new UserModel()
             {
-                UserId = 1,
-                Username = "mock-name",
+                Id = 1,
                 Email = "mock-email",
-                AvatarUrl = "mock-url",
-                IsVerified = false,
-                TimeZone = "mock-zone"
+                Verified = 0,
+                Username = "mock-name",
+                Avatar = "mock-url",
+                TimeZone = "GMT-09:00"
             };
         }
 
@@ -30,11 +30,11 @@ namespace UnitTests.Mocks
         {
             return new UserModel()
             {
-                UserId = -15,
-                Username = "",
+                Id = -15,
                 Email = "",
-                AvatarUrl = "",
-                IsVerified = false,
+                Verified = -4,
+                Username = "",
+                Avatar = "",
                 TimeZone = ""
             };
         }
@@ -48,12 +48,13 @@ namespace UnitTests.Mocks
         {
             return new MarketDataModel()
             {
+                Id = 1,
+                CollectionTime = DateTime.Now.AddDays(-1),
+                UnitValue = 0.021599M,
+                Change24h = 25.00M,
+                Change7d = 45.00M,
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now.AddDays(-1),
-                FiatPricePerUnit = 0.021599M,
-                PercentChange24h = 25.00M,
-                PercentChange7d = 45.00M
             };
         }
 
@@ -66,12 +67,13 @@ namespace UnitTests.Mocks
         {
             return new MarketDataModel()
             {
+                Id = 2,
+                CollectionTime = DateTime.Now,
+                UnitValue = 0.091599M,
+                Change24h = 15.00M,
+                Change7d = 85.00M,
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
-                CollectionDateTime = DateTime.Now,
-                FiatPricePerUnit = 0.091599M,
-                PercentChange24h = 15.00M,
-                PercentChange7d = 85.00M
             };
         }
     }

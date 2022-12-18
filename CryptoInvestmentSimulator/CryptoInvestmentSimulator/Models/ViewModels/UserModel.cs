@@ -2,15 +2,15 @@
 {
     public class UserModel
     {
-        public int UserId { get; set; }
-
-        public string Username { get; set; }
+        public int Id { get; set; }
 
         public string Email { get; set; }
 
-        public string AvatarUrl { get; set; }
+        public int Verified { get; set; }
 
-        public bool IsVerified { get; set; }
+        public string Username { get; set; }
+
+        public string Avatar { get; set; }
 
         public string TimeZone { get; set; }
     }

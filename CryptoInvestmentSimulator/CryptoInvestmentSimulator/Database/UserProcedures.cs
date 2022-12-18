@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using MySql.Data.MySqlClient;
 
@@ -29,17 +30,20 @@ namespace CryptoInvestmentSimulator.Database
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"SELECT * FROM users WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"SELECT * FROM user WHERE email = '{email}'", connection);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        user.UserId = reader.GetInt32("user_id");
-                        user.Username = reader.GetString("username");
+                        user.Id = reader.GetInt32("user_id");
                         user.Email = reader.GetString("email");
-                        user.AvatarUrl = reader.GetString("avatar_url");
-                        user.TimeZone = reader.GetString("time_zone");
+                        user.Verified = reader.GetInt32("verified");
+                        user.Username = reader.GetString("username");
+                        user.Avatar = reader.GetString("avatar");
+
+                        var timeZoneString = DbKeyConversionHelper.TimeZoneKeyToString(reader.GetInt32("zone_id"));
+                        user.TimeZone = timeZoneString;
                     }
                 }
             }
@@ -62,12 +66,13 @@ namespace CryptoInvestmentSimulator.Database
 
             if (!DoesUserExist(userModel.Email))
             {
-                var valuesString = $"'{userModel.Username}', '{userModel.Email}', '{userModel.AvatarUrl}', '{userModel.TimeZone}'";
+                var timeZoneKey = DbKeyConversionHelper.TimeZoneToDbKey(userModel.TimeZone);
+                var valuesString = $"'{userModel.Email}', {userModel.Verified}, '{userModel.Username}', '{userModel.Avatar}', {timeZoneKey}";
 
                 using (var connection = context.GetConnection())
                 {
                     connection.Open();
-                    MySqlCommand command = new($"INSERT INTO users ({DatabaseConstants.UserColumns}) VALUES ({valuesString})", connection);
+                    MySqlCommand command = new($"INSERT INTO user ({DatabaseConstants.UserColumns}) VALUES ({valuesString})", connection);
                     command.ExecuteNonQuery();
                 }
             }
@@ -89,7 +94,7 @@ namespace CryptoInvestmentSimulator.Database
             using (MySqlConnection connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE users SET username = '{username}' WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET username = '{username}' WHERE email = '{email}'", connection);
                 command.ExecuteNonQuery();
             }
         }
@@ -110,7 +115,7 @@ namespace CryptoInvestmentSimulator.Database
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE users SET avatar_url = '{avatar}' WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET avatar = '{avatar}' WHERE email = '{email}'", connection);
                 command.ExecuteNonQuery();
             }
         }
@@ -121,7 +126,7 @@ namespace CryptoInvestmentSimulator.Database
         /// <param name="email"></param>
         /// <param name="timezone"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void UpdateTimeZone(string email, string timezone)
+        public void UpdateTimeZone(string email, int timezone)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -131,7 +136,7 @@ namespace CryptoInvestmentSimulator.Database
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE users SET time_zone = '{timezone}' WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET zone_id = {timezone} WHERE email = '{email}'", connection);
                 command.ExecuteNonQuery();
             }
         }
@@ -154,7 +159,7 @@ namespace CryptoInvestmentSimulator.Database
                 using (var connection = context.GetConnection())
                 {
                     connection.Open();
-                    MySqlCommand command = new($"UPDATE users SET is_verified = 1 WHERE email = '{email}'", connection);
+                    MySqlCommand command = new($"UPDATE user SET verified = 1 WHERE email = '{email}'", connection);
                     command.ExecuteNonQuery();
                 }
             }
@@ -176,13 +181,13 @@ namespace CryptoInvestmentSimulator.Database
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"SELECT is_verified FROM users WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"SELECT verified FROM user WHERE email = '{email}'", connection);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        if(reader.GetValue(reader.GetOrdinal("is_verified")).ToString() == "1")
+                        if(reader.GetValue(reader.GetOrdinal("verified")).ToString() == "1")
                         {
                             return true;
                         }
@@ -209,7 +214,7 @@ namespace CryptoInvestmentSimulator.Database
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new ($"SELECT * FROM users WHERE email = '{email}'", connection);
+                MySqlCommand command = new ($"SELECT * FROM user WHERE email = '{email}'", connection);
 
                 using (var reader = command.ExecuteReader())
                 {                 

@@ -2,6 +2,6 @@
 {
     public enum FiatEnum
     {
-        EUR = 0
+        EUR = 1
     }
 }

@@ -60,7 +60,7 @@ namespace UnitTests.ControllerTests
             portfolioController.ControllerContext = new ControllerContext { HttpContext = httpContext };
 
             // Act
-            var result = portfolioController.UpdateDetails("new-name", "new-avatar", "new-zone") as ViewResult;
+            var result = portfolioController.UpdateDetails("new-name", "new-avatar", "GMT+09:00") as ViewResult;
 
             // Assert
             Assert.Equal("200", portfolioController.HttpContext.Response.StatusCode.ToString());

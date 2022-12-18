@@ -50,9 +50,9 @@ namespace UnitTests.DatabaseTests
 			// Assert
 			Assert.Equal(mockMarketData.CryptoSymbol, result.CryptoSymbol);
 			Assert.Equal(mockMarketData.FiatSymbol, result.FiatSymbol);
-			Assert.Equal(mockMarketData.FiatPricePerUnit, result.FiatPricePerUnit);
-			Assert.Equal(mockMarketData.PercentChange24h, result.PercentChange24h);
-			Assert.Equal(mockMarketData.PercentChange7d, result.PercentChange7d);
+			Assert.Equal(mockMarketData.UnitValue, result.UnitValue);
+			Assert.Equal(mockMarketData.Change24h, result.Change24h);
+			Assert.Equal(mockMarketData.Change7d, result.Change7d);
 		}
 
 		/// <summary>
@@ -76,8 +76,8 @@ namespace UnitTests.DatabaseTests
 			testServer.ShutDown();
 
 			// Assert
-			Assert.Equal((double)mockMarketDataOld.FiatPricePerUnit, result[0]);
-			Assert.Equal((double)mockMarketDataNew.FiatPricePerUnit, result[1]);
+			Assert.Equal((double)mockMarketDataOld.UnitValue, result[0]);
+			Assert.Equal((double)mockMarketDataNew.UnitValue, result[1]);
 		}
 
 		/// <summary>
@@ -96,10 +96,10 @@ namespace UnitTests.DatabaseTests
 			var mockMarketDataOld = ModelMock.GetValidMarketDataModelOld();
 			var mockMarketDataNew = ModelMock.GetValidMarketDataModelNew();
 
-			var oldDate = mockMarketDataOld.CollectionDateTime.ToString();
+			var oldDate = mockMarketDataOld.CollectionTime.ToString();
 			var expectedOldDate = ((DateTimeOffset)DateTime.Parse(oldDate)).ToUnixTimeSeconds() * 1000;
 
-			var newDate = mockMarketDataNew.CollectionDateTime.ToString();
+			var newDate = mockMarketDataNew.CollectionTime.ToString();
 			var expectedNewDate = ((DateTimeOffset)DateTime.Parse(newDate)).ToUnixTimeSeconds() * 1000;
 
 			// Act
