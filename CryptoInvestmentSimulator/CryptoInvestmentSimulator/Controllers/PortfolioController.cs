@@ -12,7 +12,8 @@ namespace CryptoInvestmentSimulator.Controllers
     public class PortfolioController : Controller
     {
         private static readonly DatabaseContext context = new(DatabaseConstants.Access);
-        private static readonly UserProcedures procedures = new(context);
+        private static readonly UserProcedures userProcedures = new(context);
+        private static readonly WalletProcedures walletProcedures = new(context);
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -28,6 +29,7 @@ namespace CryptoInvestmentSimulator.Controllers
         public IActionResult Index()
         {
             var user = GetUserDetails();
+            ViewBag.WalletContents = walletProcedures.GetUsersWalletBalances(user.Id);
 
             return View("Index", user);
         }
@@ -43,9 +45,9 @@ namespace CryptoInvestmentSimulator.Controllers
         public IActionResult UpdateDetails(string username, string avatar, string timezone)
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            procedures.UpdateUsername(email, username);
-            procedures.UpdateAvatar(email, avatar);
-            procedures.UpdateTimeZone(email, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
+            userProcedures.UpdateUsername(email, username);
+            userProcedures.UpdateAvatar(email, avatar);
+            userProcedures.UpdateTimeZone(email, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
 
             var user = GetUserDetails();
 
@@ -59,7 +61,7 @@ namespace CryptoInvestmentSimulator.Controllers
         private UserModel GetUserDetails()
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            return procedures.GetUserDetails(email);
+            return userProcedures.GetUserDetails(email);
         }
     }
 }

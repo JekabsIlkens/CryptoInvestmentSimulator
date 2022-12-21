@@ -67,13 +67,20 @@
     <script>
         const ctx = document.getElementById('myChart');
 
+        var eur = @ViewBag.WalletContents.EuroAmount;
+        var btc = @ViewBag.WalletContents.BitcoinAmount;
+        var eth = @ViewBag.WalletContents.EtheriumAmount;
+        var ada = @ViewBag.WalletContents.CardanoAmount;
+        var atom = @ViewBag.WalletContents.CosmosAmount;
+        var doge = @ViewBag.WalletContents.DogecoinAmount;
+
         new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: ['EUR', 'BTC', 'ETH', 'ADA', 'ATOM', 'DOGE'],
                 datasets: [{
                     label: 'Wallet Dataset',
-                    data: [305, 1150, 982, 45, 312, 15],
+                    data: [eur, btc, eth, ada, atom, doge],
                     backgroundColor: [
                         '#c9cbcf',
                         '#ff9f40',
@@ -82,7 +89,7 @@
                         '#9966ff',
                         '#4bc0c0'
                     ],
-                    hoverOffset: 4
+                    hoverOffset: 2
                 }]
             },
             options: {
