@@ -207,7 +207,6 @@ namespace CryptoInvestmentSimulator.Database
             }
 
             var userId = -1;
-            var values = $"";
 
             using (var connection = context.GetConnection())
             {
@@ -222,7 +221,7 @@ namespace CryptoInvestmentSimulator.Database
                     }
                 }
 
-                values = $"'{FiatEnum.EUR}', 5000, {userId}";
+                var values = $"'{FiatEnum.EUR}', 5000, {userId}";
                 command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
                 command.ExecuteNonQuery();
 

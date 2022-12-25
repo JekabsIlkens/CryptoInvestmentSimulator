@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
 using MySql.Data.MySqlClient;
 using MySql.Server;
@@ -74,8 +75,19 @@ namespace UnitTests.Mocks
                 "CONSTRAINT `fk_market_data_crypto_symbol1` FOREIGN KEY(`crypto_id`) REFERENCES `crypto_symbol` (`crypto_id`), " +
                 "CONSTRAINT `fk_market_data_fiat_symbol1` FOREIGN KEY(`fiat_id`) REFERENCES `fiat_symbol` (`fiat_id`))");
 
+            // Creates a mock wallet table.
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
+                "CREATE TABLE `wallet` (" +
+                "`wallet_id` int NOT NULL AUTO_INCREMENT, " +
+                "`symbol` varchar(4) NOT NULL, " +
+                "`balance` decimal(12,6) NOT NULL, " +
+                "`user_id` int NOT NULL, " +
+                "PRIMARY KEY (`wallet_id`), " +
+                "KEY `fk_wallet_user1_idx` (`user_id`), " +
+                "CONSTRAINT `fk_wallet_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`))");
+
             // Populate helper tables with necessary data
-            for(int i = -12; i <= 12; i++)
+            for (int i = -12; i <= 12; i++)
             {
                 MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
                     $"INSERT INTO time_zone (time_zone.change) VALUES ({i})");
@@ -107,6 +119,13 @@ namespace UnitTests.Mocks
             var marketDataValuesNew = $"'{formatedDateNew}', {mockMarketDataNew.UnitValue}, {mockMarketDataNew.Change24h}, " +
                 $"{mockMarketDataNew.Change7d}, {cryptoKeyNew}, {fiatKeyNew}";
 
+            var eurWallet = $"'{FiatEnum.EUR}', 10, {mockUser.Id}";
+            var btcWallet = $"'{CryptoEnum.BTC}', 20, {mockUser.Id}";
+            var ethWallet = $"'{CryptoEnum.ETH}', 30, {mockUser.Id}";
+            var adaWallet = $"'{CryptoEnum.ADA}', 40, {mockUser.Id}";
+            var atomWallet = $"'{CryptoEnum.ATOM}', 50, {mockUser.Id}";
+            var dogeWallet = $"'{CryptoEnum.DOGE}', 60, {mockUser.Id}";
+
             // Insert mock data
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
                 $"INSERT INTO user ({DatabaseConstants.UserColumns}) VALUES ({userValues})");
@@ -116,6 +135,13 @@ namespace UnitTests.Mocks
 
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"),
                 $"INSERT INTO market_data ({DatabaseConstants.MarketDataColumns}) VALUES ({marketDataValuesNew})");
+
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({eurWallet})");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({btcWallet})");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({ethWallet})");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({adaWallet})");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({atomWallet})");
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("test"), $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({dogeWallet})");
 
             return dbServer;
         }
@@ -200,6 +226,22 @@ namespace UnitTests.Mocks
             var value = result.GetFieldValue<int>(ordinal);
 
             return "" + value;
+        }
+
+        public static decimal GetWalletBalance(string connectionString, string query)
+        {
+            var value = -1M;
+
+            using (var reader = MySqlHelper.ExecuteReader(connectionString, query))
+            {
+                while (reader.Read())
+                {
+                    var ordinal = reader.GetOrdinal("balance");
+                    value = reader.GetFieldValue<decimal>(ordinal);
+                }
+            }
+
+            return value;
         }
     }
 }
