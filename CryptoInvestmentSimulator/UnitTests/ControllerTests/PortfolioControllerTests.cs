@@ -7,6 +7,10 @@ using Xunit;
 
 namespace UnitTests.ControllerTests
 {
+    // TESTS ARE CURRENTLY BROKEN DUE TO MOCK USER NOT HAVING DB TABLES
+    // WILL BE FIXED AFTER INVESTMENT MODULE IMPLEMENTATION
+    // ALL OTHER UNIT TESTS PASS SUCCESSFULY
+
     public class PortfolioControllerTests
     {
         /// <summary>
