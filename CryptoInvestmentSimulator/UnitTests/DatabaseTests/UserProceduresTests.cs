@@ -1,5 +1,6 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Database;
+using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using FluentAssertions;
 using UnitTests.Mocks;
@@ -27,8 +28,7 @@ namespace UnitTests.DatabaseTests
             Action act4 = () => userProcedures.UpdateAvatar(mockUser.Email, mockUser.Avatar);
             Action act5 = () => userProcedures.UpdateTimeZone(mockUser.Email, 1);
             Action act6 = () => userProcedures.UpdateVerification(mockUser.Email);
-            Action act7 = () => userProcedures.IsUserVerified(mockUser.Email);
-            Action act8 = () => userProcedures.DoesUserExist(mockUser.Email);
+            Action act7 = () => userProcedures.DoesUserExist(mockUser.Email);
 
             // Assert
             act1.Should().ThrowExactly<ArgumentNullException>();
@@ -38,7 +38,6 @@ namespace UnitTests.DatabaseTests
             act5.Should().ThrowExactly<ArgumentNullException>();
             act6.Should().ThrowExactly<ArgumentNullException>();
             act7.Should().ThrowExactly<ArgumentNullException>();
-            act8.Should().ThrowExactly<ArgumentNullException>();
         }
 
         /// <summary>
@@ -227,54 +226,6 @@ namespace UnitTests.DatabaseTests
         }
 
         /// <summary>
-        /// Tests if verification check returns true for verified user.
-        /// </summary>
-        [Fact]
-        public void IsUserVerified_VerifiedUser_ReturnsTrue()
-        {
-            // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
-            var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-
-            procedures.UpdateVerification(mockUser.Email);
-            procedures.InsertNewUser(mockUser);
-
-            // Act
-            var result = procedures.IsUserVerified(mockUser.Email);
-            testServer.ShutDown();
-
-            // Assert
-            Assert.True(result);
-        }
-
-        /// <summary>
-        /// Tests if verification check returns false for unverified user.
-        /// </summary>
-        [Fact]
-        public void IsUserVerified_UnverifiedUser_ReturnsFalse()
-        {
-            // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
-            var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-            procedures.InsertNewUser(mockUser);
-
-            // Act
-            var result = procedures.IsUserVerified(mockUser.Email);
-            testServer.ShutDown();
-
-            // Assert
-            Assert.False(result);
-        }
-
-        /// <summary>
         /// Tests if existance check returns true for existing user.
         /// </summary>
         [Fact]
@@ -318,6 +269,56 @@ namespace UnitTests.DatabaseTests
 
             // Assert
             Assert.False(result);
+        }
+
+        /// <summary>
+        /// Tests if wallet creation for a new user works as expected
+        /// and initial balance for each wallet is correct.
+        /// </summary>
+        [Fact]
+        public void CreateWalletsForUser_ExistingUser_WalletsCreated()
+        {
+            // Arrange
+            var testServer = DatabaseMock.CreateDatabase();
+            var mockConnection = testServer.GetConnectionString("test");
+            var mockContext = new DatabaseContext(mockConnection);
+
+            var procedures = new UserProcedures(mockContext);
+            var mockUser = ModelMock.GetValidUserModel();
+            mockUser.Id = 2;
+            mockUser.Email = "walletTest@mail.com";
+
+            // Act
+            procedures.InsertNewUser(mockUser);
+            procedures.CreateWalletsForUser(mockUser.Email);
+
+            var eurQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{FiatEnum.EUR}'";
+            var eurWalletResult = DatabaseMock.GetWalletBalance(mockConnection, eurQuery);
+
+            var btcQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.BTC}'";
+            var btcWalletResult = DatabaseMock.GetWalletBalance(mockConnection, btcQuery);
+
+            var ethQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.ETH}'";
+            var ethWalletResult = DatabaseMock.GetWalletBalance(mockConnection, ethQuery);
+
+            var adaQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.ADA}'";
+            var adaWalletResult = DatabaseMock.GetWalletBalance(mockConnection, adaQuery);
+
+            var atomQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.ATOM}'";
+            var atomWalletResult = DatabaseMock.GetWalletBalance(mockConnection, atomQuery);
+
+            var dogeQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.DOGE}'";
+            var dogeWalletResult = DatabaseMock.GetWalletBalance(mockConnection, dogeQuery);
+
+            testServer.ShutDown();
+
+            // Assert
+            Assert.Equal(5000M, eurWalletResult);
+            Assert.Equal(0M, btcWalletResult);
+            Assert.Equal(0M, ethWalletResult);
+            Assert.Equal(0M, adaWalletResult);
+            Assert.Equal(0M, atomWalletResult);
+            Assert.Equal(0M, dogeWalletResult);
         }
     }
 }

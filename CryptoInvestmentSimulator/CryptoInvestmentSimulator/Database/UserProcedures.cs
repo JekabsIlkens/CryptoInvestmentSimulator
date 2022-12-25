@@ -1,4 +1,5 @@
 ﻿using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using MySql.Data.MySqlClient;
@@ -154,48 +155,12 @@ namespace CryptoInvestmentSimulator.Database
                 throw new ArgumentNullException(nameof(email));
             }
 
-            if (!IsUserVerified(email))
-            {
-                using (var connection = context.GetConnection())
-                {
-                    connection.Open();
-                    MySqlCommand command = new($"UPDATE user SET verified = 1 WHERE email = '{email}'", connection);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks current status of users verification.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns>User verification status</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public bool IsUserVerified(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"SELECT verified FROM user WHERE email = '{email}'", connection);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        if(reader.GetValue(reader.GetOrdinal("verified")).ToString() == "1")
-                        {
-                            return true;
-                        }
-                    }
-                }
+                MySqlCommand command = new($"UPDATE user SET verified = 1 WHERE email = '{email}'", connection);
+                command.ExecuteNonQuery();
             }
-
-            return false;
         }
 
         /// <summary>
@@ -226,6 +191,60 @@ namespace CryptoInvestmentSimulator.Database
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Creates new wallets with initial balances for user
+        /// after verification process has been done.
+        /// </summary>
+        /// <param name="email">Current users email</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void CreateWalletsForUser(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
+            var userId = -1;
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT user_id FROM user WHERE email = '{email}'", connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        userId = (int)reader.GetValue(reader.GetOrdinal("user_id"));
+                    }
+                }
+
+                var values = $"'{FiatEnum.EUR}', 5000, {userId}";
+                command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
+                command.ExecuteNonQuery();
+
+                values = $"'{CryptoEnum.BTC}', 0, {userId}";
+                command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
+                command.ExecuteNonQuery();
+
+                values = $"'{CryptoEnum.ETH}', 0, {userId}";
+                command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
+                command.ExecuteNonQuery();
+
+                values = $"'{CryptoEnum.ADA}', 0, {userId}";
+                command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
+                command.ExecuteNonQuery();
+
+                values = $"'{CryptoEnum.ATOM}', 0, {userId}";
+                command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
+                command.ExecuteNonQuery();
+
+                values = $"'{CryptoEnum.DOGE}', 0, {userId}";
+                command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

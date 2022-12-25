@@ -76,19 +76,15 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <exception cref="ArgumentNullException"></exception>
         private void EmailVerificationCheck()
         {
+            var user = GetUserDetails();
             var claims = User.Identities.First().Claims;
-            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException($"Received {nameof(email)} is null or empty!");
-            }
 
             foreach (var claim in claims)
             {
-                if (claim.Type == "email_verified" && claim.Value == "true")
+                if (claim.Type == "email_verified" && claim.Value == "true" && user.Verified == 0)
                 {
-                    procedures.UpdateVerification(email);
+                    procedures.UpdateVerification(user.Email);
+                    procedures.CreateWalletsForUser(user.Email);
                 }
 
             }
