@@ -1,0 +1,33 @@
+﻿@using CryptoInvestmentSimulator.Helpers;
+@{
+    var actualKey = ConfidenceHelper.GetRandomKey(8);
+}
+
+<!-- Portfolio reset popup form -->
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <!-- Sends form data to ResetPortfolio method in Portfolio Controller -->
+            <form method="post" asp-controller="Portfolio" asp-action="ResetPortfolio">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm portfolio reset:</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Repeat the following key to confirm reset!</label>
+                        <input type="text" class="form-control" required="required" value="@actualKey" name="actualKey" readonly />
+
+                        <input id="target" type="text" class="form-control" required="required" value="" name="receivedKey" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="cancelReset" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="confirm" type="submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -46,12 +46,40 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult UpdateDetails(string username, string avatar, string timezone)
         {
-            var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            userProcedures.UpdateUsername(email, username);
-            userProcedures.UpdateAvatar(email, avatar);
-            userProcedures.UpdateTimeZone(email, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
-
             var user = GetUserDetails();
+
+            userProcedures.UpdateUsername(user.Email, username);
+            userProcedures.UpdateAvatar(user.Email, avatar);
+            userProcedures.UpdateTimeZone(user.Email, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
+
+            user = GetUserDetails();
+            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+
+            return View("Index", user);
+        }
+
+        /// <summary>
+        /// Performs confidence key match check and resets users portfolio.
+        /// </summary>
+        /// <param name="actualKey">Expected key</param>
+        /// <param name="receivedKey">User input</param>
+        /// <returns>Portfolio view with user view model</returns>
+        [HttpPost]
+        public IActionResult ResetPortfolio(string actualKey, string receivedKey)
+        {
+            var user = GetUserDetails();
+
+            if (actualKey == receivedKey)
+            {
+                // TODO: Add investment clear procedure
+                ResetUsersWallets(user.Id);
+
+                ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+
+                return View("Index", user);
+            }
+
+            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
 
             return View("Index", user);
         }
@@ -102,6 +130,20 @@ namespace CryptoInvestmentSimulator.Controllers
             allToPercent[5] = (allToEuro[5] * 100) / hundredPercent;
 
             return allToPercent;
+        }
+
+        /// <summary>
+        /// Resets all wallet balances for a given user to initial amounts.
+        /// </summary>
+        /// <param name="userId">Target user</param>
+        private void ResetUsersWallets(int userId)
+        {
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), 5000);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.BTC.ToString(), 0);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ETH.ToString(), 0);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ADA.ToString(), 0);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ATOM.ToString(), 0);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.DOGE.ToString(), 0);
         }
     }
 }

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Portfolio Page";
 
     await Html.RenderPartialAsync("_EditDetails");
+    await Html.RenderPartialAsync("_ConfirmReset");
 }
 
 <script src="~/js/time_zones.js"></script>
@@ -22,6 +23,7 @@
             <p> <strong>Time zone:</strong> @Model.TimeZone </p>
 
             <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
+            <button id="reset" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Reset portfolio</button>
         </div>
 
         @if (Model.Verified == 1)
