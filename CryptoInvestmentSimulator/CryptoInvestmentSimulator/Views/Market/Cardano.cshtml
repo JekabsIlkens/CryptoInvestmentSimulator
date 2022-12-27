@@ -7,6 +7,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="~/js/charts/chart_switch.js"></script>
 	<script src="~/js/charts/ada_frames.js"></script>
+	<script src="~/js/leverage_ratios.js"></script>
+	<script src="~/js/transaction_form.js"></script>
 }
 
 <div class="text-center">
@@ -24,6 +26,30 @@
 		<div id="chartZone4h"></div>
 		<div id="chartZone8h"></div>
 		<div id="chartZone24h"></div>
+
+		<form method="post" asp-controller="Investment" asp-action="CreateNewPosition">
+
+			<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
+				<div class="row">
+					<div class="col-6">
+						<label>Amount (EUR)</label>
+						<input id="receivedEuro" type="text" class="form-control" required="required" placeholder="0.000000" value="" name="euroAmount" />
+
+						<label>Amount (ADA)</label>
+						<input id="convertedCrypto" type="text" class="form-control" placeholder="0.000000" name="cryptoAmount" readonly />
+					</div>
+					<div class="col-6">
+						<label for="leverage-ratio-select">Leverage</label>
+						<select id="leverage-ratio-select" type="text" class="form-control" name="leverageRatio"></select>
+
+						<label>Margin</label>
+						<input id="calculatedMargin" type="text" class="form-control" placeholder="0.000000" name="marginAmount" readonly />
+					</div>
+				</div>
+			</div>
+
+			<button id="buy" type="submit" class="btn btn-success">BUY</button>
+		</form>
 
 	<!-- Navigates user back to market page. -->
 	<a class="text-danger" asp-controller="Market" asp-action="Index">Back</a>
