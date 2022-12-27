@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	fiatAmountInput.addEventListener("input", function (e) {
 		var fiatAmountString = "" + fiatAmountInput.value;
+		var unitValueString = "" + (priceArray1h[priceArray1h.length - 1]);
 
 		var unitValueParsed = parseFloat(unitValueString);
 		var fiatAmountParsed = parseFloat(fiatAmountString);

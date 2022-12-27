@@ -1,11 +1,5 @@
-﻿@using CryptoInvestmentSimulator.Constants;
-@using CryptoInvestmentSimulator.Database;
-@using CryptoInvestmentSimulator.Enums;
-@{
+﻿@{
 	ViewData["Title"] = "BTC/EUR";
-
-	DatabaseContext context = new(DatabaseConstants.Access);
-	MarketDataProcedures procedures = new(context);
 }
 
 @section Scripts 
@@ -14,9 +8,6 @@
 	<script src="~/js/charts/chart_switch.js"></script>
 	<script src="~/js/charts/btc_frames.js"></script>
 	<script src="~/js/leverage_ratios.js"></script>
-	<script>
-		var unitValueString = "" + @Html.Raw(procedures.GetLatestMarketData(CryptoEnum.BTC).UnitValue);
-	</script>
 	<script src="~/js/transaction_form.js"></script>
 }
 

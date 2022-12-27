@@ -5,9 +5,9 @@
 	// Generates new chart by using timeArray as x and priceArray as y.
 
 	var prices = @Html.Raw(Json.Serialize(ViewBag.PricePoints));
-	var priceArray = [];
+	var priceArray1h = [];
 	for (var i = 0; i < 60; i++) {
-		priceArray[i] = prices[i];
+		priceArray1h[i] = prices[i];
 	}
 
 	var times = @Html.Raw(Json.Serialize(ViewBag.TimePoints));
@@ -25,7 +25,7 @@
 			labels: timeArray,
 			datasets: [{
 				label: 'Euro',
-				data: priceArray,
+				data: priceArray1h,
 				borderWidth: 1
 			}]
 		},
