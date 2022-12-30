@@ -23,14 +23,28 @@ namespace CryptoInvestmentSimulator.Database
 			}
 
 			var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(positionModel.DateTime);
+			string valuesString, commandString;
 
-			var valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, {positionModel.Margin}, " +
-				$"{positionModel.Leverage}, {positionModel.Status}, {positionModel.Wallet}, {positionModel.Data}";
+			if (positionModel.Leverage == 0)
+			{
+				valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, " +
+					$"{positionModel.Status}, {positionModel.Wallet}, {positionModel.Data}";
+
+				commandString = $"INSERT INTO transaction ({DatabaseConstants.TransactionColumnsNoLeverage}) VALUES ({valuesString})";
+
+			}
+			else
+			{
+				valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, {positionModel.Margin}, " +
+					$"{positionModel.Leverage}, {positionModel.Status}, {positionModel.Wallet}, {positionModel.Data}";
+
+				commandString = $"INSERT INTO transaction ({DatabaseConstants.TransactionColumnsLeverage}) VALUES ({valuesString})";
+			}
 
 			using (MySqlConnection connection = context.GetConnection())
 			{
 				connection.Open();
-				MySqlCommand command = new($"INSERT INTO transaction ({DatabaseConstants.TransactionColumns}) VALUES ({valuesString})", connection);
+				MySqlCommand command = new(commandString, connection);
 				command.ExecuteNonQuery();
 			}
 		}

@@ -16,8 +16,9 @@ namespace CryptoInvestmentSimulator.Controllers
     public class MarketController : Controller
     {
         private static readonly DatabaseContext context = new(DatabaseConstants.Access);
-        private static readonly MarketDataProcedures marketProcedures = new(context);
         private static readonly UserProcedures userProcedures = new(context);
+        private static readonly WalletProcedures walletProcedures = new(context);
+        private static readonly MarketDataProcedures marketProcedures = new(context);
         private static readonly InvestmentProcedures investmentProcedures = new(context);
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -419,6 +420,11 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult OpenBitcoinPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
+            var userId = GetUserDetails().Id;
+            var currentBalances = walletProcedures.GetUsersWalletBalances(userId);
+            var currentEUR = currentBalances.EuroAmount;
+            var currentBTC = currentBalances.BitcoinAmount;
+
             var newPosition = new PositionModel
             {
                 DateTime = DateTime.Now,
@@ -427,11 +433,13 @@ namespace CryptoInvestmentSimulator.Controllers
                 Margin = decimal.Parse(marginAmount),
                 Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = investmentProcedures.GetUserWalletId(GetUserDetails().Id, FiatEnum.EUR),
+                Wallet = investmentProcedures.GetUserWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.BTC).Id
             };
 
             investmentProcedures.InsertNewPosition(newPosition);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.BTC.ToString(), currentBTC + newPosition.CryptoAmount);
 
             return View("Bitcoin");
         }
