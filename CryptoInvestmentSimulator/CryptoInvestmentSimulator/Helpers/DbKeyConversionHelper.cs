@@ -154,7 +154,7 @@ namespace CryptoInvestmentSimulator.Helpers
         {
             return leverageMultiplier switch
             {
-                "1x" => 0,
+                "None" => 0,
                 "2x" => 1,
                 "5x" => 2,
                 "10x" => 3,

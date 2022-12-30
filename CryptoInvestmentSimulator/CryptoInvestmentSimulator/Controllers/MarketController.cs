@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Security.Claims;
 
 namespace CryptoInvestmentSimulator.Controllers
@@ -424,6 +425,13 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentBalances = walletProcedures.GetUsersWalletBalances(userId);
             var currentEUR = currentBalances.EuroAmount;
             var currentBTC = currentBalances.BitcoinAmount;
+
+            marginAmount = marginAmount == null ? "0" : marginAmount;
+            if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
+            {
+                ViewBag.Error = "Insufficient funds for requested purchase!";
+                return View("Bitcoin");
+            }
 
             var newPosition = new PositionModel
             {
