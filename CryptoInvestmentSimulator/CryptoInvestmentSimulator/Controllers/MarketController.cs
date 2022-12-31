@@ -78,6 +78,10 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_DataTable");
         }
 
+        /// <summary>
+        /// Prepares view bags with users open BTC position data for each table column.
+        /// </summary>
+        /// <returns>Positions table partial view</returns>
         [Authorize]
         public IActionResult PositionsTableBTC()
         {
@@ -93,7 +97,155 @@ namespace CryptoInvestmentSimulator.Controllers
             var count = 0;
             foreach(var position in positionsList)
             {
-                dateTimes[count] = position.DateTime.ToString();
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                fiatAmounts[count] = position.FiatAmount.ToString();
+                cryptoAmounts[count] = position.CryptoAmount.ToString();
+                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                margins[count] = position.Margin.ToString();
+
+                count++;
+            }
+
+            ViewBag.DateTimes = dateTimes;
+            ViewBag.FiatAmounts = fiatAmounts;
+            ViewBag.CryptoAmounts = cryptoAmounts;
+            ViewBag.Ratios = ratios;
+            ViewBag.Margins = margins;
+
+            return PartialView("_PositionsTable");
+        }
+
+        /// <summary>
+        /// Prepares view bags with users open ETH position data for each table column.
+        /// </summary>
+        /// <returns>Positions table partial view</returns>
+        [Authorize]
+        public IActionResult PositionsTableETH()
+        {
+            var positionsList = investmentProcedures.GetAllActivePositions(GetUserDetails().Id, CryptoEnum.ETH);
+            var length = positionsList.Count;
+
+            string[] dateTimes = new string[length];
+            string[] fiatAmounts = new string[length];
+            string[] cryptoAmounts = new string[length];
+            string[] ratios = new string[length];
+            string[] margins = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                fiatAmounts[count] = position.FiatAmount.ToString();
+                cryptoAmounts[count] = position.CryptoAmount.ToString();
+                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                margins[count] = position.Margin.ToString();
+
+                count++;
+            }
+
+            ViewBag.DateTimes = dateTimes;
+            ViewBag.FiatAmounts = fiatAmounts;
+            ViewBag.CryptoAmounts = cryptoAmounts;
+            ViewBag.Ratios = ratios;
+            ViewBag.Margins = margins;
+
+            return PartialView("_PositionsTable");
+        }
+
+        /// <summary>
+        /// Prepares view bags with users open ADA position data for each table column.
+        /// </summary>
+        /// <returns>Positions table partial view</returns>
+        [Authorize]
+        public IActionResult PositionsTableADA()
+        {
+            var positionsList = investmentProcedures.GetAllActivePositions(GetUserDetails().Id, CryptoEnum.ADA);
+            var length = positionsList.Count;
+
+            string[] dateTimes = new string[length];
+            string[] fiatAmounts = new string[length];
+            string[] cryptoAmounts = new string[length];
+            string[] ratios = new string[length];
+            string[] margins = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                fiatAmounts[count] = position.FiatAmount.ToString();
+                cryptoAmounts[count] = position.CryptoAmount.ToString();
+                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                margins[count] = position.Margin.ToString();
+
+                count++;
+            }
+
+            ViewBag.DateTimes = dateTimes;
+            ViewBag.FiatAmounts = fiatAmounts;
+            ViewBag.CryptoAmounts = cryptoAmounts;
+            ViewBag.Ratios = ratios;
+            ViewBag.Margins = margins;
+
+            return PartialView("_PositionsTable");
+        }
+
+        /// <summary>
+        /// Prepares view bags with users open ATOM position data for each table column.
+        /// </summary>
+        /// <returns>Positions table partial view</returns>
+        [Authorize]
+        public IActionResult PositionsTableATOM()
+        {
+            var positionsList = investmentProcedures.GetAllActivePositions(GetUserDetails().Id, CryptoEnum.ATOM);
+            var length = positionsList.Count;
+
+            string[] dateTimes = new string[length];
+            string[] fiatAmounts = new string[length];
+            string[] cryptoAmounts = new string[length];
+            string[] ratios = new string[length];
+            string[] margins = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                fiatAmounts[count] = position.FiatAmount.ToString();
+                cryptoAmounts[count] = position.CryptoAmount.ToString();
+                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                margins[count] = position.Margin.ToString();
+
+                count++;
+            }
+
+            ViewBag.DateTimes = dateTimes;
+            ViewBag.FiatAmounts = fiatAmounts;
+            ViewBag.CryptoAmounts = cryptoAmounts;
+            ViewBag.Ratios = ratios;
+            ViewBag.Margins = margins;
+
+            return PartialView("_PositionsTable");
+        }
+
+        /// <summary>
+        /// Prepares view bags with users open DOGE position data for each table column.
+        /// </summary>
+        /// <returns>Positions table partial view</returns>
+        [Authorize]
+        public IActionResult PositionsTableDOGE()
+        {
+            var positionsList = investmentProcedures.GetAllActivePositions(GetUserDetails().Id, CryptoEnum.DOGE);
+            var length = positionsList.Count;
+
+            string[] dateTimes = new string[length];
+            string[] fiatAmounts = new string[length];
+            string[] cryptoAmounts = new string[length];
+            string[] ratios = new string[length];
+            string[] margins = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
                 ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
@@ -451,6 +603,18 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_Chart24h");
         }
 
+        /// <summary>
+        /// Receives user input form buy form. Validates amounts against users wallet.
+        /// If requested purchase amount plus optional margin is larger than euro wallet balance,
+        /// then further process is stopped and view bag with error message is prepared.
+        /// If requested purchase amount plus optional margin is smaller or equal to euro wallet balance,
+        /// then position model is filled, position inserted into DB and wallet balances adjusted acordingly.
+        /// </summary>
+        /// <param name="euroAmount">Buy amount in euro requested by user</param>
+        /// <param name="cryptoAmount">Calculated crypto amount</param>
+        /// <param name="leverageRatio">Leverage multiplier selected by user</param>
+        /// <param name="marginAmount">Calculated margin amount</param>
+        /// <returns>Bitcoin market view</returns>
         [HttpPost]
         public IActionResult OpenBitcoinPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
@@ -459,7 +623,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentEUR = currentBalances.EuroAmount;
             var currentBTC = currentBalances.BitcoinAmount;
 
-            marginAmount = marginAmount == null ? "0" : marginAmount;
+            marginAmount = marginAmount ?? "0";
             if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
             {
                 ViewBag.Error = "Insufficient funds for requested purchase!";
@@ -483,6 +647,190 @@ namespace CryptoInvestmentSimulator.Controllers
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.BTC.ToString(), currentBTC + newPosition.CryptoAmount);
 
             return View("Bitcoin");
+        }
+
+        /// <summary>
+        /// Receives user input form buy form. Validates amounts against users wallet.
+        /// If requested purchase amount plus optional margin is larger than euro wallet balance,
+        /// then further process is stopped and view bag with error message is prepared.
+        /// If requested purchase amount plus optional margin is smaller or equal to euro wallet balance,
+        /// then position model is filled, position inserted into DB and wallet balances adjusted acordingly.
+        /// </summary>
+        /// <param name="euroAmount">Buy amount in euro requested by user</param>
+        /// <param name="cryptoAmount">Calculated crypto amount</param>
+        /// <param name="leverageRatio">Leverage multiplier selected by user</param>
+        /// <param name="marginAmount">Calculated margin amount</param>
+        /// <returns>Etherium market view</returns>
+        [HttpPost]
+        public IActionResult OpenEtheriumPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
+        {
+            var userId = GetUserDetails().Id;
+            var currentBalances = walletProcedures.GetUsersWalletBalances(userId);
+            var currentEUR = currentBalances.EuroAmount;
+            var currentETH = currentBalances.EtheriumAmount;
+
+            marginAmount = marginAmount ?? "0";
+            if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
+            {
+                ViewBag.Error = "Insufficient funds for requested purchase!";
+                return View("Etherium");
+            }
+
+            var newPosition = new PositionModel
+            {
+                DateTime = DateTime.Now,
+                FiatAmount = decimal.Parse(euroAmount),
+                CryptoAmount = decimal.Parse(cryptoAmount),
+                Margin = decimal.Parse(marginAmount),
+                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Status = (int)StatusEnum.Open,
+                Wallet = investmentProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Data = marketProcedures.GetLatestMarketData(CryptoEnum.ETH).Id
+            };
+
+            investmentProcedures.InsertNewPosition(newPosition);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ETH.ToString(), currentETH + newPosition.CryptoAmount);
+
+            return View("Etherium");
+        }
+
+        /// <summary>
+        /// Receives user input form buy form. Validates amounts against users wallet.
+        /// If requested purchase amount plus optional margin is larger than euro wallet balance,
+        /// then further process is stopped and view bag with error message is prepared.
+        /// If requested purchase amount plus optional margin is smaller or equal to euro wallet balance,
+        /// then position model is filled, position inserted into DB and wallet balances adjusted acordingly.
+        /// </summary>
+        /// <param name="euroAmount">Buy amount in euro requested by user</param>
+        /// <param name="cryptoAmount">Calculated crypto amount</param>
+        /// <param name="leverageRatio">Leverage multiplier selected by user</param>
+        /// <param name="marginAmount">Calculated margin amount</param>
+        /// <returns>Cardano market view</returns>
+        [HttpPost]
+        public IActionResult OpenCardanoPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
+        {
+            var userId = GetUserDetails().Id;
+            var currentBalances = walletProcedures.GetUsersWalletBalances(userId);
+            var currentEUR = currentBalances.EuroAmount;
+            var currentADA = currentBalances.CardanoAmount;
+
+            marginAmount = marginAmount ?? "0";
+            if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
+            {
+                ViewBag.Error = "Insufficient funds for requested purchase!";
+                return View("Cardano");
+            }
+
+            var newPosition = new PositionModel
+            {
+                DateTime = DateTime.Now,
+                FiatAmount = decimal.Parse(euroAmount),
+                CryptoAmount = decimal.Parse(cryptoAmount),
+                Margin = decimal.Parse(marginAmount),
+                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Status = (int)StatusEnum.Open,
+                Wallet = investmentProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Data = marketProcedures.GetLatestMarketData(CryptoEnum.ADA).Id
+            };
+
+            investmentProcedures.InsertNewPosition(newPosition);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ADA.ToString(), currentADA + newPosition.CryptoAmount);
+
+            return View("Cardano");
+        }
+
+        /// <summary>
+        /// Receives user input form buy form. Validates amounts against users wallet.
+        /// If requested purchase amount plus optional margin is larger than euro wallet balance,
+        /// then further process is stopped and view bag with error message is prepared.
+        /// If requested purchase amount plus optional margin is smaller or equal to euro wallet balance,
+        /// then position model is filled, position inserted into DB and wallet balances adjusted acordingly.
+        /// </summary>
+        /// <param name="euroAmount">Buy amount in euro requested by user</param>
+        /// <param name="cryptoAmount">Calculated crypto amount</param>
+        /// <param name="leverageRatio">Leverage multiplier selected by user</param>
+        /// <param name="marginAmount">Calculated margin amount</param>
+        /// <returns>Cosmos market view</returns>
+        [HttpPost]
+        public IActionResult OpenCosmosPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
+        {
+            var userId = GetUserDetails().Id;
+            var currentBalances = walletProcedures.GetUsersWalletBalances(userId);
+            var currentEUR = currentBalances.EuroAmount;
+            var currentATOM = currentBalances.CosmosAmount;
+
+            marginAmount = marginAmount ?? "0";
+            if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
+            {
+                ViewBag.Error = "Insufficient funds for requested purchase!";
+                return View("Cosmos");
+            }
+
+            var newPosition = new PositionModel
+            {
+                DateTime = DateTime.Now,
+                FiatAmount = decimal.Parse(euroAmount),
+                CryptoAmount = decimal.Parse(cryptoAmount),
+                Margin = decimal.Parse(marginAmount),
+                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Status = (int)StatusEnum.Open,
+                Wallet = investmentProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Data = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM).Id
+            };
+
+            investmentProcedures.InsertNewPosition(newPosition);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ATOM.ToString(), currentATOM + newPosition.CryptoAmount);
+
+            return View("Cosmos");
+        }
+
+        /// <summary>
+        /// Receives user input form buy form. Validates amounts against users wallet.
+        /// If requested purchase amount plus optional margin is larger than euro wallet balance,
+        /// then further process is stopped and view bag with error message is prepared.
+        /// If requested purchase amount plus optional margin is smaller or equal to euro wallet balance,
+        /// then position model is filled, position inserted into DB and wallet balances adjusted acordingly.
+        /// </summary>
+        /// <param name="euroAmount">Buy amount in euro requested by user</param>
+        /// <param name="cryptoAmount">Calculated crypto amount</param>
+        /// <param name="leverageRatio">Leverage multiplier selected by user</param>
+        /// <param name="marginAmount">Calculated margin amount</param>
+        /// <returns>Dogecoin market view</returns>
+        [HttpPost]
+        public IActionResult OpenDogecoinPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
+        {
+            var userId = GetUserDetails().Id;
+            var currentBalances = walletProcedures.GetUsersWalletBalances(userId);
+            var currentEUR = currentBalances.EuroAmount;
+            var currentDOGE = currentBalances.DogecoinAmount;
+
+            marginAmount = marginAmount ?? "0";
+            if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
+            {
+                ViewBag.Error = "Insufficient funds for requested purchase!";
+                return View("Dogecoin");
+            }
+
+            var newPosition = new PositionModel
+            {
+                DateTime = DateTime.Now,
+                FiatAmount = decimal.Parse(euroAmount),
+                CryptoAmount = decimal.Parse(cryptoAmount),
+                Margin = decimal.Parse(marginAmount),
+                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Status = (int)StatusEnum.Open,
+                Wallet = investmentProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Data = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE).Id
+            };
+
+            investmentProcedures.InsertNewPosition(newPosition);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.DOGE.ToString(), currentDOGE + newPosition.CryptoAmount);
+
+            return View("Dogecoin");
         }
 
         /// <summary>

@@ -27,7 +27,7 @@
 		<div id="chartZone8h"></div>
 		<div id="chartZone24h"></div>
 
-		<form method="post" asp-controller="Investment" asp-action="CreateNewPosition">
+		<form method="post" asp-controller="Market" asp-action="OpenEtheriumPosition">
 
 			<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
 				<div class="row">
@@ -48,10 +48,17 @@
 				</div>
 			</div>
 
+			@if (ViewBag.Error != null)
+			{
+				<div><p>@ViewBag.Error</p></div>
+			}
+
 			<button id="buy" type="submit" class="btn btn-success">BUY</button>
 		</form>
 
 	<!-- Navigates user back to market page. -->
 	<a class="text-danger" asp-controller="Market" asp-action="Index">Back</a>
+
+	<div id="activePositionZone"></div>
 
 </div>
