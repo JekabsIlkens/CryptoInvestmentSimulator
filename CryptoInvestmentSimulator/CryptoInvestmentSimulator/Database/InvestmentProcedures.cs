@@ -49,6 +49,44 @@ namespace CryptoInvestmentSimulator.Database
 			}
 		}
 
+		public List<PositionModel> GetAllActivePositions(int userId, CryptoEnum crypto)
+		{
+			var modelList = new List<PositionModel>();
+
+			using (var connection = context.GetConnection())
+			{
+				connection.Open();
+				MySqlCommand command = new
+					($"SELECT wallet.user_id, market_data.crypto_id, transaction.date_time, transaction.fiat_amount, " +
+					$"transaction.crypto_amount, transaction.ratio_id, transaction.margin, transaction.status_id " +
+					$"FROM cisdb.transaction " +
+					$"INNER JOIN cisdb.wallet ON transaction.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN cisdb.market_data ON transaction.data_id = market_data.data_id " +
+					$"WHERE wallet.user_id = {userId} AND market_data.crypto_id = {(int)crypto} AND transaction.status_id = 1 " +
+					$"ORDER BY transaction.date_time DESC", 
+					connection);
+
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var model = new PositionModel
+						{
+							DateTime = (DateTime)reader.GetValue(reader.GetOrdinal("date_time")),
+							FiatAmount = (decimal)reader.GetValue(reader.GetOrdinal("fiat_amount")),
+							CryptoAmount = (decimal)reader.GetValue(reader.GetOrdinal("crypto_amount")),
+							Leverage = (int)reader.GetValue(reader.GetOrdinal("ratio_id")),
+							Margin = (decimal)reader.GetValue(reader.GetOrdinal("margin"))
+						};
+
+						modelList.Add(model);
+					}
+				}
+			}
+
+			return modelList;
+		}
+
 		public int GetUserWalletId(int userId, FiatEnum fiat)
 		{
 			if (userId < 1) throw new ArgumentException(nameof(userId));

@@ -78,6 +78,39 @@ namespace CryptoInvestmentSimulator.Controllers
             return PartialView("_DataTable");
         }
 
+        [Authorize]
+        public IActionResult PositionsTableBTC()
+        {
+            var positionsList = investmentProcedures.GetAllActivePositions(GetUserDetails().Id, CryptoEnum.BTC);
+            var length = positionsList.Count;
+
+            string[] dateTimes = new string[length];
+            string[] fiatAmounts = new string[length];
+            string[] cryptoAmounts = new string[length];
+            string[] ratios = new string[length];
+            string[] margins = new string[length];
+
+            var count = 0;
+            foreach(var position in positionsList)
+            {
+                dateTimes[count] = position.DateTime.ToString();
+                fiatAmounts[count] = position.FiatAmount.ToString();
+                cryptoAmounts[count] = position.CryptoAmount.ToString();
+                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                margins[count] = position.Margin.ToString();
+
+                count++;
+            }
+
+            ViewBag.DateTimes = dateTimes;
+            ViewBag.FiatAmounts = fiatAmounts;
+            ViewBag.CryptoAmounts = cryptoAmounts;
+            ViewBag.Ratios = ratios;
+            ViewBag.Margins = margins;
+
+            return PartialView("_PositionsTable");
+        }
+
         /// <summary>
         /// Collects Bitcoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
