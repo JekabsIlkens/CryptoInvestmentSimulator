@@ -833,6 +833,12 @@ namespace CryptoInvestmentSimulator.Controllers
             return View("Dogecoin");
         }
 
+        [HttpPost]
+        public IActionResult ClosePosition(string positionNumber, string cryptoSymbol)
+        {
+            return View("Index");
+        }
+
         /// <summary>
         /// Collects latest market data records from database for all supported cryptos.
         /// </summary>
