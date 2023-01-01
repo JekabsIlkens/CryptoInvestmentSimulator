@@ -836,7 +836,68 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult ClosePosition(string positionNumber, string cryptoSymbol)
         {
-            return View("Index");
+            var userId = GetUserDetails().Id;
+
+            var positionsList = new List<PositionModel>();
+            var returnablePage = string.Empty;
+
+            if (cryptoSymbol == CryptoEnum.BTC.ToString())
+            {
+                positionsList = investmentProcedures.GetAllActivePositions(userId, CryptoEnum.BTC);
+                returnablePage = "Bitcoin";
+            }
+
+            if (cryptoSymbol == CryptoEnum.ETH.ToString())
+            {
+                positionsList = investmentProcedures.GetAllActivePositions(userId, CryptoEnum.ETH);
+                returnablePage = "Etherium";
+            }
+
+            if (cryptoSymbol == CryptoEnum.ADA.ToString())
+            {
+                positionsList = investmentProcedures.GetAllActivePositions(userId, CryptoEnum.ADA);
+                returnablePage = "Cardano";
+            }
+
+            if (cryptoSymbol == CryptoEnum.ATOM.ToString())
+            {
+                positionsList = investmentProcedures.GetAllActivePositions(userId, CryptoEnum.ATOM);
+                returnablePage = "Cosmos";
+            }
+
+            if (cryptoSymbol == CryptoEnum.DOGE.ToString())
+            {
+                positionsList = investmentProcedures.GetAllActivePositions(userId, CryptoEnum.DOGE);
+                returnablePage = "Dogecoin";
+            }
+
+            var positionToClose = new PositionModel();
+            var positionNumberInt = int.Parse(positionNumber);
+            var counter = 1;
+
+            foreach(var position in positionsList)
+            {
+                if(counter == positionNumberInt)
+                {
+                    positionToClose = position;
+                }
+
+                counter++;
+            }
+
+            var currentCryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, cryptoSymbol);
+            walletProcedures.UpdateUsersWalletBalance(userId, cryptoSymbol, (currentCryptoBalance - positionToClose.CryptoAmount));
+
+            var buyTimeUnitValue = investmentProcedures.GetPositionsUnitValue(positionToClose.Id);
+            var currentUnitValue = marketProcedures.GetLatestMarketData(StringToCryptoEnum(cryptoSymbol)).UnitValue;
+            var profitMultiplier = currentUnitValue / buyTimeUnitValue;
+
+            var currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (currentFiatBalance + positionToClose.FiatAmount * profitMultiplier));
+
+            investmentProcedures.UpdatePositionStatus(positionToClose.Id, (int)StatusEnum.Closed);
+
+            return View(returnablePage);
         }
 
         /// <summary>
@@ -984,6 +1045,19 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             return userProcedures.GetUserDetails(email);
+        }
+
+        private CryptoEnum StringToCryptoEnum(string symbol)
+        {
+            return symbol switch
+            {
+                "BTC" => CryptoEnum.BTC,
+                "ETH" => CryptoEnum.ETH,
+                "ADA" => CryptoEnum.ADA,
+                "ATOM" => CryptoEnum.ATOM,
+                "DOGE" => CryptoEnum.DOGE,
+                _ => throw new ArgumentException(symbol)
+            };
         }
     }
 }

@@ -63,26 +63,34 @@
 		positionsBody.appendChild(row);
 	}
 
-	// Collects the position number dropdown select as a global variable.
-	var positionSelect = document.getElementById("position-number-select");
 	var positionsCount = document.getElementById("positionsBody").childElementCount;
 
-	for (let i = 1; i <= positionsCount; i++) {
-		let newOption = document.createElement('option');
-		newOption.innerHTML = "" + i;
-		newOption.value = "" + i;
+	if(positionsCount != 0)
+	{
+		document.getElementById("sell-form").style.display = "block";
+		var positionSelect = document.getElementById("position-number-select");
 
-		positionSelect.appendChild(newOption);
+		for (let i = 1; i <= positionsCount; i++) {
+			let newOption = document.createElement('option');
+			newOption.innerHTML = "" + i;
+			newOption.value = "" + i;
+
+			positionSelect.appendChild(newOption);
+		}
+
+		var soldCrypto = document.getElementById("crypto-sold");
+		var cryptoPage = "" + window.location.href;
+
+		if (cryptoPage.includes("bitcoin")) soldCrypto.value = "BTC";
+		if (cryptoPage.includes("etherium")) soldCrypto.value = "ETH";
+		if (cryptoPage.includes("cardano")) soldCrypto.value = "ADA";
+		if (cryptoPage.includes("cosmos")) soldCrypto.value = "ATOM";
+		if (cryptoPage.includes("dogecoin")) soldCrypto.value = "DOGE";
 	}
-
-	var soldCrypto = document.getElementById("crypto-sold");
-	var cryptoPage = "" + window.location.href;
-
-	if (cryptoPage.includes("bitcoin")) soldCrypto.value = "BTC";
-	if (cryptoPage.includes("etherium")) soldCrypto.value = "ETH";
-	if (cryptoPage.includes("cardano")) soldCrypto.value = "ADA";
-	if (cryptoPage.includes("cosmos")) soldCrypto.value = "ATOM";
-	if (cryptoPage.includes("dogecoin")) soldCrypto.value = "DOGE";
+	else
+	{
+		document.getElementById("sell-form").style.display = "none";
+	}
 
 </script>
 
@@ -101,7 +109,7 @@
 	<tbody id="positionsBody"></tbody>
 </table>
 
-<form method="post" asp-controller="Market" asp-action="ClosePosition">
+<form id="sell-form" method="post" asp-controller="Market" asp-action="ClosePosition">
 	<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
 		<label for="position-number-select">Position</label>
 		<select id="position-number-select" type="text" class="form-control" name="positionNumber"></select>

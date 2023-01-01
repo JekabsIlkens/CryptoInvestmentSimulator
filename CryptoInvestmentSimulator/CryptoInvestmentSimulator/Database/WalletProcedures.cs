@@ -67,6 +67,35 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
+        /// Collects a specified wallet balance for given user.
+        /// </summary> 
+        /// <param name="userId">User id / Walled owner</param>
+        /// <returns>Current balance of wallet</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public decimal GetSpecificWalletBalance(int userId, string symbol)
+        {
+            if (userId < 1) throw new ArgumentException(nameof(userId));
+
+            var currencyBalance = 0M;
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT * FROM wallet WHERE user_id = {userId} AND symbol = '{symbol}'", connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        currencyBalance = (decimal)reader.GetValue(reader.GetOrdinal("balance"));
+                    }
+                }
+            }
+
+            return currencyBalance;
+        }
+
+        /// <summary>
         /// Updates a specified users wallet balance for specified currency.
         /// </summary>
         /// <param name="userId">Wallet owner</param>
