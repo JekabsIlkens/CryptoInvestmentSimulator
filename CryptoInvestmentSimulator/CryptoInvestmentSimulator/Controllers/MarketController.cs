@@ -892,8 +892,37 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentUnitValue = marketProcedures.GetLatestMarketData(StringToCryptoEnum(cryptoSymbol)).UnitValue;
             var profitMultiplier = currentUnitValue / buyTimeUnitValue;
 
-            var currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (currentFiatBalance + positionToClose.FiatAmount * profitMultiplier));
+            decimal newBalance;
+            decimal currentFiatBalance;
+
+            if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
+            {
+                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                newBalance = currentFiatBalance + positionToClose.FiatAmount + ((positionToClose.FiatAmount * 2 * profitMultiplier) - (positionToClose.FiatAmount * 2));
+
+                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+            }
+            else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
+            {
+                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                newBalance = currentFiatBalance + positionToClose.FiatAmount + ((positionToClose.FiatAmount * 5 * profitMultiplier) - (positionToClose.FiatAmount * 5));
+
+                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+            }
+            else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
+            {
+                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                newBalance = currentFiatBalance + positionToClose.FiatAmount + ((positionToClose.FiatAmount * 10 * profitMultiplier) - (positionToClose.FiatAmount * 10));
+
+                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+            }
+            else
+            {
+                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                newBalance = currentFiatBalance + (positionToClose.FiatAmount * profitMultiplier);
+
+                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+            }
 
             investmentProcedures.UpdatePositionStatus(positionToClose.Id, (int)StatusEnum.Closed);
 
