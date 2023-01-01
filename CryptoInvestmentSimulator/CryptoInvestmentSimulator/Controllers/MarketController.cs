@@ -643,7 +643,7 @@ namespace CryptoInvestmentSimulator.Controllers
             };
 
             investmentProcedures.InsertNewPosition(newPosition);
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount - newPosition.Margin);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.BTC.ToString(), currentBTC + newPosition.CryptoAmount);
 
             return View("Bitcoin");
@@ -689,7 +689,7 @@ namespace CryptoInvestmentSimulator.Controllers
             };
 
             investmentProcedures.InsertNewPosition(newPosition);
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount - newPosition.Margin);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ETH.ToString(), currentETH + newPosition.CryptoAmount);
 
             return View("Etherium");
@@ -735,7 +735,7 @@ namespace CryptoInvestmentSimulator.Controllers
             };
 
             investmentProcedures.InsertNewPosition(newPosition);
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount - newPosition.Margin);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ADA.ToString(), currentADA + newPosition.CryptoAmount);
 
             return View("Cardano");
@@ -781,7 +781,7 @@ namespace CryptoInvestmentSimulator.Controllers
             };
 
             investmentProcedures.InsertNewPosition(newPosition);
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount - newPosition.Margin);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ATOM.ToString(), currentATOM + newPosition.CryptoAmount);
 
             return View("Cosmos");
@@ -827,7 +827,7 @@ namespace CryptoInvestmentSimulator.Controllers
             };
 
             investmentProcedures.InsertNewPosition(newPosition);
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), currentEUR - newPosition.FiatAmount - newPosition.Margin);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.DOGE.ToString(), currentDOGE + newPosition.CryptoAmount);
 
             return View("Dogecoin");
@@ -898,21 +898,27 @@ namespace CryptoInvestmentSimulator.Controllers
             if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + positionToClose.FiatAmount + ((positionToClose.FiatAmount * 2 * profitMultiplier) - (positionToClose.FiatAmount * 2));
+                newBalance = currentFiatBalance + positionToClose.FiatAmount + 
+                    ((positionToClose.FiatAmount * 2 * profitMultiplier) - (positionToClose.FiatAmount * 2)) +
+                    positionToClose.Margin;
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
             else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + positionToClose.FiatAmount + ((positionToClose.FiatAmount * 5 * profitMultiplier) - (positionToClose.FiatAmount * 5));
+                newBalance = currentFiatBalance + positionToClose.FiatAmount + 
+                    ((positionToClose.FiatAmount * 5 * profitMultiplier) - (positionToClose.FiatAmount * 5)) +
+                    positionToClose.Margin;
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
             else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + positionToClose.FiatAmount + ((positionToClose.FiatAmount * 10 * profitMultiplier) - (positionToClose.FiatAmount * 10));
+                newBalance = currentFiatBalance + positionToClose.FiatAmount + 
+                    ((positionToClose.FiatAmount * 10 * profitMultiplier) - (positionToClose.FiatAmount * 10)) +
+                    positionToClose.Margin;
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
@@ -1066,6 +1072,48 @@ namespace CryptoInvestmentSimulator.Controllers
             }
         }
 
+        public void LiquidatePositions()
+        {
+            var userIdList = userProcedures.GetAllVerifiedUserIds();
+
+            foreach(var userId in userIdList)
+            {
+                var activeLeveragedPositions = investmentProcedures.GetAllActiveLeveragedPositions(userId);
+
+                foreach (var position in activeLeveragedPositions)
+                {
+                    var currentUnitValue = marketProcedures.GetLatestMarketData(IntToCryptoEnum(position.CryptoId)).UnitValue;
+                    var profitMultiplier = currentUnitValue / position.UnitValue;
+
+                    decimal currentProfit;
+
+                    if (position.RatioId == 2)
+                    {
+                        currentProfit = ((position.FiatAmount * 2 * profitMultiplier) - (position.FiatAmount * 2));
+                    }
+                    else if (position.RatioId == 3)
+                    {
+                        currentProfit = ((position.FiatAmount * 5 * profitMultiplier) - (position.FiatAmount * 5));
+                    }
+                    else
+                    {
+                        currentProfit = ((position.FiatAmount * 10 * profitMultiplier) - (position.FiatAmount * 10));
+                    }
+
+                    if (currentProfit < (position.MarginAmount * 2 * -1))
+                    {
+                        var cryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, IntToCryptoEnum(position.CryptoId).ToString());
+                        walletProcedures.UpdateUsersWalletBalance(userId, IntToCryptoEnum(position.CryptoId).ToString(), (cryptoBalance - position.CryptoAmount));
+
+                        var fiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                        walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (fiatBalance + position.FiatAmount - currentProfit));
+
+                        investmentProcedures.UpdatePositionStatus(position.TransactionId, (int)StatusEnum.Liquidated);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Fills a user model for use in other methods.
         /// </summary>
@@ -1076,16 +1124,29 @@ namespace CryptoInvestmentSimulator.Controllers
             return userProcedures.GetUserDetails(email);
         }
 
-        private CryptoEnum StringToCryptoEnum(string symbol)
+        private CryptoEnum StringToCryptoEnum(string symbolString)
         {
-            return symbol switch
+            return symbolString switch
             {
                 "BTC" => CryptoEnum.BTC,
                 "ETH" => CryptoEnum.ETH,
                 "ADA" => CryptoEnum.ADA,
                 "ATOM" => CryptoEnum.ATOM,
                 "DOGE" => CryptoEnum.DOGE,
-                _ => throw new ArgumentException(symbol)
+                _ => throw new ArgumentException(symbolString)
+            };
+        }
+
+        private CryptoEnum IntToCryptoEnum(int symbolKey)
+        {
+            return symbolKey switch
+            {
+                1 => CryptoEnum.BTC,
+                2 => CryptoEnum.ETH,
+                3 => CryptoEnum.ADA,
+                4 => CryptoEnum.ATOM,
+                5 => CryptoEnum.DOGE,
+                _ => throw new ArgumentException(nameof(symbolKey))
             };
         }
     }

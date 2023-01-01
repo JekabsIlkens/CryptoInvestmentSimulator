@@ -246,5 +246,26 @@ namespace CryptoInvestmentSimulator.Database
                 command.ExecuteNonQuery();
             }
         }
+
+        public List<int> GetAllVerifiedUserIds()
+        {
+            var idList = new List<int>();
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT user_id FROM user WHERE verified = 1", connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        idList.Add(reader.GetInt32("user_id"));
+                    }
+                }
+            }
+
+            return idList;
+        }
     }
 }

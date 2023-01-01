@@ -88,6 +88,45 @@ namespace CryptoInvestmentSimulator.Database
 			return modelList;
 		}
 
+		public List<LiquidationModel> GetAllActiveLeveragedPositions(int userId)
+		{
+			var modelList = new List<LiquidationModel>();
+
+			using (var connection = context.GetConnection())
+			{
+				connection.Open();
+				MySqlCommand command = new
+					($"SELECT wallet.user_id, transaction.transaction_id, transaction.fiat_amount, transaction.fiat_amount, " +
+					$"transaction.margin, transaction.ratio_id, market_data.unit_value, market_data.crypto_id " +
+					$"FROM transaction " +
+					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
+					$"WHERE wallet.user_id = {userId} AND transaction.status_id = 1",
+					connection);
+
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var model = new LiquidationModel
+						{
+							TransactionId = (int)reader.GetValue(reader.GetOrdinal("transaction_id")),
+							FiatAmount = (decimal)reader.GetValue(reader.GetOrdinal("fiat_amount")),
+							CryptoAmount = (decimal)reader.GetValue(reader.GetOrdinal("crypto_amount")),
+							MarginAmount = (decimal)reader.GetValue(reader.GetOrdinal("margin")),
+							RatioId = (int)reader.GetValue(reader.GetOrdinal("ratio_id")),
+							UnitValue = (decimal)reader.GetValue(reader.GetOrdinal("unit_value")),
+							CryptoId = (int)reader.GetValue(reader.GetOrdinal("crypto_id"))
+						};
+
+						modelList.Add(model);
+					}
+				}
+			}
+
+			return modelList;
+		}
+
 		/// <summary>
 		/// Returns the unit value of a given position (unit value at the time of opening position).
 		/// </summary>
