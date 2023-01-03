@@ -30,4 +30,8 @@
     <ProjectReference Include="..\CryptoInvestmentSimulator\CryptoInvestmentSimulator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="HelperTests\" />
+  </ItemGroup>
+
 </Project>

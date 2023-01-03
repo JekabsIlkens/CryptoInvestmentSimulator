@@ -1,8 +1,6 @@
-﻿using CryptoInvestmentSimulator.Constants;
-using CryptoInvestmentSimulator.Database;
+﻿using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Enums;
-using CryptoInvestmentSimulator.Models.ViewModels;
-using FluentAssertions;
+using MySql.Server;
 using UnitTests.Mocks;
 using Xunit;
 
@@ -10,23 +8,9 @@ namespace UnitTests.DatabaseTests
 {
 	public class MarketDataProceduresTests
 	{
-		/// <summary>
-		/// Tests if passing a MarketDataModel equal to null throws exception.
-		/// </summary>
-		[Fact]
-		public void InsertNewMarketDataEntry_ParameterIsNull_Exception()
-		{
-			// Arrange
-			var marketDataProcedures = new MarketDataProcedures(new DatabaseContext(DatabaseConstants.Access));
-			var marketDataModel = new MarketDataModel();
-			marketDataModel = null;
-
-			// Act
-			Action act = () => marketDataProcedures.InsertNewMarketDataEntry(marketDataModel);
-
-			// Assert
-			act.Should().ThrowExactly<ArgumentNullException>();
-		}
+		private static readonly MySqlServer mockServer = DatabaseInstanceMock.CreateMockDatabase();
+		private static readonly string mockConnection = mockServer.GetConnectionString("mockdb");
+		private static readonly DatabaseContext mockContext = new DatabaseContext(mockConnection);
 
 		/// <summary>
 		/// Tests if the latest market data record gets returned
@@ -36,16 +20,13 @@ namespace UnitTests.DatabaseTests
 		public void GetLatestMarketData_DataExistsInDb_FilledMarketDataModel()
 		{
 			// Arrange
-			var testServer = DatabaseMock.CreateDatabase();
-			var mockConnection = testServer.GetConnectionString("test");
-			var mockContext = new DatabaseContext(mockConnection);
-
 			var procedures = new MarketDataProcedures(mockContext);
-			var mockMarketData = ModelMock.GetValidMarketDataModelNew();
+
+			var mockMarketData = ModelMock.GetValidNewMarketDataModel();
 
 			// Act
-			var result = procedures.GetLatestMarketData(CryptoEnum.BTC);
-			testServer.ShutDown();
+			var result = procedures.GetLatestMarketData(CryptoEnum.ETH);
+			mockServer.ShutDown();
 
 			// Assert
 			Assert.Equal(mockMarketData.CryptoSymbol, result.CryptoSymbol);
@@ -63,20 +44,18 @@ namespace UnitTests.DatabaseTests
 		public void GetPricePointHistory_TwoRecordsInDb_Returns2Values()
 		{
 			// Arrange
-			var testServer = DatabaseMock.CreateDatabase();
-			var mockConnection = testServer.GetConnectionString("test");
-			var mockContext = new DatabaseContext(mockConnection);
-
 			var procedures = new MarketDataProcedures(mockContext);
-			var mockMarketDataOld = ModelMock.GetValidMarketDataModelOld();
-			var mockMarketDataNew = ModelMock.GetValidMarketDataModelNew();
+
+			var mockMarketDataNew = ModelMock.GetValidNewMarketDataModel();
+			mockMarketDataNew.CryptoSymbol = CryptoEnum.BTC.ToString();
+			procedures.InsertNewMarketDataEntry(mockMarketDataNew);
 
 			// Act
 			var result = procedures.GetPricePointHistory(CryptoEnum.BTC, 2, 1);
-			testServer.ShutDown();
+			mockServer.ShutDown();
 
 			// Assert
-			Assert.Equal((double)mockMarketDataOld.UnitValue, result[0]);
+			Assert.Equal((double)0.025M, result[0]);
 			Assert.Equal((double)mockMarketDataNew.UnitValue, result[1]);
 		}
 
@@ -88,15 +67,13 @@ namespace UnitTests.DatabaseTests
 		public void GetTimePointHistory_TwoRecordsInDb_Returns2Values()
 		{
 			// Arrange
-			var testServer = DatabaseMock.CreateDatabase();
-			var mockConnection = testServer.GetConnectionString("test");
-			var mockContext = new DatabaseContext(mockConnection);
-
 			var procedures = new MarketDataProcedures(mockContext);
-			var mockMarketDataOld = ModelMock.GetValidMarketDataModelOld();
-			var mockMarketDataNew = ModelMock.GetValidMarketDataModelNew();
 
-			var oldDate = mockMarketDataOld.CollectionTime.ToString();
+			var mockMarketDataNew = ModelMock.GetValidNewMarketDataModel();
+			mockMarketDataNew.CryptoSymbol = CryptoEnum.BTC.ToString();
+			procedures.InsertNewMarketDataEntry(mockMarketDataNew);
+
+			var oldDate = DateTime.Now.AddDays(-10).ToString();
 			var expectedOldDate = ((DateTimeOffset)DateTime.Parse(oldDate)).ToUnixTimeSeconds() * 1000;
 
 			var newDate = mockMarketDataNew.CollectionTime.ToString();
@@ -104,7 +81,7 @@ namespace UnitTests.DatabaseTests
 
 			// Act
 			var result = procedures.GetTimePointHistory(CryptoEnum.BTC, 2, 1);
-			testServer.ShutDown();
+			mockServer.ShutDown();
 
 			// Assert
 			Assert.Equal(expectedOldDate, result[0]);

@@ -18,8 +18,7 @@
         public static readonly string WalletColumns = "symbol, balance, user_id";
         public static readonly string UserColumns = "email, verified, username, avatar, zone_id";
         public static readonly string MarketDataColumns = "date_time, unit_value, daily_change, weekly_change, crypto_id, fiat_id";
-        public static readonly string TransactionColumnsNoLeverage = "date_time, fiat_amount, crypto_amount, status_id, wallet_id, data_id";
-        public static readonly string TransactionColumnsLeverage = "date_time, fiat_amount, crypto_amount, margin, ratio_id, status_id, wallet_id, data_id";
+        public static readonly string TransactionColumns = "date_time, fiat_amount, crypto_amount, margin, ratio_id, status_id, wallet_id, data_id";
 
     }
 }

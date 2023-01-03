@@ -1,4 +1,5 @@
-﻿using CryptoInvestmentSimulator.Models.ViewModels;
+﻿using CryptoInvestmentSimulator.Enums;
+using CryptoInvestmentSimulator.Models.ViewModels;
 using MySql.Data.MySqlClient;
 
 namespace CryptoInvestmentSimulator.Database
@@ -115,6 +116,29 @@ namespace CryptoInvestmentSimulator.Database
                 MySqlCommand command = new($"UPDATE wallet SET balance = {newBalance} WHERE user_id = {userId} AND symbol = '{symbol}'", connection);
                 command.ExecuteNonQuery();
             }
+        }
+
+        public int GetUserWalletId(int userId, FiatEnum fiat)
+        {
+            if (userId < 1) throw new ArgumentException(nameof(userId));
+
+            var walletId = -1;
+
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT * FROM wallet WHERE user_id = {userId} AND symbol = '{fiat}'", connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        walletId = (int)reader.GetValue(reader.GetOrdinal("wallet_id"));
+                    }
+                }
+            }
+
+            return walletId;
         }
     }
 }

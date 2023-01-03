@@ -23,23 +23,11 @@ namespace CryptoInvestmentSimulator.Database
 			}
 
 			var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(positionModel.DateTime);
-			string valuesString, commandString;
 
-			if (positionModel.Leverage == 0)
-			{
-				valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, " +
-					$"{positionModel.Status}, {positionModel.Wallet}, {positionModel.Data}";
-
-				commandString = $"INSERT INTO transaction ({DatabaseConstants.TransactionColumnsNoLeverage}) VALUES ({valuesString})";
-
-			}
-			else
-			{
-				valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, {positionModel.Margin}, " +
+			string valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, {positionModel.Margin}, " +
 					$"{positionModel.Leverage}, {positionModel.Status}, {positionModel.Wallet}, {positionModel.Data}";
 
-				commandString = $"INSERT INTO transaction ({DatabaseConstants.TransactionColumnsLeverage}) VALUES ({valuesString})";
-			}
+			string commandString = $"INSERT INTO transaction ({DatabaseConstants.TransactionColumns}) VALUES ({valuesString})";
 
 			using (MySqlConnection connection = context.GetConnection())
 			{
@@ -168,29 +156,6 @@ namespace CryptoInvestmentSimulator.Database
 				MySqlCommand command = new($"UPDATE transaction SET status_id = {newStatusId} WHERE transaction_id = {transactionId}", connection);
 				command.ExecuteNonQuery();
 			}
-		}
-
-		public int GetUserWalletId(int userId, FiatEnum fiat)
-		{
-			if (userId < 1) throw new ArgumentException(nameof(userId));
-
-			var walletId = -1;
-
-			using (var connection = context.GetConnection())
-			{
-				connection.Open();
-				MySqlCommand command = new($"SELECT * FROM wallet WHERE user_id = {userId} AND symbol = '{fiat}'", connection);
-
-				using (var reader = command.ExecuteReader())
-				{
-					while (reader.Read())
-					{
-						walletId = (int)reader.GetValue(reader.GetOrdinal("wallet_id"));
-					}
-				}
-			}
-
-			return walletId;
 		}
 	}
 }

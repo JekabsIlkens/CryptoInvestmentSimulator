@@ -42,9 +42,7 @@ namespace CryptoInvestmentSimulator.Database
                         user.Verified = reader.GetInt32("verified");
                         user.Username = reader.GetString("username");
                         user.Avatar = reader.GetString("avatar");
-
-                        var timeZoneString = DbKeyConversionHelper.TimeZoneKeyToString(reader.GetInt32("zone_id"));
-                        user.TimeZone = timeZoneString;
+                        user.TimeZone = DbKeyConversionHelper.TimeZoneKeyToString(reader.GetInt32("zone_id"));
                     }
                 }
             }

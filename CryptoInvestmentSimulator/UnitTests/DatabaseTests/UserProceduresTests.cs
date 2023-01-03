@@ -1,8 +1,9 @@
 ﻿using CryptoInvestmentSimulator.Constants;
 using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Enums;
-using CryptoInvestmentSimulator.Models.ViewModels;
+using CryptoInvestmentSimulator.Helpers;
 using FluentAssertions;
+using MySql.Server;
 using UnitTests.Mocks;
 using Xunit;
 
@@ -10,6 +11,10 @@ namespace UnitTests.DatabaseTests
 {
     public class UserProceduresTests
     {
+        private static readonly MySqlServer mockServer = DatabaseInstanceMock.CreateMockDatabase();
+        private static readonly string mockConnection = mockServer.GetConnectionString("mockdb");
+        private static readonly DatabaseContext mockContext = new DatabaseContext(mockConnection);
+
         /// <summary>
         /// Tests if all <see cref="UserProcedures"/> methods return exception
         /// when provided parameters are null or empty.
@@ -48,19 +53,20 @@ namespace UnitTests.DatabaseTests
         public void GetUserDetails_UserExistsInDb_FilledUserModel()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
 
             // Act
             var result = procedures.GetUserDetails(mockUser.Email);
-            testServer.ShutDown();
+            mockServer.ShutDown();
 
             // Assert
+            Assert.Equal(mockUser.Id, result.Id);
+            Assert.Equal(mockUser.Email, result.Email);
+            Assert.Equal(mockUser.Verified, result.Verified);
             Assert.Equal(mockUser.Username, result.Username);
+            Assert.Equal(mockUser.Avatar, result.Avatar);
+            Assert.Equal(mockUser.TimeZone, result.TimeZone);
         }
 
         /// <summary>
@@ -71,20 +77,19 @@ namespace UnitTests.DatabaseTests
         public void GetUserDetails_UserNotInDb_EmptyUserModel()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-            mockUser.Email = "missing.user@yahoo.com";
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
+            mockUser.Email = "unknown@mail.com";
 
             // Act
             var result = procedures.GetUserDetails(mockUser.Email);
-            testServer.ShutDown();
+            mockServer.ShutDown();
 
             // Assert
+            Assert.Null(result.Email);
             Assert.Null(result.Username);
+            Assert.Null(result.Avatar);
+            Assert.Null(result.TimeZone);
         }
 
         /// <summary>
@@ -95,27 +100,17 @@ namespace UnitTests.DatabaseTests
         public void InsertNewUser_UserDoesNotExist_UserInserted()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var newUser = new UserModel()
-            {
-                Id = 2,
-                Username = "mock-username",
-                Email = "mock-email",
-                Avatar = "mock-url",
-                Verified = 0,
-                TimeZone = "mock-timezone"
-            };
+            var newUser = ModelMock.GetValidVerifiedUserModel();
+            newUser.Id = 2;
+            newUser.Email = "new@mail.com";
 
             procedures.InsertNewUser(newUser);
             var query = $"SELECT * FROM user WHERE email = '{newUser.Email}'";
 
             // Act
-            var result = DatabaseMock.QueryHasRows(mockConnection, query);
-            testServer.ShutDown();
+            var result = DatabaseInstanceMock.QueryHasRows(mockConnection, query);
+            mockServer.ShutDown();
 
             // Assert
             Assert.True(result);
@@ -128,20 +123,16 @@ namespace UnitTests.DatabaseTests
         public void UpdateUsername_ValidParameters_UsernameUpdated()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-            mockUser.Username = "Spongebob";
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
+            mockUser.Username = "Pete";
 
             procedures.UpdateUsername(mockUser.Email, mockUser.Username);
             var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
-            var result = DatabaseMock.GetUsernameValue(mockConnection, query);
-            testServer.ShutDown();
+            var result = DatabaseInstanceMock.GetUsernameValue(mockConnection, query);
+            mockServer.ShutDown();
 
             // Assert
             Assert.Equal(mockUser.Username, result);
@@ -154,20 +145,16 @@ namespace UnitTests.DatabaseTests
         public void UpdateAvatar_ValidParameters_AvatarUpdated()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-            mockUser.Avatar = "new-url";
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
+            mockUser.Avatar = "new-avatar";
 
             procedures.UpdateAvatar(mockUser.Email, mockUser.Avatar);
             var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
-            var result = DatabaseMock.GetAvatarValue(mockConnection, query);
-            testServer.ShutDown();
+            var result = DatabaseInstanceMock.GetAvatarValue(mockConnection, query);
+            mockServer.ShutDown();
 
             // Assert
             Assert.Equal(mockUser.Avatar, result);
@@ -180,20 +167,16 @@ namespace UnitTests.DatabaseTests
         public void UpdateTimeZone_ValidParameters_TimeZoneUpdated()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-            mockUser.TimeZone = "GMT+02:00";
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
+            mockUser.TimeZone = "GMT-08:00";
 
-            procedures.UpdateTimeZone(mockUser.Email, 15);
+            procedures.UpdateTimeZone(mockUser.Email, DbKeyConversionHelper.TimeZoneToDbKey(mockUser.TimeZone));
             var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
-            var result = DatabaseMock.GetTimeZoneValue(mockConnection, query);
-            testServer.ShutDown();
+            var result = DatabaseInstanceMock.GetTimeZoneValue(mockConnection, query);
+            mockServer.ShutDown();
 
             // Assert
             Assert.Equal(mockUser.TimeZone, result);
@@ -206,66 +189,55 @@ namespace UnitTests.DatabaseTests
         public void UpdateVerification_ValidParameters_VerificationUpdated()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
+            mockUser.Verified = 0;
             var oldStatus = mockUser.Verified;
 
             procedures.UpdateVerification(mockUser.Email);
             var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act
-            var result = DatabaseMock.GetVerificationValue(mockConnection, query);
-            testServer.ShutDown();
+            var result = DatabaseInstanceMock.GetVerificationValue(mockConnection, query);
+            mockServer.ShutDown();
 
             // Assert
             Assert.NotEqual(oldStatus.ToString(), result);
         }
 
         /// <summary>
-        /// Tests if existance check returns true for existing user.
+        /// Tests if DoesUserExist returns true for existing user.
         /// </summary>
         [Fact]
         public void DoesUserExist_ExistingUser_ReturnsTrue()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
             procedures.InsertNewUser(mockUser);
 
             // Act
             var result = procedures.DoesUserExist(mockUser.Email);
-            testServer.ShutDown();
+            mockServer.ShutDown();
 
             // Assert
             Assert.True(result);
         }
 
         /// <summary>
-        /// Tests if existance check returns false for nonexistant user.
+        /// Tests if DoesUserExist returns false for nonexistant user.
         /// </summary>
         [Fact]
         public void DoesUserExist_NonexistantUser_ReturnsFalse()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
-            mockUser.Email = "notexist@gmail.com";
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
+            mockUser.Email = "missing@gmail.com";
 
             // Act
             var result = procedures.DoesUserExist(mockUser.Email);
-            testServer.ShutDown();
+            mockServer.ShutDown();
 
             // Assert
             Assert.False(result);
@@ -279,12 +251,8 @@ namespace UnitTests.DatabaseTests
         public void CreateWalletsForUser_ExistingUser_WalletsCreated()
         {
             // Arrange
-            var testServer = DatabaseMock.CreateDatabase();
-            var mockConnection = testServer.GetConnectionString("test");
-            var mockContext = new DatabaseContext(mockConnection);
-
             var procedures = new UserProcedures(mockContext);
-            var mockUser = ModelMock.GetValidUserModel();
+            var mockUser = ModelMock.GetValidVerifiedUserModel();
             mockUser.Id = 2;
             mockUser.Email = "walletTest@mail.com";
 
@@ -293,24 +261,24 @@ namespace UnitTests.DatabaseTests
             procedures.CreateWalletsForUser(mockUser.Email);
 
             var eurQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{FiatEnum.EUR}'";
-            var eurWalletResult = DatabaseMock.GetWalletBalance(mockConnection, eurQuery);
+            var eurWalletResult = DatabaseInstanceMock.GetWalletBalance(mockConnection, eurQuery);
 
             var btcQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.BTC}'";
-            var btcWalletResult = DatabaseMock.GetWalletBalance(mockConnection, btcQuery);
+            var btcWalletResult = DatabaseInstanceMock.GetWalletBalance(mockConnection, btcQuery);
 
             var ethQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.ETH}'";
-            var ethWalletResult = DatabaseMock.GetWalletBalance(mockConnection, ethQuery);
+            var ethWalletResult = DatabaseInstanceMock.GetWalletBalance(mockConnection, ethQuery);
 
             var adaQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.ADA}'";
-            var adaWalletResult = DatabaseMock.GetWalletBalance(mockConnection, adaQuery);
+            var adaWalletResult = DatabaseInstanceMock.GetWalletBalance(mockConnection, adaQuery);
 
             var atomQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.ATOM}'";
-            var atomWalletResult = DatabaseMock.GetWalletBalance(mockConnection, atomQuery);
+            var atomWalletResult = DatabaseInstanceMock.GetWalletBalance(mockConnection, atomQuery);
 
             var dogeQuery = $"SELECT * FROM wallet WHERE user_id = {mockUser.Id} AND symbol = '{CryptoEnum.DOGE}'";
-            var dogeWalletResult = DatabaseMock.GetWalletBalance(mockConnection, dogeQuery);
+            var dogeWalletResult = DatabaseInstanceMock.GetWalletBalance(mockConnection, dogeQuery);
 
-            testServer.ShutDown();
+            mockServer.ShutDown();
 
             // Assert
             Assert.Equal(5000M, eurWalletResult);
@@ -319,6 +287,33 @@ namespace UnitTests.DatabaseTests
             Assert.Equal(0M, adaWalletResult);
             Assert.Equal(0M, atomWalletResult);
             Assert.Equal(0M, dogeWalletResult);
+        }
+
+        /// <summary>
+        /// Tests if GetAllVerifiedUserIds correctly returns only verified user ids.
+        /// </summary>
+        [Fact]
+        public void GetAllVerifiedUserIds_OneVerifiedOneUnverifiedInDb_ReturnsOneItem()
+        {
+            // Arrange
+            var procedures = new UserProcedures(mockContext);
+
+            var verifiedUser = ModelMock.GetValidVerifiedUserModel();
+
+            var unverifiedUser = ModelMock.GetValidVerifiedUserModel();
+            unverifiedUser.Id = 2;
+            unverifiedUser.Email = "new@mail.com";
+            unverifiedUser.Verified = 0;
+
+            procedures.InsertNewUser(verifiedUser);
+            procedures.InsertNewUser(unverifiedUser);
+
+            // Act
+            var result = procedures.GetAllVerifiedUserIds();
+            mockServer.ShutDown();
+
+            // Assert
+            Assert.Single(result);
         }
     }
 }
