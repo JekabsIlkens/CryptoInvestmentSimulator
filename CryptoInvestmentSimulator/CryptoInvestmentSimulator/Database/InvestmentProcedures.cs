@@ -37,7 +37,7 @@ namespace CryptoInvestmentSimulator.Database
 			}
 		}
 
-		public List<PositionModel> GetAllActivePositions(int userId, CryptoEnum crypto)
+		public List<PositionModel> GetAllOpenPositions(int userId, CryptoEnum crypto)
 		{
 			var modelList = new List<PositionModel>();
 
@@ -47,9 +47,9 @@ namespace CryptoInvestmentSimulator.Database
 				MySqlCommand command = new
 					($"SELECT transaction.transaction_id, wallet.user_id, market_data.crypto_id, transaction.date_time, transaction.fiat_amount, " +
 					$"transaction.crypto_amount, transaction.ratio_id, transaction.margin, transaction.status_id " +
-					$"FROM cisdb.transaction " +
-					$"INNER JOIN cisdb.wallet ON transaction.wallet_id = wallet.wallet_id " +
-					$"INNER JOIN cisdb.market_data ON transaction.data_id = market_data.data_id " +
+					$"FROM transaction " +
+					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
 					$"WHERE wallet.user_id = {userId} AND market_data.crypto_id = {(int)crypto} AND transaction.status_id = 1 " +
 					$"ORDER BY transaction.date_time DESC", 
 					connection);
@@ -76,7 +76,7 @@ namespace CryptoInvestmentSimulator.Database
 			return modelList;
 		}
 
-		public List<LiquidationModel> GetAllActiveLeveragedPositions(int userId)
+		public List<LiquidationModel> GetAllOpenLeveragedPositions(int userId)
 		{
 			var modelList = new List<LiquidationModel>();
 
@@ -129,8 +129,8 @@ namespace CryptoInvestmentSimulator.Database
 				connection.Open();
 				MySqlCommand command = new
 					($"SELECT transaction.transaction_id, market_data.unit_value " +
-					$"FROM cisdb.transaction " +
-					$"INNER JOIN cisdb.market_data ON transaction.data_id = market_data.data_id " +
+					$"FROM transaction " +
+					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
 					$"WHERE transaction_id = {transactionId}",
 					connection);
 
