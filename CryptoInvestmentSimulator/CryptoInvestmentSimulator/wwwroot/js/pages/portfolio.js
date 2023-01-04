@@ -46,3 +46,9 @@ window.addEventListener('DOMContentLoaded', (event) =>
         timezoneSelect.appendChild(newOption);
     }
 });
+
+window.addEventListener("load", (event) =>
+{
+    $('#walletTableZone').load("/Portfolio/WalletTable");
+    setInterval(function () { $('#walletTableZone').load("/Portfolio/WalletTable"); }, 60000);
+});

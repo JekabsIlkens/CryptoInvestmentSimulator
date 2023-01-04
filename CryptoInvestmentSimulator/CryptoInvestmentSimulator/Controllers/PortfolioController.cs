@@ -84,6 +84,39 @@ namespace CryptoInvestmentSimulator.Controllers
             return View("Index", user);
         }
 
+        public IActionResult WalletTable()
+        {
+            var userId = GetUserDetails().Id;
+
+            var walletBalances = walletProcedures.GetUsersWalletBalances(userId);
+
+            decimal[] cryptoAmounts = new decimal[5];
+            cryptoAmounts[0] = walletBalances.BitcoinAmount;
+            cryptoAmounts[1] = walletBalances.EtheriumAmount;
+            cryptoAmounts[2] = walletBalances.CardanoAmount;
+            cryptoAmounts[3] = walletBalances.CosmosAmount;
+            cryptoAmounts[4] = walletBalances.DogecoinAmount;
+
+            var btcLatest = marketProcedures.GetLatestMarketData(CryptoEnum.BTC);
+            var ethLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ETH);
+            var adaLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ADA);
+            var atomLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM);
+            var dogeLatest = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE);
+
+            decimal[] cryptosToEuro = new decimal[5];
+            cryptosToEuro[0] = btcLatest.UnitValue * walletBalances.BitcoinAmount;
+            cryptosToEuro[1] = ethLatest.UnitValue * walletBalances.EtheriumAmount;
+            cryptosToEuro[2] = adaLatest.UnitValue * walletBalances.CardanoAmount;
+            cryptosToEuro[3] = atomLatest.UnitValue * walletBalances.CosmosAmount;
+            cryptosToEuro[4] = dogeLatest.UnitValue * walletBalances.DogecoinAmount;
+
+            ViewBag.CryptoAmounts = cryptoAmounts;
+            ViewBag.CryptosToEuro = cryptosToEuro;
+            ViewBag.WalletPercent = GetWalletPercentageSplit(userId);
+
+            return PartialView("_WalletTable");
+        }
+
         /// <summary>
         /// Fills a user model for use in other methods.
         /// </summary>

@@ -29,7 +29,14 @@
         @if (Model.Verified == 1)
         {
             <div class="col-8">
-                <div class="bg-info">Capital growth!</div>
+                <div class="row">
+                    <div class="col-6">
+                        <div id="walletTableZone"></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-danger">OTHER STATS</div>
+                    </div>
+                </div>
             </div>
         }
         else
