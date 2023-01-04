@@ -1,0 +1,92 @@
+﻿
+<script>
+
+	var dateTimes = @Html.Raw(Json.Serialize(ViewBag.DateTimes));
+	var dateTimesList = [];
+	for (let i = 0; i <= dateTimes.length - 1; i++) {
+		dateTimesList[i] = dateTimes[i];
+	}
+
+	var symbols = @Html.Raw(Json.Serialize(ViewBag.Symbols));
+	var symbolsList = [];
+	for (let i = 0; i <= symbols.length - 1; i++) {
+		symbolsList[i] = symbols[i];
+	}
+
+	var fiatAmounts = @Html.Raw(Json.Serialize(ViewBag.FiatAmounts));
+	var fiatAmountsList = [];
+	for (let i = 0; i <= fiatAmounts.length - 1; i++) {
+		fiatAmountsList[i] = fiatAmounts[i];
+	}
+
+	var cryptoAmounts = @Html.Raw(Json.Serialize(ViewBag.CryptoAmounts));
+	var cryptoAmountsList = [];
+	for (let i = 0; i <= cryptoAmounts.length - 1; i++) {
+		cryptoAmountsList[i] = cryptoAmounts[i];
+	}
+
+	var ratioAmounts = @Html.Raw(Json.Serialize(ViewBag.Ratios));
+	var ratioAmountsList = [];
+	for (let i = 0; i <= ratioAmounts.length - 1; i++) {
+		ratioAmountsList[i] = ratioAmounts[i];
+	}
+
+	var marginAmounts = @Html.Raw(Json.Serialize(ViewBag.Margins));
+	var marginAmountsList = [];
+	for (let i = 0; i <= marginAmounts.length - 1; i++) {
+		marginAmountsList[i] = marginAmounts[i];
+	}
+
+	var investmentsBody = document.getElementById("investmentsBody");
+
+	for (let i = 0; i <= dateTimesList.length - 1; i++) {
+		let row = document.createElement("tr");
+
+		let numberTd = document.createElement("td");
+		numberTd.innerHTML = "" + (i + 1);
+		row.appendChild(numberTd);
+
+		let openedTd = document.createElement("td");
+		openedTd.innerHTML = dateTimesList[i];
+		row.appendChild(openedTd);
+
+		let symbolTd = document.createElement("td");
+		symbolTd.innerHTML = symbolsList[i];
+		row.appendChild(symbolTd);
+
+		let euroTd = document.createElement("td");
+		euroTd.innerHTML = fiatAmountsList[i];
+		row.appendChild(euroTd);
+
+		let cryptoTd = document.createElement("td");
+		cryptoTd.innerHTML = cryptoAmountsList[i];
+		row.appendChild(cryptoTd);
+
+		let leverageTd = document.createElement("td");
+		leverageTd.innerHTML = ratioAmountsList[i];
+		row.appendChild(leverageTd);
+
+		let marginTd = document.createElement("td");
+		marginTd.innerHTML = marginAmountsList[i];
+		row.appendChild(marginTd);
+
+		investmentsBody.appendChild(row);
+	}
+
+</script>
+
+<table class="table table-striped table-hover table-sm table-dark border-light">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Opened</th>
+			<th scope="col">Crypto</th>
+			<th scope="col">Fiat amount</th>
+			<th scope="col">Crypto amount</th>
+			<th scope="col">Leverage</th>
+			<th scope="col">Margin</th>
+		</tr>
+	</thead>
+
+	<tbody id="investmentsBody"></tbody>
+</table>

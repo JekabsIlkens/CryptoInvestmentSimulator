@@ -37,7 +37,47 @@ namespace CryptoInvestmentSimulator.Database
 			}
 		}
 
-		public List<PositionModel> GetAllOpenPositions(int userId, CryptoEnum crypto)
+		public List<PositionModel> GetAllOpenPositions(int userId)
+		{
+			var modelList = new List<PositionModel>();
+
+			using (var connection = context.GetConnection())
+			{
+				connection.Open();
+				MySqlCommand command = new
+					($"SELECT transaction.transaction_id, wallet.user_id, market_data.crypto_id, market_data.crypto_id, transaction.date_time, transaction.fiat_amount, " +
+					$"transaction.crypto_amount, transaction.ratio_id, transaction.margin, transaction.status_id " +
+					$"FROM transaction " +
+					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
+					$"WHERE wallet.user_id = {userId} AND transaction.status_id = 1 " +
+					$"ORDER BY transaction.date_time DESC",
+					connection);
+
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var model = new PositionModel
+						{
+							Id = (int)reader.GetValue(reader.GetOrdinal("transaction_id")),
+							BoughtCrypto = (int)reader.GetValue(reader.GetOrdinal("crypto_id")),
+							DateTime = (DateTime)reader.GetValue(reader.GetOrdinal("date_time")),
+							FiatAmount = (decimal)reader.GetValue(reader.GetOrdinal("fiat_amount")),
+							CryptoAmount = (decimal)reader.GetValue(reader.GetOrdinal("crypto_amount")),
+							Leverage = (int)reader.GetValue(reader.GetOrdinal("ratio_id")),
+							Margin = (decimal)reader.GetValue(reader.GetOrdinal("margin"))
+						};
+
+						modelList.Add(model);
+					}
+				}
+			}
+
+			return modelList;
+		}
+
+		public List<PositionModel> GetAllOpenSpecificCryptoPositions(int userId, CryptoEnum crypto)
 		{
 			var modelList = new List<PositionModel>();
 
@@ -84,7 +124,7 @@ namespace CryptoInvestmentSimulator.Database
 			{
 				connection.Open();
 				MySqlCommand command = new
-					($"SELECT wallet.user_id, transaction.transaction_id, transaction.fiat_amount, transaction.fiat_amount, " +
+					($"SELECT wallet.user_id, transaction.transaction_id, transaction.fiat_amount, transaction.crypto_amount, " +
 					$"transaction.margin, transaction.ratio_id, market_data.unit_value, market_data.crypto_id " +
 					$"FROM transaction " +
 					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +

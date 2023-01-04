@@ -50,5 +50,8 @@ window.addEventListener('DOMContentLoaded', (event) =>
 window.addEventListener("load", (event) =>
 {
     $('#walletTableZone').load("/Portfolio/WalletTable");
-    setInterval(function () { $('#walletTableZone').load("/Portfolio/WalletTable"); }, 60000);
+    // setInterval(function () { $('#walletTableZone').load("/Portfolio/WalletTable"); }, 60000);
+
+    $('#investmentTableZone').load("/Portfolio/InvestmentTable");
+    // setInterval(function () { $('#investmentTableZone').load("/Portfolio/InvestmentTable"); }, 60000);
 });

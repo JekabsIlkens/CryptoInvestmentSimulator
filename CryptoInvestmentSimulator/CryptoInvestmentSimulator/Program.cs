@@ -55,7 +55,7 @@ internal class Program
         app.MapControllerRoute(name: "default", pattern: "{controller=Landing}/{action=Index}/{id?}");
 
         ///* UNCOMMENT TO TURN ON MARKET DATA COLLECTION AND LIQUIDATION *///
-        // app.Lifetime.ApplicationStarted.Register(OnStartedActions);
+        app.Lifetime.ApplicationStarted.Register(OnStartedActions);
 
         app.Run();
     }
