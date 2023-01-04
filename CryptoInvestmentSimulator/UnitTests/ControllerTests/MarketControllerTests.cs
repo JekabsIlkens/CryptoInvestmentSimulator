@@ -185,6 +185,7 @@ namespace UnitTests.ControllerTests
 			Assert.Equal(2, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
+			// Too much use of recursion would be required to test ViewBags automatically.
 		}
 
 		/// <summary>
@@ -214,6 +215,7 @@ namespace UnitTests.ControllerTests
 			Assert.Equal(2, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
+			// Too much use of recursion would be required to test ViewBags automatically.
 		}
 
 		/// <summary>
@@ -243,6 +245,7 @@ namespace UnitTests.ControllerTests
 			Assert.Equal(2, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
+			// Too much use of recursion would be required to test ViewBags automatically.
 		}
 
 		/// <summary>
@@ -272,6 +275,7 @@ namespace UnitTests.ControllerTests
 			Assert.Equal(2, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
+			// Too much use of recursion would be required to test ViewBags automatically.
 		}
 
 		/// <summary>
@@ -295,5 +299,63 @@ namespace UnitTests.ControllerTests
 			Assert.NotNull(result[3]);
 			Assert.NotNull(result[4]);
 		}
-	}
+
+		/// <summary>
+		/// Tests if Position Table partial view is rendered when user opens Bitcoin page.
+		/// DISCLAMER: tests for other crypto Position Tables would be identical, so skipping those tests.
+		/// </summary>
+		[Fact]
+		public void PositionsTableBTC_AuthorizedUserOpensBitcoinPage_PositionTableDisplayed()
+		{
+			// Arrange
+			var marketController = new MarketController();
+
+			var claims = new List<Claim> { new Claim(ClaimTypes.Email, "test-mail") };
+			var identity = new ClaimsIdentity(claims, "TestAuth");
+			var claimsPrincipal = new ClaimsPrincipal(identity);
+
+			var httpContext = new DefaultHttpContext();
+			httpContext.User = claimsPrincipal;
+			marketController.ControllerContext = new ControllerContext { HttpContext = httpContext };
+
+			// Act
+			var result = marketController.PositionsTableBTC() as PartialViewResult;
+
+			// Assert
+			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
+			Assert.Equal("_PositionsTable", result.ViewName);
+			Assert.Equal(5, result.ViewData.Count);
+
+			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
+			// Too much use of recursion would be required to test ViewBags automatically.
+		}
+
+		/// <summary>
+		/// Tests if position opening process is stopped and error view bag returned if
+		/// user tries to make a purchase bigger than his fiat wallet balance.
+		/// DISCLAMER: tests for other crypto Position Openings would be identical, so skipping those tests.
+		/// </summary>
+		[Fact]
+		public void OpenBitcoinPosition_UserTriesToBuyTooMuch_ViewBagWithErrorReturned()
+		{
+			// Arrange
+			var marketController = new MarketController();
+
+			var claims = new List<Claim> { new Claim(ClaimTypes.Email, "test-mail") };
+			var identity = new ClaimsIdentity(claims, "TestAuth");
+			var claimsPrincipal = new ClaimsPrincipal(identity);
+
+			var httpContext = new DefaultHttpContext();
+			httpContext.User = claimsPrincipal;
+			marketController.ControllerContext = new ControllerContext { HttpContext = httpContext };
+
+			// Act
+			var result = marketController.OpenBitcoinPosition("500", "150", "2x", "50") as ViewResult;
+
+			// Assert
+			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
+			Assert.Equal("Bitcoin", result.ViewName);
+			Assert.Single(result.ViewData);
+		}
+	}  
 }

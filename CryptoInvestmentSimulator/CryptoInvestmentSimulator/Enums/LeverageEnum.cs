@@ -2,8 +2,9 @@
 {
     public enum LeverageEnum
     {
-        Two = 1,
-        Five = 2,
-        Ten = 3,
+        None = 1,
+        Two = 2,
+        Five = 3,
+        Ten = 4
     }
 }

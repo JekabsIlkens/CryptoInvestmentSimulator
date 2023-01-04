@@ -12,7 +12,7 @@ internal class Program
     static void OnStartedActions()
     {
         var timer = new System.Timers.Timer { Interval = 60000 };
-        timer.Elapsed += GetNewMarketData;
+        timer.Elapsed += CollectMarketDataAndLiquidatePositions;
         timer.Start();
     }
 
@@ -21,10 +21,13 @@ internal class Program
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="elapsedEvent"></param>
-    static void GetNewMarketData(object sender, System.Timers.ElapsedEventArgs elapsedEvent)
+    static void CollectMarketDataAndLiquidatePositions(object sender, System.Timers.ElapsedEventArgs elapsedEvent)
     {
         marketController.InsertMarketData(marketController.GetNewMarketData());
         Console.WriteLine("New market data collected! Collection time: " + DateTime.Now.ToString());
+
+        marketController.LiquidatePositions();
+        Console.WriteLine("Poor positions liquidated! Liquidation time: " + DateTime.Now.ToString());
     }
 
     private static void Main(string[] args)
@@ -51,7 +54,7 @@ internal class Program
 
         app.MapControllerRoute(name: "default", pattern: "{controller=Landing}/{action=Index}/{id?}");
 
-        ///* UNCOMMENT TO TURN ON MARKET DATA COLLECTION *///
+        ///* UNCOMMENT TO TURN ON MARKET DATA COLLECTION AND LIQUIDATION *///
         // app.Lifetime.ApplicationStarted.Register(OnStartedActions);
 
         app.Run();

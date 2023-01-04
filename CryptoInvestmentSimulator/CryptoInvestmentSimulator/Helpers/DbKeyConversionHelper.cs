@@ -149,5 +149,29 @@ namespace CryptoInvestmentSimulator.Helpers
                 _ => throw new ArgumentOutOfRangeException(nameof(fiat)),
             };
         }
+
+        public static int LeverageStringToDbKey(string leverageMultiplier)
+        {
+            return leverageMultiplier switch
+            {
+                "None" => 1,
+                "2x" => 2,
+                "5x" => 3,
+                "10x" => 4,
+                _ => throw new ArgumentOutOfRangeException(nameof(leverageMultiplier)),
+            };
+        }
+
+        public static string LeverageKeyToString(int ratioId)
+        {
+            return ratioId switch
+            {
+                1 => "None",
+                2 => "2x",
+                3 => "5x",
+                4 => "10x",
+                _ => throw new ArgumentOutOfRangeException(nameof(ratioId)),
+            };
+        }
     }
 }

@@ -25,4 +25,7 @@ window.addEventListener("load", (event) =>
 	document.getElementById("4h").addEventListener("click", get4hChart);
 	document.getElementById("8h").addEventListener("click", get8hChart);
 	document.getElementById("24h").addEventListener("click", get24hChart);
+
+	$('#activePositionZone').load("/Market/PositionsTableATOM");
+	setInterval(function () { $('#activePositionZone').load("/Market/PositionsTableATOM"); }, 61000);
 });

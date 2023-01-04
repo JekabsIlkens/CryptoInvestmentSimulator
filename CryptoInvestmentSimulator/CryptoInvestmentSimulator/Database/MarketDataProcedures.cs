@@ -62,6 +62,9 @@ namespace CryptoInvestmentSimulator.Database
                 {
                     while (reader.Read())
                     {
+                        var dataId = (int)reader.GetValue(reader.GetOrdinal("data_id"));
+                        marketDataModel.Id = dataId;
+
                         var dateTime = reader.GetValue(reader.GetOrdinal("date_time")).ToString();
                         marketDataModel.CollectionTime = DateTime.Parse(dateTime);
 

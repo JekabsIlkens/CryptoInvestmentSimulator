@@ -1,0 +1,122 @@
+﻿
+<script>
+
+	var dateTimes = @Html.Raw(Json.Serialize(ViewBag.DateTimes));
+	var dateTimesList = [];
+	for (let i = 0; i <= dateTimes.length - 1; i++) {
+		dateTimesList[i] = dateTimes[i];
+	}
+
+	var fiatAmounts = @Html.Raw(Json.Serialize(ViewBag.FiatAmounts));
+	var fiatAmountsList = [];
+	for (let i = 0; i <= fiatAmounts.length - 1; i++) {
+		fiatAmountsList[i] = fiatAmounts[i];
+	}
+
+	var cryptoAmounts = @Html.Raw(Json.Serialize(ViewBag.CryptoAmounts));
+	var cryptoAmountsList = [];
+	for (let i = 0; i <= cryptoAmounts.length - 1; i++) {
+		cryptoAmountsList[i] = cryptoAmounts[i];
+	}
+
+	var ratioAmounts = @Html.Raw(Json.Serialize(ViewBag.Ratios));
+	var ratioAmountsList = [];
+	for (let i = 0; i <= ratioAmounts.length - 1; i++) {
+		ratioAmountsList[i] = ratioAmounts[i];
+	}
+
+	var marginAmounts = @Html.Raw(Json.Serialize(ViewBag.Margins));
+	var marginAmountsList = [];
+	for (let i = 0; i <= marginAmounts.length - 1; i++) {
+		marginAmountsList[i] = marginAmounts[i];
+	}
+
+	var positionsBody = document.getElementById("positionsBody");
+
+	for (let i = 0; i <= dateTimesList.length - 1; i++) {
+		let row = document.createElement("tr");
+
+		let numberTd = document.createElement("td");
+		numberTd.innerHTML = "" + (i + 1);
+		row.appendChild(numberTd);
+
+		let openedTd = document.createElement("td");
+		openedTd.innerHTML = dateTimesList[i];
+		row.appendChild(openedTd);
+
+		let euroTd = document.createElement("td");
+		euroTd.innerHTML = fiatAmountsList[i];
+		row.appendChild(euroTd);
+
+		let cryptoTd = document.createElement("td");
+		cryptoTd.innerHTML = cryptoAmountsList[i];
+		row.appendChild(cryptoTd);
+
+		let leverageTd = document.createElement("td");
+		leverageTd.innerHTML = ratioAmountsList[i];
+		row.appendChild(leverageTd);
+
+		let marginTd = document.createElement("td");
+		marginTd.innerHTML = marginAmountsList[i];
+		row.appendChild(marginTd);
+
+		positionsBody.appendChild(row);
+	}
+
+	var positionsCount = document.getElementById("positionsBody").childElementCount;
+
+	if(positionsCount != 0)
+	{
+		document.getElementById("sell-form").style.display = "block";
+		var positionSelect = document.getElementById("position-number-select");
+
+		for (let i = 1; i <= positionsCount; i++) {
+			let newOption = document.createElement('option');
+			newOption.innerHTML = "" + i;
+			newOption.value = "" + i;
+
+			positionSelect.appendChild(newOption);
+		}
+
+		var soldCrypto = document.getElementById("crypto-sold");
+		var cryptoPage = "" + window.location.href;
+
+		if (cryptoPage.includes("bitcoin")) soldCrypto.value = "BTC";
+		if (cryptoPage.includes("etherium")) soldCrypto.value = "ETH";
+		if (cryptoPage.includes("cardano")) soldCrypto.value = "ADA";
+		if (cryptoPage.includes("cosmos")) soldCrypto.value = "ATOM";
+		if (cryptoPage.includes("dogecoin")) soldCrypto.value = "DOGE";
+	}
+	else
+	{
+		document.getElementById("sell-form").style.display = "none";
+	}
+
+</script>
+
+<table class="table table-striped table-hover table-sm table-dark border-light">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Opened</th>
+			<th scope="col">Fiat amount</th>
+			<th scope="col">Crypto amount</th>
+			<th scope="col">Leverage</th>
+			<th scope="col">Margin</th>
+		</tr>
+	</thead>
+
+	<tbody id="positionsBody"></tbody>
+</table>
+
+<form id="sell-form" method="post" asp-controller="Market" asp-action="ClosePosition">
+	<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
+		<label for="position-number-select">Position</label>
+		<select id="position-number-select" type="text" class="form-control" name="positionNumber"></select>
+
+		<label style="display:none" for="crypto-sold">Crypto</label>
+		<input style="display:none" id="crypto-sold" type="text" class="form-control" name="cryptoSymbol" readonly />
+
+		<button id="sell" type="submit" class="btn btn-danger">Sell</button>
+	</div>
+</form>
