@@ -104,11 +104,11 @@ namespace CryptoInvestmentSimulator.Controllers
             var dogeLatest = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE);
 
             decimal[] cryptosToEuro = new decimal[5];
-            cryptosToEuro[0] = btcLatest.UnitValue * walletBalances.BitcoinAmount;
-            cryptosToEuro[1] = ethLatest.UnitValue * walletBalances.EtheriumAmount;
-            cryptosToEuro[2] = adaLatest.UnitValue * walletBalances.CardanoAmount;
-            cryptosToEuro[3] = atomLatest.UnitValue * walletBalances.CosmosAmount;
-            cryptosToEuro[4] = dogeLatest.UnitValue * walletBalances.DogecoinAmount;
+            cryptosToEuro[0] = walletBalances.BitcoinAmount / btcLatest.UnitValue;
+            cryptosToEuro[1] = walletBalances.EtheriumAmount / ethLatest.UnitValue;
+            cryptosToEuro[2] = walletBalances.CardanoAmount / adaLatest.UnitValue;
+            cryptosToEuro[3] = walletBalances.CosmosAmount / atomLatest.UnitValue;
+            cryptosToEuro[4] = walletBalances.DogecoinAmount / dogeLatest.UnitValue;
 
             ViewBag.CryptoAmounts = cryptoAmounts;
             ViewBag.CryptosToEuro = cryptosToEuro;
@@ -144,11 +144,11 @@ namespace CryptoInvestmentSimulator.Controllers
             decimal[] allToEuro = new decimal[6];
 
             allToEuro[0] = walletBalances.EuroAmount;
-            allToEuro[1] = btcLatest.UnitValue * walletBalances.BitcoinAmount;
-            allToEuro[2] = ethLatest.UnitValue * walletBalances.EtheriumAmount;
-            allToEuro[3] = adaLatest.UnitValue * walletBalances.CardanoAmount;
-            allToEuro[4] = atomLatest.UnitValue * walletBalances.CosmosAmount;
-            allToEuro[5] = dogeLatest.UnitValue * walletBalances.DogecoinAmount;
+            allToEuro[1] = walletBalances.BitcoinAmount / btcLatest.UnitValue;
+            allToEuro[2] = walletBalances.EtheriumAmount / ethLatest.UnitValue;
+            allToEuro[3] = walletBalances.CardanoAmount / adaLatest.UnitValue;
+            allToEuro[4] = walletBalances.CosmosAmount / atomLatest.UnitValue;
+            allToEuro[5] = walletBalances.DogecoinAmount / dogeLatest.UnitValue;
 
             var hundredPercent = 0M;
             for (int i = 0; i < allToEuro.Length; i++) hundredPercent += allToEuro[i];
