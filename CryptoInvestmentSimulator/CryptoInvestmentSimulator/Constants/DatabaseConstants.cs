@@ -2,13 +2,13 @@
 {
     public static class DatabaseConstants
     {
-        // Database access constants
+        // Database configuration and access constants.
         public static readonly string Access = "server=localhost;port=7770;database=cisdb;user=cisadmin;password=CISadminPASS";
 
-        // Formatting constants
+        // Formatting constants.
         public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
-        // Table column constants
+        // Table column constants.
         public static readonly string LeverageRatioColumns = "multiplier";
         public static readonly string CryptoSymbolColumns = "symbol";
         public static readonly string FiatSymbolColumns = "symbol";

@@ -400,7 +400,7 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="userId">Target user</param>
         private void ResetUsersWallets(int userId)
         {
-            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), 5000);
+            walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), BusinessRuleConstants.InitialCapital);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.BTC.ToString(), 0);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ETH.ToString(), 0);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ADA.ToString(), 0);

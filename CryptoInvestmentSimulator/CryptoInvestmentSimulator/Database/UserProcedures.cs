@@ -219,7 +219,7 @@ namespace CryptoInvestmentSimulator.Database
                     }
                 }
 
-                var values = $"'{FiatEnum.EUR}', 5000, {userId}";
+                var values = $"'{FiatEnum.EUR}', {BusinessRuleConstants.InitialCapital}, {userId}";
                 command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
                 command.ExecuteNonQuery();
 
