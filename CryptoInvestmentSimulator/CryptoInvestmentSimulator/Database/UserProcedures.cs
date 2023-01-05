@@ -16,16 +16,14 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Queries database for a specific user by email.
+        /// Queries database for a specific user by email address.
         /// </summary>
-        /// <returns>Filled user model</returns>
+        /// <param name="email">Email of requested user.</param>
+        /// <returns>
+        /// Filled <see cref="UserModel"/>.
+        /// </returns>
         public UserModel GetUserDetails(string email)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             var user = new UserModel();
 
             using (var connection = context.GetConnection())
@@ -51,18 +49,11 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Checks if given user already exists in datbase. 
-        /// If not - inserts user details into database.
+        /// Checks if given user already exists in database. If not - inserts user details into database.
         /// </summary>
-        /// <param name="userModel"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="userModel">Filled model with new users data.</param>
         public void InsertNewUser(UserModel userModel)
         {
-            if (string.IsNullOrEmpty(userModel.Email))
-            {
-                throw new ArgumentNullException(nameof(userModel.Email));
-            }
-
             if (!DoesUserExist(userModel.Email))
             {
                 var timeZoneKey = DbKeyConversionHelper.TimeZoneToDbKey(userModel.TimeZone);
@@ -78,146 +69,75 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Updates given users username.
+        /// Updates username for given user.
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="username"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void UpdateUsername(string email, string username)
+        /// <param name="userId">Target users id.</param>
+        /// <param name="username">New username.</param>
+        public void UpdateUsername(int userId, string username)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             using (MySqlConnection connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE user SET username = '{username}' WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET username = '{username}' WHERE user_id = {userId}", connection);
                 command.ExecuteNonQuery();
             }
         }
 
         /// <summary>
-        /// Updates given users avatar url.
+        /// Updates avatar image url for given user.
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="avatar"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void UpdateAvatar(string email, string avatar)
+        /// <param name="userId">Target users id.</param>
+        /// <param name="avatarUrl">New avatar image url.</param>
+        public void UpdateAvatar(int userId, string avatarUrl)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE user SET avatar = '{avatar}' WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET avatar = '{avatarUrl}' WHERE user_id = {userId}", connection);
                 command.ExecuteNonQuery();
             }
         }
 
         /// <summary>
-        /// Updates given users timezone.
+        /// Updates time zone for given user.
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="timezone"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void UpdateTimeZone(string email, int timezone)
+        /// <param name="userId">Target users id.</param>
+        /// <param name="timeZone">New time zone.</param>
+        public void UpdateTimeZone(int userId, int timeZone)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE user SET zone_id = {timezone} WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET zone_id = {timeZone} WHERE user_id = {userId}", connection);
                 command.ExecuteNonQuery();
             }
         }
 
         /// <summary>
-        /// Checks if given user is already verified.
-        /// If not - updates given users verification status.
+        /// Updates verification status for given user.
         /// </summary>
-        /// <param name="email"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void UpdateVerification(string email)
+        /// <param name="userId">Target users id.</param>
+        public void UpdateVerification(int userId)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new($"UPDATE user SET verified = 1 WHERE email = '{email}'", connection);
+                MySqlCommand command = new($"UPDATE user SET verified = 1 WHERE user_id = {userId}", connection);
                 command.ExecuteNonQuery();
             }
         }
 
         /// <summary>
-        /// Queries database for given user to see if it exists.
+        /// Creates wallets with initial balances for a new user after verification process has been completed.
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns>User existance status</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public bool DoesUserExist(string email)
+        /// <param name="userId">Target users id.</param>
+        public void CreateWalletsForUser(int userId)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
             using (var connection = context.GetConnection())
             {
                 connection.Open();
-                MySqlCommand command = new ($"SELECT * FROM user WHERE email = '{email}'", connection);
 
-                using (var reader = command.ExecuteReader())
-                {                 
-                    while (reader.Read())
-                    {
-                        if (reader.HasRows) return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Creates new wallets with initial balances for user
-        /// after verification process has been done.
-        /// </summary>
-        /// <param name="email">Current users email</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void CreateWalletsForUser(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentNullException(nameof(email));
-            }
-
-            var userId = -1;
-
-            using (var connection = context.GetConnection())
-            {
-                connection.Open();
-                MySqlCommand command = new($"SELECT user_id FROM user WHERE email = '{email}'", connection);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        userId = (int)reader.GetValue(reader.GetOrdinal("user_id"));
-                    }
-                }
+                MySqlCommand command;
 
                 var values = $"'{FiatEnum.EUR}', {BusinessRuleConstants.InitialCapital}, {userId}";
                 command = new($"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({values})", connection);
@@ -245,9 +165,15 @@ namespace CryptoInvestmentSimulator.Database
             }
         }
 
+        /// <summary>
+        /// Creates a list filled with all verified user ids.
+        /// </summary>
+        /// <returns>
+        /// Filled list of verified user ids.
+        /// </returns>
         public List<int> GetAllVerifiedUserIds()
         {
-            var idList = new List<int>();
+            var userIdList = new List<int>();
 
             using (var connection = context.GetConnection())
             {
@@ -258,12 +184,38 @@ namespace CryptoInvestmentSimulator.Database
                 {
                     while (reader.Read())
                     {
-                        idList.Add(reader.GetInt32("user_id"));
+                        userIdList.Add(reader.GetInt32("user_id"));
                     }
                 }
             }
 
-            return idList;
+            return userIdList;
+        }
+
+        /// <summary>
+        /// Queries database for given user to see if it exists.
+        /// </summary>
+        /// <param name="email">Requested users email.</param>
+        /// <returns>
+        /// True if exists, False if doesn't.
+        /// </returns>
+        private bool DoesUserExist(string email)
+        {
+            using (var connection = context.GetConnection())
+            {
+                connection.Open();
+                MySqlCommand command = new($"SELECT * FROM user WHERE email = '{email}'", connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.HasRows) return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

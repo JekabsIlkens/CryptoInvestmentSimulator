@@ -63,13 +63,13 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult UpdateDetails(string username, string avatar, string timezone)
         {
+            var userId = GetUserDetails().Id;
+
+            userProcedures.UpdateUsername(userId, username);
+            userProcedures.UpdateAvatar(userId, avatar);
+            userProcedures.UpdateTimeZone(userId, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
+
             var user = GetUserDetails();
-
-            userProcedures.UpdateUsername(user.Email, username);
-            userProcedures.UpdateAvatar(user.Email, avatar);
-            userProcedures.UpdateTimeZone(user.Email, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
-
-            user = GetUserDetails();
             ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
             ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
 
