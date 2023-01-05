@@ -37,6 +37,12 @@
 		marginAmountsList[i] = marginAmounts[i];
 	}
 
+	var profits = @Html.Raw(Json.Serialize(ViewBag.Profits));
+	var profitsList = [];
+	for (let i = 0; i <= profits.length - 1; i++) {
+		profitsList[i] = profits[i];
+	}
+
 	var investmentsBody = document.getElementById("investmentsBody");
 
 	for (let i = 0; i <= dateTimesList.length - 1; i++) {
@@ -70,6 +76,17 @@
 		marginTd.innerHTML = marginAmountsList[i];
 		row.appendChild(marginTd);
 
+		let profitTd = document.createElement("td");
+
+		if (profitsList[i] >= 0){
+			profitTd.innerHTML = "+" + profitsList[i];
+		}
+		else{
+			profitTd.innerHTML = profitsList[i];
+		}
+
+		row.appendChild(profitTd);
+
 		investmentsBody.appendChild(row);
 	}
 
@@ -85,6 +102,7 @@
 			<th scope="col">Crypto amount</th>
 			<th scope="col">Leverage</th>
 			<th scope="col">Margin</th>
+			<th scope="col">Profit</th>
 		</tr>
 	</thead>
 
