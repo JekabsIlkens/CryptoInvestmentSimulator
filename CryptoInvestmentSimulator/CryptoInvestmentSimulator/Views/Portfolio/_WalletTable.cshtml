@@ -1,0 +1,68 @@
+﻿
+<script>
+
+	const cryptoSymbols = ["BTC", "ETH", "ADA", "ATOM", "DOGE"];
+
+	var cryptoAmounts = @Html.Raw(Json.Serialize(ViewBag.CryptoAmounts));
+	var cryptoAmountsList = [];
+	for (let i = 0; i <= cryptoAmounts.length - 1; i++) {
+		cryptoAmountsList[i] = cryptoAmounts[i];
+	}
+
+	var cryptosToEuro = @Html.Raw(Json.Serialize(ViewBag.CryptosToEuro));
+	var cryptosToEuroList = [];
+	for (let i = 0; i <= cryptosToEuro.length - 1; i++) {
+		cryptosToEuroList[i] = cryptosToEuro[i];
+	}
+
+	var balancesBody = document.getElementById("balancesBody");
+
+	for (let i = 0; i <= cryptoAmountsList.length - 1; i++) {
+		let row = document.createElement("tr");
+
+		let cryptoSymbol = document.createElement("td");
+		cryptoSymbol.innerHTML = cryptoSymbols[i];
+		row.appendChild(cryptoSymbol);
+
+		let amountCrypto = document.createElement("td");
+		amountCrypto.innerHTML = cryptoAmountsList[i];
+		row.appendChild(amountCrypto);
+
+		let amountEuro = document.createElement("td");
+		amountEuro.innerHTML = cryptosToEuroList[i];
+		row.appendChild(amountEuro);
+
+		balancesBody.appendChild(row);
+	}
+
+</script>
+
+<table class="table table-striped table-hover table-sm table-dark border-light">
+	<thead>
+		<tr>
+			<th scope="col">Crypto</th>
+			<th scope="col">Amount</th>
+			<th scope="col">Euro</th>
+		</tr>
+	</thead>
+
+	<tbody id="balancesBody">
+
+	</tbody>
+</table>
+
+<table class="table table-striped table-hover table-sm table-dark border-light">
+	<thead>
+		<tr>
+			<th scope="col">Fiat</th>
+			<th scope="col">Amount</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<tr>
+			<td>EUR</td>
+			<td>@ViewBag.EuroAmount</td>
+		</tr>
+	</tbody>
+</table>

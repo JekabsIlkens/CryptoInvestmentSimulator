@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 			// Calculates equivelant amount of crypto to users input in euro.
 			// Fills readonly crypto amount field.
-			var cryptoAmountResult = "" + (unitValueParsed * fiatAmountParsed);
+			var cryptoAmountResult = "" + (fiatAmountParsed / unitValueParsed);
 			cryptoAmountInput.value = cryptoAmountResult;
 
 			// Each leverage ratio uses different devisor, sets calculated result as readonly margin input value.

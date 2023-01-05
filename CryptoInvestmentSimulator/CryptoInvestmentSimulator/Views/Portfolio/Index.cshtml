@@ -29,7 +29,15 @@
         @if (Model.Verified == 1)
         {
             <div class="col-8">
-                <div class="bg-info">Capital growth!</div>
+                <div class="row">
+                    <div class="col-6">
+                        <div id="walletTableZone"></div>
+                    </div>
+                    <div class="col-6">
+                        <p>Total earnings: @ViewBag.TotalEarnings</p>
+                        <p>PNL (Profit & Loss): @ViewBag.PNL</p>
+                    </div>
+                </div>
             </div>
         }
         else
@@ -59,7 +67,7 @@
             </div>
 
             <div class="col-8">
-                <div class="bg-success">Investment list!</div>
+                <div id="investmentTableZone"></div>
             </div>
         </div>
     }

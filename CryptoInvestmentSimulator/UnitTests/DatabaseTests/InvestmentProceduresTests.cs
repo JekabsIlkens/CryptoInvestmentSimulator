@@ -24,11 +24,11 @@ namespace UnitTests.DatabaseTests
             var newPosition = ModelMock.GetOldBitcoinPositionWithoutLeverage();
             newPosition.DateTime = DateTime.Now;
 
-            var positionsBefore = procedures.GetAllOpenPositions(1, CryptoEnum.BTC);
+            var positionsBefore = procedures.GetAllOpenSpecificCryptoPositions(1, CryptoEnum.BTC);
 
             // Act
             procedures.InsertNewPosition(newPosition);
-            var positionsAfter = procedures.GetAllOpenPositions(1, CryptoEnum.BTC);
+            var positionsAfter = procedures.GetAllOpenSpecificCryptoPositions(1, CryptoEnum.BTC);
 
             mockServer.ShutDown();
 
@@ -50,7 +50,7 @@ namespace UnitTests.DatabaseTests
             var existingPosition = ModelMock.GetOldBitcoinPositionWithoutLeverage();
 
             // Act
-            var result = procedures.GetAllOpenPositions(1, CryptoEnum.BTC);
+            var result = procedures.GetAllOpenSpecificCryptoPositions(1, CryptoEnum.BTC);
 
             mockServer.ShutDown();
 
@@ -71,7 +71,7 @@ namespace UnitTests.DatabaseTests
             var existingPosition = ModelMock.GetNewEtheriumPositionWithLeverage();
 
             // Act
-            var result = procedures.GetAllOpenPositions(1, CryptoEnum.ETH);
+            var result = procedures.GetAllOpenSpecificCryptoPositions(1, CryptoEnum.ETH);
 
             mockServer.ShutDown();
 
@@ -111,11 +111,11 @@ namespace UnitTests.DatabaseTests
             // Arrange
             var procedures = new InvestmentProcedures(mockContext);
 
-            var openPositionsBefore = procedures.GetAllOpenPositions(1, CryptoEnum.BTC);
+            var openPositionsBefore = procedures.GetAllOpenSpecificCryptoPositions(1, CryptoEnum.BTC);
 
             // Act
             procedures.UpdatePositionStatus(openPositionsBefore[0].Id, (int)StatusEnum.Closed);
-            var openPositionsAfter = procedures.GetAllOpenPositions(1, CryptoEnum.BTC);
+            var openPositionsAfter = procedures.GetAllOpenSpecificCryptoPositions(1, CryptoEnum.BTC);
 
             mockServer.ShutDown();
 

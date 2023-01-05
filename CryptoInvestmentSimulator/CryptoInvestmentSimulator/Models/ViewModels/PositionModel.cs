@@ -3,6 +3,7 @@
 	public class PositionModel
 	{
 		public int Id { get; set; }
+		public int BoughtCrypto { get; set; }
 		public DateTime DateTime { get; set; }
 		public decimal FiatAmount { get; set; }
 		public decimal CryptoAmount { get; set; }

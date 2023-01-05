@@ -85,7 +85,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableBTC()
         {
-            var positionsList = investmentProcedures.GetAllOpenPositions(GetUserDetails().Id, CryptoEnum.BTC);
+            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.BTC);
             var length = positionsList.Count;
 
             string[] dateTimes = new string[length];
@@ -122,7 +122,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableETH()
         {
-            var positionsList = investmentProcedures.GetAllOpenPositions(GetUserDetails().Id, CryptoEnum.ETH);
+            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ETH);
             var length = positionsList.Count;
 
             string[] dateTimes = new string[length];
@@ -159,7 +159,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableADA()
         {
-            var positionsList = investmentProcedures.GetAllOpenPositions(GetUserDetails().Id, CryptoEnum.ADA);
+            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ADA);
             var length = positionsList.Count;
 
             string[] dateTimes = new string[length];
@@ -196,7 +196,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableATOM()
         {
-            var positionsList = investmentProcedures.GetAllOpenPositions(GetUserDetails().Id, CryptoEnum.ATOM);
+            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ATOM);
             var length = positionsList.Count;
 
             string[] dateTimes = new string[length];
@@ -233,7 +233,7 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableDOGE()
         {
-            var positionsList = investmentProcedures.GetAllOpenPositions(GetUserDetails().Id, CryptoEnum.DOGE);
+            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.DOGE);
             var length = positionsList.Count;
 
             string[] dateTimes = new string[length];
@@ -843,31 +843,31 @@ namespace CryptoInvestmentSimulator.Controllers
 
             if (cryptoSymbol == CryptoEnum.BTC.ToString())
             {
-                positionsList = investmentProcedures.GetAllOpenPositions(userId, CryptoEnum.BTC);
+                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.BTC);
                 returnablePage = "Bitcoin";
             }
 
             if (cryptoSymbol == CryptoEnum.ETH.ToString())
             {
-                positionsList = investmentProcedures.GetAllOpenPositions(userId, CryptoEnum.ETH);
+                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ETH);
                 returnablePage = "Etherium";
             }
 
             if (cryptoSymbol == CryptoEnum.ADA.ToString())
             {
-                positionsList = investmentProcedures.GetAllOpenPositions(userId, CryptoEnum.ADA);
+                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ADA);
                 returnablePage = "Cardano";
             }
 
             if (cryptoSymbol == CryptoEnum.ATOM.ToString())
             {
-                positionsList = investmentProcedures.GetAllOpenPositions(userId, CryptoEnum.ATOM);
+                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ATOM);
                 returnablePage = "Cosmos";
             }
 
             if (cryptoSymbol == CryptoEnum.DOGE.ToString())
             {
-                positionsList = investmentProcedures.GetAllOpenPositions(userId, CryptoEnum.DOGE);
+                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.DOGE);
                 returnablePage = "Dogecoin";
             }
 

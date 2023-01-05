@@ -26,7 +26,7 @@ internal class Program
         marketController.InsertMarketData(marketController.GetNewMarketData());
         Console.WriteLine("New market data collected! Collection time: " + DateTime.Now.ToString());
 
-        marketController.LiquidatePositions();
+        // marketController.LiquidatePositions();
         Console.WriteLine("Poor positions liquidated! Liquidation time: " + DateTime.Now.ToString());
     }
 

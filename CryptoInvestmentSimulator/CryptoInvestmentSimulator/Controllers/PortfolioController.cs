@@ -16,6 +16,7 @@ namespace CryptoInvestmentSimulator.Controllers
         private static readonly UserProcedures userProcedures = new(context);
         private static readonly WalletProcedures walletProcedures = new(context);
         private static readonly MarketDataProcedures marketProcedures = new(context);
+        private static readonly InvestmentProcedures investmentProcedures = new(context);
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -31,7 +32,23 @@ namespace CryptoInvestmentSimulator.Controllers
         public IActionResult Index()
         {
             var user = GetUserDetails();
+
             ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+
+            ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
+
+            ViewBag.PNL = GetProfitAndLossMeasurement();
+
+            ViewBag.CryptoAmounts = GetWalletTableCryptoAmounts();
+            ViewBag.CryptosToEuro = GetWalletTableCryptosToEuro();
+            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+
+            ViewBag.Symbols = GetInvestmentTableSymbols();
+            ViewBag.DateTimes = GetInvestmentTableDateTimes();
+            ViewBag.FiatAmounts = GetInvestmentTableFiatAmounts();
+            ViewBag.CryptoAmounts = GetInvestmentTableCryptoAmounts();
+            ViewBag.Ratios = GetInvestmentTableRatios();
+            ViewBag.Margins = GetInvestmentTableMargins();
 
             return View("Index", user);
         }
@@ -54,6 +71,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             user = GetUserDetails();
             ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+            ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
 
             return View("Index", user);
         }
@@ -84,6 +102,227 @@ namespace CryptoInvestmentSimulator.Controllers
             return View("Index", user);
         }
 
+        public IActionResult WalletTable()
+        {
+            var userId = GetUserDetails().Id;
+
+            ViewBag.CryptoAmounts = GetWalletTableCryptoAmounts();
+            ViewBag.CryptosToEuro = GetWalletTableCryptosToEuro();
+            ViewBag.WalletPercent = GetWalletPercentageSplit(userId);
+
+            ViewBag.EuroAmount = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+
+            return PartialView("_WalletTable");
+        }
+
+        public IActionResult InvestmentTable()
+        {
+            var userId = GetUserDetails().Id;
+
+            ViewBag.Symbols = GetInvestmentTableSymbols();
+            ViewBag.DateTimes = GetInvestmentTableDateTimes();
+            ViewBag.FiatAmounts = GetInvestmentTableFiatAmounts();
+            ViewBag.CryptoAmounts = GetInvestmentTableCryptoAmounts();
+            ViewBag.Ratios = GetInvestmentTableRatios();
+            ViewBag.Margins = GetInvestmentTableMargins();
+            ViewBag.Profits = GetOpenPositionUnrealizedProfits();
+
+            return PartialView("_InvestmentTable");
+        }
+
+        private decimal[] GetOpenPositionUnrealizedProfits()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+
+            decimal[] potentialProfitsList = new decimal[positionsList.Count];
+
+            var count = 0;
+            foreach(var position in positionsList)
+            {
+                var buyTimeUnitValue = investmentProcedures.GetPositionsUnitValue(position.Id);
+                var currentUnitValue = marketProcedures.GetLatestMarketData(IntToCryptoEnum(position.BoughtCrypto)).UnitValue;
+
+                if (position.Leverage == 2)
+                {
+                    potentialProfitsList[count] = (currentUnitValue - buyTimeUnitValue) * 2 * position.FiatAmount;
+                }
+                else if (position.Leverage == 3)
+                {
+                    potentialProfitsList[count] = (currentUnitValue - buyTimeUnitValue) * 5 * position.FiatAmount;
+                }
+                else if (position.Leverage == 4)
+                {
+                    potentialProfitsList[count] = (currentUnitValue - buyTimeUnitValue) * 10 * position.FiatAmount;
+                }
+                else
+                {
+                    potentialProfitsList[count] = (currentUnitValue - buyTimeUnitValue) * position.FiatAmount;
+                }
+            }
+
+            return potentialProfitsList;
+        }
+
+        private decimal GetProfitAndLossMeasurement()
+        {
+            var profitsList = GetOpenPositionUnrealizedProfits();
+            var profitSum = 0M;
+
+            foreach(var profit in profitsList)
+            {
+                profitSum += profit;
+            }
+
+            var PNL = (GetFullPortfolioValueEuro() - 5000M) + (GetFullPortfolioValueEuro() - 5000M) + profitSum;
+
+            return PNL;
+        }
+
+        private decimal[] GetWalletTableCryptoAmounts()
+        {
+            var userId = GetUserDetails().Id;
+            var walletBalances = walletProcedures.GetUsersWalletBalances(userId);
+
+            decimal[] cryptoAmounts = new decimal[5];
+            cryptoAmounts[0] = walletBalances.BitcoinAmount;
+            cryptoAmounts[1] = walletBalances.EtheriumAmount;
+            cryptoAmounts[2] = walletBalances.CardanoAmount;
+            cryptoAmounts[3] = walletBalances.CosmosAmount;
+            cryptoAmounts[4] = walletBalances.DogecoinAmount;
+
+            return cryptoAmounts;
+        }
+
+        private decimal[] GetWalletTableCryptosToEuro()
+        {
+            var userId = GetUserDetails().Id;
+            var walletBalances = walletProcedures.GetUsersWalletBalances(userId);
+
+            var btcLatest = marketProcedures.GetLatestMarketData(CryptoEnum.BTC);
+            var ethLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ETH);
+            var adaLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ADA);
+            var atomLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM);
+            var dogeLatest = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE);
+
+            decimal[] cryptosToEuro = new decimal[5];
+            cryptosToEuro[0] = walletBalances.BitcoinAmount * btcLatest.UnitValue;
+            cryptosToEuro[1] = walletBalances.EtheriumAmount * ethLatest.UnitValue;
+            cryptosToEuro[2] = walletBalances.CardanoAmount * adaLatest.UnitValue;
+            cryptosToEuro[3] = walletBalances.CosmosAmount * atomLatest.UnitValue;
+            cryptosToEuro[4] = walletBalances.DogecoinAmount * dogeLatest.UnitValue;
+
+            return cryptosToEuro;
+        }
+
+        private string[] GetInvestmentTableSymbols()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+            var length = positionsList.Count;
+
+            string[] symbols = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                symbols[count] = DbKeyConversionHelper.CryptoKeyToSymbol(position.BoughtCrypto);
+                count++;
+            }
+
+            return symbols;
+        }
+
+        private string[] GetInvestmentTableDateTimes()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+            var length = positionsList.Count;
+
+            string[] dateTimes = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                count++;
+            }
+
+            return dateTimes;
+        }
+
+        private string[] GetInvestmentTableFiatAmounts()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+            var length = positionsList.Count;
+
+            string[] fiatAmounts = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                fiatAmounts[count] = position.FiatAmount.ToString();
+                count++;
+            }
+
+            return fiatAmounts;
+        }
+
+        private string[] GetInvestmentTableCryptoAmounts()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+            var length = positionsList.Count;
+
+            string[] cryptoAmounts = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                cryptoAmounts[count] = position.CryptoAmount.ToString();
+                count++;
+            }
+
+            return cryptoAmounts;
+        }
+
+        private string[] GetInvestmentTableRatios()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+            var length = positionsList.Count;
+
+            string[] ratios = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                count++;
+            }
+
+            return ratios;
+        }
+
+        private string[] GetInvestmentTableMargins()
+        {
+            var userId = GetUserDetails().Id;
+            var positionsList = investmentProcedures.GetAllOpenPositions(userId);
+            var length = positionsList.Count;
+
+            string[] margins = new string[length];
+
+            var count = 0;
+            foreach (var position in positionsList)
+            {
+                margins[count] = position.Margin.ToString();
+                count++;
+            }
+
+            return margins;
+        }
+
         /// <summary>
         /// Fills a user model for use in other methods.
         /// </summary>
@@ -111,11 +350,11 @@ namespace CryptoInvestmentSimulator.Controllers
             decimal[] allToEuro = new decimal[6];
 
             allToEuro[0] = walletBalances.EuroAmount;
-            allToEuro[1] = btcLatest.UnitValue * walletBalances.BitcoinAmount;
-            allToEuro[2] = ethLatest.UnitValue * walletBalances.EtheriumAmount;
-            allToEuro[3] = adaLatest.UnitValue * walletBalances.CardanoAmount;
-            allToEuro[4] = atomLatest.UnitValue * walletBalances.CosmosAmount;
-            allToEuro[5] = dogeLatest.UnitValue * walletBalances.DogecoinAmount;
+            allToEuro[1] = walletBalances.BitcoinAmount * btcLatest.UnitValue;
+            allToEuro[2] = walletBalances.EtheriumAmount * ethLatest.UnitValue;
+            allToEuro[3] = walletBalances.CardanoAmount * adaLatest.UnitValue;
+            allToEuro[4] = walletBalances.CosmosAmount * atomLatest.UnitValue;
+            allToEuro[5] = walletBalances.DogecoinAmount * dogeLatest.UnitValue;
 
             var hundredPercent = 0M;
             for (int i = 0; i < allToEuro.Length; i++) hundredPercent += allToEuro[i];
@@ -132,6 +371,29 @@ namespace CryptoInvestmentSimulator.Controllers
             return allToPercent;
         }
 
+        private decimal GetFullPortfolioValueEuro()
+        {
+            var userId = GetUserDetails().Id;
+
+            var walletBalances = walletProcedures.GetUsersWalletBalances(userId);
+            var btcLatest = marketProcedures.GetLatestMarketData(CryptoEnum.BTC);
+            var ethLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ETH);
+            var adaLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ADA);
+            var atomLatest = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM);
+            var dogeLatest = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE);
+
+            decimal fullValue = 0M;
+
+            fullValue += walletBalances.EuroAmount;
+            fullValue += walletBalances.BitcoinAmount * btcLatest.UnitValue;
+            fullValue += walletBalances.EtheriumAmount * ethLatest.UnitValue;
+            fullValue += walletBalances.CardanoAmount * adaLatest.UnitValue;
+            fullValue += walletBalances.CosmosAmount * atomLatest.UnitValue;
+            fullValue += walletBalances.DogecoinAmount * dogeLatest.UnitValue;
+
+            return fullValue;
+        }
+
         /// <summary>
         /// Resets all wallet balances for a given user to initial amounts.
         /// </summary>
@@ -144,6 +406,19 @@ namespace CryptoInvestmentSimulator.Controllers
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ADA.ToString(), 0);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.ATOM.ToString(), 0);
             walletProcedures.UpdateUsersWalletBalance(userId, CryptoEnum.DOGE.ToString(), 0);
+        }
+
+        private CryptoEnum IntToCryptoEnum(int symbolKey)
+        {
+            return symbolKey switch
+            {
+                1 => CryptoEnum.BTC,
+                2 => CryptoEnum.ETH,
+                3 => CryptoEnum.ADA,
+                4 => CryptoEnum.ATOM,
+                5 => CryptoEnum.DOGE,
+                _ => throw new ArgumentException(nameof(symbolKey))
+            };
         }
     }
 }
