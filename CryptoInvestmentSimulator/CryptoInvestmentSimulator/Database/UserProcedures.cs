@@ -40,7 +40,7 @@ namespace CryptoInvestmentSimulator.Database
                         user.Verified = reader.GetInt32("verified");
                         user.Username = reader.GetString("username");
                         user.Avatar = reader.GetString("avatar");
-                        user.TimeZone = DbKeyConversionHelper.TimeZoneKeyToString(reader.GetInt32("zone_id"));
+                        user.TimeZone = DatabaseKeyConversionHelper.TimeZoneKeyToString(reader.GetInt32("zone_id"));
                     }
                 }
             }
@@ -56,7 +56,7 @@ namespace CryptoInvestmentSimulator.Database
         {
             if (!DoesUserExist(userModel.Email))
             {
-                var timeZoneKey = DbKeyConversionHelper.TimeZoneToDbKey(userModel.TimeZone);
+                var timeZoneKey = DatabaseKeyConversionHelper.TimeZoneToDbKey(userModel.TimeZone);
                 var valuesString = $"'{userModel.Email}', {userModel.Verified}, '{userModel.Username}', '{userModel.Avatar}', {timeZoneKey}";
 
                 using (var connection = context.GetConnection())

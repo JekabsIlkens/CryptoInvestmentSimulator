@@ -2,7 +2,7 @@
 
 namespace CryptoInvestmentSimulator.Helpers
 {
-    public static class DbKeyConversionHelper
+    public static class DatabaseKeyConversionHelper
     {
         /// <summary>
         /// Converts string type time zone from into coresponding database key.

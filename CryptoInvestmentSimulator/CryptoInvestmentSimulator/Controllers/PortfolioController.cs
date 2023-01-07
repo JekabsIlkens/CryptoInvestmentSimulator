@@ -67,7 +67,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             userProcedures.UpdateUsername(userId, username);
             userProcedures.UpdateAvatar(userId, avatar);
-            userProcedures.UpdateTimeZone(userId, DbKeyConversionHelper.TimeZoneToDbKey(timezone));
+            userProcedures.UpdateTimeZone(userId, DatabaseKeyConversionHelper.TimeZoneToDbKey(timezone));
 
             var user = GetUserDetails();
             ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
@@ -226,7 +226,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var count = 0;
             foreach (var position in positionsList)
             {
-                symbols[count] = DbKeyConversionHelper.CryptoKeyToSymbol(position.BoughtCrypto);
+                symbols[count] = DatabaseKeyConversionHelper.CryptoKeyToSymbol(position.BoughtCrypto);
                 count++;
             }
 
@@ -298,7 +298,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var count = 0;
             foreach (var position in positionsList)
             {
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 count++;
             }
 

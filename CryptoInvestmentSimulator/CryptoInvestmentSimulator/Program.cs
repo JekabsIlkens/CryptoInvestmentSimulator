@@ -1,13 +1,12 @@
 using CryptoInvestmentSimulator;
-using CryptoInvestmentSimulator.Controllers;
 
 internal class Program
 {
-    private static readonly MarketController marketController = new();
+    private static readonly GlobalOperations globalOperations = new();
 
     /// <summary>
     /// Starts global timer on application launch and executes
-    /// market data retrieval method on each elapsed interval.
+    /// market data retrieval and position liquidation methods on each elapsed interval.
     /// </summary>
     static void OnStartedActions()
     {
@@ -23,11 +22,11 @@ internal class Program
     /// <param name="elapsedEvent"></param>
     static void CollectMarketDataAndLiquidatePositions(object sender, System.Timers.ElapsedEventArgs elapsedEvent)
     {
-        marketController.InsertMarketData(marketController.GetNewMarketData());
-        Console.WriteLine("New market data collected! Collection time: " + DateTime.Now.ToString());
+        globalOperations.InsertMarketData();
+        Console.WriteLine($"New market data collected! Collection time: {DateTime.Now}");
 
-        // marketController.LiquidatePositions();
-        Console.WriteLine("Poor positions liquidated! Liquidation time: " + DateTime.Now.ToString());
+        // globalOperations.LiquidatePositions();
+        Console.WriteLine($"Poor positions liquidated! Liquidation time: {DateTime.Now}");
     }
 
     private static void Main(string[] args)
@@ -54,8 +53,7 @@ internal class Program
 
         app.MapControllerRoute(name: "default", pattern: "{controller=Landing}/{action=Index}/{id?}");
 
-        ///* UNCOMMENT TO TURN ON MARKET DATA COLLECTION AND LIQUIDATION *///
-        // app.Lifetime.ApplicationStarted.Register(OnStartedActions);
+        app.Lifetime.ApplicationStarted.Register(OnStartedActions);
 
         app.Run();
     }

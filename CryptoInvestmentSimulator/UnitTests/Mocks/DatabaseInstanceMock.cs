@@ -60,7 +60,7 @@ namespace UnitTests.Mocks
 
             // Populates user table with records.
             var mockVerifiedUser = ModelMock.GetValidVerifiedUserModel();
-            var timeZoneKey1 = DbKeyConversionHelper.TimeZoneToDbKey(mockVerifiedUser.TimeZone);
+            var timeZoneKey1 = DatabaseKeyConversionHelper.TimeZoneToDbKey(mockVerifiedUser.TimeZone);
             var verifiedUserValues = $"'{mockVerifiedUser.Email}', {mockVerifiedUser.Verified}, " +
                 $"'{mockVerifiedUser.Username}', '{mockVerifiedUser.Avatar}', '{timeZoneKey1}'";
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), 
@@ -69,8 +69,8 @@ namespace UnitTests.Mocks
             // Populates market data table with records.
             var mockMarketDataOld = ModelMock.GetValidOldMarketDataModel();
             var formatedDateOld = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataOld.CollectionTime);
-            var cryptoKeyOld = DbKeyConversionHelper.CryptoSymbolToDbKey(mockMarketDataOld.CryptoSymbol);
-            var fiatKeyOld = DbKeyConversionHelper.FiatSymbolToDbKey(mockMarketDataOld.FiatSymbol);
+            var cryptoKeyOld = DatabaseKeyConversionHelper.CryptoSymbolToDbKey(mockMarketDataOld.CryptoSymbol);
+            var fiatKeyOld = DatabaseKeyConversionHelper.FiatSymbolToDbKey(mockMarketDataOld.FiatSymbol);
             var marketDataValuesOld = $"'{formatedDateOld}', {mockMarketDataOld.UnitValue}, {mockMarketDataOld.Change24h}, " +
                 $"{mockMarketDataOld.Change7d}, {cryptoKeyOld}, {fiatKeyOld}";
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), 
@@ -78,8 +78,8 @@ namespace UnitTests.Mocks
 
             var mockMarketDataNew = ModelMock.GetValidNewMarketDataModel();
             var formatedDateNew = DateTimeFormatHelper.ToDbFormatAsString(mockMarketDataNew.CollectionTime);
-            var cryptoKeyNew = DbKeyConversionHelper.CryptoSymbolToDbKey(mockMarketDataNew.CryptoSymbol);
-            var fiatKeyNew = DbKeyConversionHelper.FiatSymbolToDbKey(mockMarketDataNew.FiatSymbol);
+            var cryptoKeyNew = DatabaseKeyConversionHelper.CryptoSymbolToDbKey(mockMarketDataNew.CryptoSymbol);
+            var fiatKeyNew = DatabaseKeyConversionHelper.FiatSymbolToDbKey(mockMarketDataNew.FiatSymbol);
             var marketDataValuesNew = $"'{formatedDateNew}', {mockMarketDataNew.UnitValue}, {mockMarketDataNew.Change24h}, " +
                 $"{mockMarketDataNew.Change7d}, {cryptoKeyNew}, {fiatKeyNew}";
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), 
@@ -189,7 +189,7 @@ namespace UnitTests.Mocks
             result.Read();
 
             var ordinal = result.GetOrdinal("zone_id");
-            var value = DbKeyConversionHelper.TimeZoneKeyToString(result.GetFieldValue<int>(ordinal));
+            var value = DatabaseKeyConversionHelper.TimeZoneKeyToString(result.GetFieldValue<int>(ordinal));
 
             return value;
         }

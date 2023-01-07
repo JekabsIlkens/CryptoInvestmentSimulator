@@ -28,8 +28,8 @@ namespace CryptoInvestmentSimulator.Database
             }
 
             var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(marketDataModel.CollectionTime);
-            var cryptoKey = DbKeyConversionHelper.CryptoSymbolToDbKey(marketDataModel.CryptoSymbol);
-            var fiatKey = DbKeyConversionHelper.FiatSymbolToDbKey(marketDataModel.FiatSymbol);
+            var cryptoKey = DatabaseKeyConversionHelper.CryptoSymbolToDbKey(marketDataModel.CryptoSymbol);
+            var fiatKey = DatabaseKeyConversionHelper.FiatSymbolToDbKey(marketDataModel.FiatSymbol);
 
             var valuesString = $"'{formattedDateTime}', {marketDataModel.UnitValue}, {marketDataModel.Change24h}, " +
                 $"{marketDataModel.Change7d}, {cryptoKey}, {fiatKey}";
@@ -77,8 +77,8 @@ namespace CryptoInvestmentSimulator.Database
                         var weeklyChange = reader.GetValue(reader.GetOrdinal("weekly_change")).ToString();
                         marketDataModel.Change7d = decimal.Parse(weeklyChange);
 
-                        var cryptoSymbol = DbKeyConversionHelper.CryptoKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("crypto_id")));
-                        var fiatSymbol = DbKeyConversionHelper.FiatKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("fiat_id")));
+                        var cryptoSymbol = DatabaseKeyConversionHelper.CryptoKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("crypto_id")));
+                        var fiatSymbol = DatabaseKeyConversionHelper.FiatKeyToSymbol((int)reader.GetValue(reader.GetOrdinal("fiat_id")));
 
                         marketDataModel.CryptoSymbol = cryptoSymbol;
                         marketDataModel.FiatSymbol = fiatSymbol;

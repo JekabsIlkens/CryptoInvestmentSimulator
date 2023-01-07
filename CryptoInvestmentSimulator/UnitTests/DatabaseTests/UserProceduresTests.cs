@@ -142,7 +142,7 @@ namespace UnitTests.DatabaseTests
             var mockUser = ModelMock.GetValidVerifiedUserModel();
             mockUser.TimeZone = "GMT-08:00";
 
-            procedures.UpdateTimeZone(mockUser.Id, DbKeyConversionHelper.TimeZoneToDbKey(mockUser.TimeZone));
+            procedures.UpdateTimeZone(mockUser.Id, DatabaseKeyConversionHelper.TimeZoneToDbKey(mockUser.TimeZone));
             var query = $"SELECT * FROM user WHERE email = '{mockUser.Email}'";
 
             // Act

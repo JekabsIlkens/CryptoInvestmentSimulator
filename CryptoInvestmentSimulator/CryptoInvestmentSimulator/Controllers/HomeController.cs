@@ -14,7 +14,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
         /// <summary>
         /// Index view for home page.
-        /// Checks if currently loggen in user is a new user.
+        /// Checks if currently logged in user is a new user.
         /// Checks if database verification status matches status from Auth0.
         /// </summary>
         /// <returns>

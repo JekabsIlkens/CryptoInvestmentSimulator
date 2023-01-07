@@ -100,7 +100,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -137,7 +137,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -174,7 +174,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -211,7 +211,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -248,7 +248,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -636,7 +636,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
                 Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.BTC).Id
@@ -682,7 +682,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
                 Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ETH).Id
@@ -728,7 +728,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
                 Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ADA).Id
@@ -774,7 +774,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
                 Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM).Id
@@ -820,7 +820,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
                 Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE).Id
@@ -888,14 +888,15 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentCryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, cryptoSymbol);
             walletProcedures.UpdateUsersWalletBalance(userId, cryptoSymbol, (currentCryptoBalance - positionToClose.CryptoAmount));
 
+            var cryptoSymbolEnum = InternalConversionHelper.StringToCryptoEnum(cryptoSymbol);
             var buyTimeUnitValue = investmentProcedures.GetPositionsUnitValue(positionToClose.Id);
-            var currentUnitValue = marketProcedures.GetLatestMarketData(StringToCryptoEnum(cryptoSymbol)).UnitValue;
+            var currentUnitValue = marketProcedures.GetLatestMarketData(cryptoSymbolEnum).UnitValue;
             var profitMultiplier = currentUnitValue / buyTimeUnitValue;
 
             decimal newBalance;
             decimal currentFiatBalance;
 
-            if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
+            if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                 newBalance = currentFiatBalance + positionToClose.FiatAmount + 
@@ -904,7 +905,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
-            else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
+            else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                 newBalance = currentFiatBalance + positionToClose.FiatAmount + 
@@ -913,7 +914,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
-            else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
+            else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                 newBalance = currentFiatBalance + positionToClose.FiatAmount + 
@@ -954,167 +955,6 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
-        /// Makes a new market data request to CMC API for each supported crypto.
-        /// Places collected data into <see cref="MarketDataModel"/>s.
-        /// Makes a list of collected models.
-        /// </summary>
-        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
-        public List<MarketDataModel> GetNewMarketData()
-        {
-            var modelList = new List<MarketDataModel>();
-
-            var btcFullData = GetCryptoToEuroData(CryptoEnum.BTC);
-            var btcMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.BTC.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(btcMDM);
-
-            var ethFullData = GetCryptoToEuroData(CryptoEnum.ETH);
-            var ethMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.ETH.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(ethMDM);
-
-            var adaFullData = GetCryptoToEuroData(CryptoEnum.ADA);
-            var adaMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.ADA.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(adaMDM);
-
-            var atomFullData = GetCryptoToEuroData(CryptoEnum.ATOM);
-            var atomMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.ATOM.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(atomMDM);
-
-            var dogeFullData = GetCryptoToEuroData(CryptoEnum.DOGE);
-            var dogeMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.DOGE.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(dogeMDM);
-
-            return modelList;
-        }
-
-        /// <summary>
-        /// Makes a Coin Market Cap API request for specified cryptocurrency.
-        /// Executes request and deserializes response into request models.
-        /// </summary>
-        /// <param name="crypto">Data will be collected for this crypto.</param>
-        /// <returns>Filled <see cref="Root"/> response model</returns>
-        /// <exception cref="Exception"></exception>
-        private static Root GetCryptoToEuroData(CryptoEnum crypto)
-        {
-            var request = new RestRequest(CoinMarketCapApiConstants.LatestQuotesTest, Method.Get);
-
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("symbol", crypto.ToString());
-            request.AddParameter("convert", FiatEnum.EUR.ToString());
-            request.AddParameter("CMC_PRO_API_KEY", CoinMarketCapApiConstants.AccessKey);
-
-            var response = new RestClient().Execute(request);
-
-            if (!response.IsSuccessStatusCode || response.Content == null)
-            {
-                throw new Exception("Market data request has failed!");
-            }
-
-            var responseModel = JsonConvert.DeserializeObject<Root>(response.Content);
-
-            if (responseModel == null)
-            {
-                throw new Exception("Market data deserialization has failed!");
-            }
-
-            return responseModel;
-        }
-
-        /// <summary>
-        /// Iterates trough each model in received model list 
-        /// and calls insert procedure for each model to insert data into database.
-        /// </summary>
-        /// <param name="modelList">List of filled <see cref="MarketDataModel"/>s</param>
-        public void InsertMarketData(List<MarketDataModel> modelList)
-        {
-            foreach (var model in modelList)
-            {
-                marketProcedures.InsertNewMarketDataEntry(model);
-            }
-        }
-
-        public void LiquidatePositions()
-        {
-            var userIdList = userProcedures.GetAllVerifiedUserIds();
-
-            foreach(var userId in userIdList)
-            {
-                var activeLeveragedPositions = investmentProcedures.GetAllOpenLeveragedPositions(userId);
-
-                foreach (var position in activeLeveragedPositions)
-                {
-                    var currentUnitValue = marketProcedures.GetLatestMarketData(IntToCryptoEnum(position.CryptoId)).UnitValue;
-                    var profitMultiplier = currentUnitValue / position.UnitValue;
-
-                    decimal currentProfit;
-
-                    if (position.RatioId == 2)
-                    {
-                        currentProfit = ((position.FiatAmount * 2 * profitMultiplier) - (position.FiatAmount * 2));
-                    }
-                    else if (position.RatioId == 3)
-                    {
-                        currentProfit = ((position.FiatAmount * 5 * profitMultiplier) - (position.FiatAmount * 5));
-                    }
-                    else
-                    {
-                        currentProfit = ((position.FiatAmount * 10 * profitMultiplier) - (position.FiatAmount * 10));
-                    }
-
-                    if (currentProfit < (position.MarginAmount * 2 * -1))
-                    {
-                        var cryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, IntToCryptoEnum(position.CryptoId).ToString());
-                        walletProcedures.UpdateUsersWalletBalance(userId, IntToCryptoEnum(position.CryptoId).ToString(), (cryptoBalance - position.CryptoAmount));
-
-                        var fiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                        walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (fiatBalance + position.FiatAmount - currentProfit));
-
-                        investmentProcedures.UpdatePositionStatus(position.TransactionId, (int)StatusEnum.Liquidated);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Fills a user model for use in other methods.
         /// </summary>
         /// <returns>Filled user model</returns>
@@ -1122,32 +962,6 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             return userProcedures.GetUserDetails(email);
-        }
-
-        private CryptoEnum StringToCryptoEnum(string symbolString)
-        {
-            return symbolString switch
-            {
-                "BTC" => CryptoEnum.BTC,
-                "ETH" => CryptoEnum.ETH,
-                "ADA" => CryptoEnum.ADA,
-                "ATOM" => CryptoEnum.ATOM,
-                "DOGE" => CryptoEnum.DOGE,
-                _ => throw new ArgumentException(symbolString)
-            };
-        }
-
-        private CryptoEnum IntToCryptoEnum(int symbolKey)
-        {
-            return symbolKey switch
-            {
-                1 => CryptoEnum.BTC,
-                2 => CryptoEnum.ETH,
-                3 => CryptoEnum.ADA,
-                4 => CryptoEnum.ATOM,
-                5 => CryptoEnum.DOGE,
-                _ => throw new ArgumentException(nameof(symbolKey))
-            };
         }
     }
 }
