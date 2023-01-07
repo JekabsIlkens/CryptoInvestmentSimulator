@@ -81,6 +81,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
         /// <summary>
         /// Gets activated trough reset portfolio form with POST.
+        /// Resets users wallet balances to initial values and deletes all owned positions.
         /// </summary>
         /// <returns>
         /// Portfolio view with filled <see cref="UserModel"/> and statistics view bags.
@@ -90,8 +91,8 @@ namespace CryptoInvestmentSimulator.Controllers
         {
             var user = GetUserDetails();
 
-            // TODO: Add investment clear procedure
             ResetUsersWallets(user.Id);
+            investmentProcedures.DeleteUsersPositions(user.Id);
 
             ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
             ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;

@@ -223,5 +223,61 @@ namespace CryptoInvestmentSimulator.Database
 				command.ExecuteNonQuery();
 			}
 		}
+
+		/// <summary>
+		/// Collects all existing positions a user owns and calls
+		/// delete statement on each position.
+		/// </summary>
+		/// <param name="userId">Target user.</param>
+		public void DeleteUsersPositions(int userId)
+		{
+			var positionIds = GetAllPositionIds(userId);
+			MySqlCommand command;
+
+			using (var connection = context.GetConnection())
+			{
+				connection.Open();
+
+				foreach(var id in positionIds)
+				{
+					command = new($"DELETE FROM position WHERE position_id = {id}", connection);
+					command.ExecuteNonQuery();
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// Collects all existing position ids that a user owns.
+		/// </summary>
+		/// <param name="userId">Position owner.</param>
+		/// <returns>
+		/// Int list of position ids.
+		/// </returns>
+		private List<int> GetAllPositionIds(int userId)
+		{
+			var idList = new List<int>();
+
+			using (var connection = context.GetConnection())
+			{
+				connection.Open();
+				MySqlCommand command = new
+					($"SELECT position.position_id, wallet.user_id " +
+					$"FROM position " +
+					$"INNER JOIN wallet ON position.wallet_id = wallet.wallet_id " +
+					$"WHERE wallet.user_id = {userId}",
+					connection);
+
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						idList.Add((int)reader.GetValue(reader.GetOrdinal("position_id")));
+					}
+				}
+			}
+
+			return idList;
+		}
 	}
 }
