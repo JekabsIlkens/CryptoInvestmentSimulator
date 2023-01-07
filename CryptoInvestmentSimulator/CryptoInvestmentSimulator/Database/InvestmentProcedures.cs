@@ -150,7 +150,7 @@ namespace CryptoInvestmentSimulator.Database
 					$"FROM position " +
 					$"INNER JOIN wallet ON position.wallet_id = wallet.wallet_id " +
 					$"INNER JOIN market_data ON position.data_id = market_data.data_id " +
-					$"WHERE wallet.user_id = {userId} AND position.status_id = 1",
+					$"WHERE wallet.user_id = {userId} AND position.status_id = 1 AND position.ratio_id > 1",
 					connection);
 
 				using (var reader = command.ExecuteReader())
