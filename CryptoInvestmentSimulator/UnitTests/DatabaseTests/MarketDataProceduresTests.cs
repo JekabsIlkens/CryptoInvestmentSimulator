@@ -13,6 +13,33 @@ namespace UnitTests.DatabaseTests
 		private static readonly DatabaseContext mockContext = new DatabaseContext(mockConnection);
 
 		/// <summary>
+		/// Tests is new market data insertion method successfuly inserts
+		/// a valid market data model.
+		/// </summary>
+		[Fact]
+		public void InsertNewMarketDataEntry_ValidMarketDataModel_SuccessfulInsert()
+		{
+			// Arrange
+			var procedures = new MarketDataProcedures(mockContext);
+
+			var before = procedures.GetLatestMarketData(CryptoEnum.DOGE);
+
+			var mockMarketData = ModelMock.GetValidNewMarketDataModel();
+			mockMarketData.CryptoSymbol = CryptoEnum.DOGE.ToString();
+			mockMarketData.UnitValue = 1111M;
+
+			// Act
+			procedures.InsertNewMarketDataEntry(mockMarketData);
+			var after = procedures.GetLatestMarketData(CryptoEnum.DOGE);
+			mockServer.ShutDown();
+
+			// Assert
+			Assert.Null(before.CryptoSymbol);
+			Assert.Equal("DOGE", after.CryptoSymbol);
+			Assert.NotEqual(before.UnitValue, after.UnitValue);
+		}
+
+		/// <summary>
 		/// Tests if the latest market data record gets returned
 		/// and not any older records.
 		/// </summary>

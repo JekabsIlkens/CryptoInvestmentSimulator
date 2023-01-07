@@ -182,7 +182,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart1h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
@@ -212,7 +212,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart4h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
@@ -242,7 +242,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart8h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
@@ -272,7 +272,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart24h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
