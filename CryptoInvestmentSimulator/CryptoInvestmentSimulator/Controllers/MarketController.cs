@@ -2,14 +2,10 @@
 using CryptoInvestmentSimulator.Database;
 using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
-using CryptoInvestmentSimulator.Models.ResponseModels;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using RestSharp;
 using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Security.Claims;
 
 namespace CryptoInvestmentSimulator.Controllers
@@ -21,12 +17,6 @@ namespace CryptoInvestmentSimulator.Controllers
         private static readonly WalletProcedures walletProcedures = new(context);
         private static readonly MarketDataProcedures marketProcedures = new(context);
         private static readonly InvestmentProcedures investmentProcedures = new(context);
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
 
         [Authorize]
         public IActionResult Index()
@@ -65,11 +55,12 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
-        /// Partial view for market page data table.
-        /// Gets list of lates marked data view models for each crypto.
-        /// Passes list to ViewBag for dynamic data display.
+        /// Collects latest market data for each cryptocurrency
+        /// and creates a view bag for dynamic data display.
         /// </summary>
-        /// <returns>_DataTable partial view with filled ViewBag</returns>
+        /// <returns>
+        /// Data table partial view.
+        /// </returns>
         [Authorize]
         public IActionResult DataTable()
         {
@@ -81,7 +72,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Prepares view bags with users open BTC position data for each table column.
         /// </summary>
-        /// <returns>Positions table partial view</returns>
+        /// <returns>
+        /// Positions table partial view.
+        /// </returns>
         [Authorize]
         public IActionResult PositionsTableBTC()
         {
@@ -94,13 +87,15 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach(var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -118,7 +113,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Prepares view bags with users open ETH position data for each table column.
         /// </summary>
-        /// <returns>Positions table partial view</returns>
+        /// <returns>
+        /// Positions table partial view.
+        /// </returns>
         [Authorize]
         public IActionResult PositionsTableETH()
         {
@@ -131,13 +128,15 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -155,7 +154,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Prepares view bags with users open ADA position data for each table column.
         /// </summary>
-        /// <returns>Positions table partial view</returns>
+        /// <returns>
+        /// Positions table partial view.
+        /// </returns>
         [Authorize]
         public IActionResult PositionsTableADA()
         {
@@ -168,13 +169,15 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -192,7 +195,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Prepares view bags with users open ATOM position data for each table column.
         /// </summary>
-        /// <returns>Positions table partial view</returns>
+        /// <returns>
+        /// Positions table partial view.
+        /// </returns>
         [Authorize]
         public IActionResult PositionsTableATOM()
         {
@@ -205,13 +210,15 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -229,7 +236,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Prepares view bags with users open DOGE position data for each table column.
         /// </summary>
-        /// <returns>Positions table partial view</returns>
+        /// <returns>
+        /// Positions table partial view.
+        /// </returns>
         [Authorize]
         public IActionResult PositionsTableDOGE()
         {
@@ -242,13 +251,15 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DbKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
                 margins[count] = position.Margin.ToString();
 
                 count++;
@@ -267,7 +278,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Bitcoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 1h chart</returns>
+        /// <returns>
+        /// Partial view that renders 1h chart.
+        /// </returns>
         [Authorize]
         public IActionResult BTC1hChart()
         {
@@ -276,6 +289,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -284,7 +298,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Bitcoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 4h chart</returns>
+        /// <returns>
+        /// Partial view that renders 4h chart.
+        /// </returns>
         [Authorize]
         public IActionResult BTC4hChart()
         {
@@ -293,6 +309,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -301,7 +318,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Bitcoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 8h chart</returns>
+        /// <returns>
+        /// Partial view that renders 8h chart.
+        /// </returns>
         [Authorize]
         public IActionResult BTC8hChart()
         {
@@ -310,6 +329,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -318,7 +338,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Bitcoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 24h chart</returns>
+        /// <returns>
+        /// Partial view that renders 24h chart.
+        /// </returns>
         [Authorize]
         public IActionResult BTC24hChart()
         {
@@ -327,6 +349,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -335,7 +358,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Etherium market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 1h chart</returns>
+        /// <returns>
+        /// Partial view that renders 1h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ETH1hChart()
         {
@@ -344,6 +369,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -352,7 +378,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Etherium market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 4h chart</returns>
+        /// <returns>
+        /// Partial view that renders 4h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ETH4hChart()
         {
@@ -361,6 +389,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -369,7 +398,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Etherium market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 8h chart</returns>
+        /// <returns>
+        /// Partial view that renders 8h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ETH8hChart()
         {
@@ -378,6 +409,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -386,7 +418,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Etherium market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 24h chart</returns>
+        /// <returns>
+        /// Partial view that renders 24h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ETH24hChart()
         {
@@ -395,6 +429,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -403,7 +438,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cardano market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 1h chart</returns>
+        /// <returns>
+        /// Partial view that renders 1h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ADA1hChart()
         {
@@ -412,6 +449,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -420,7 +458,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cardano market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 4h chart</returns>
+        /// <returns>
+        /// Partial view that renders 4h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ADA4hChart()
         {
@@ -429,6 +469,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -437,7 +478,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cardano market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 8h chart</returns>
+        /// <returns>
+        /// Partial view that renders 8h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ADA8hChart()
         {
@@ -446,6 +489,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -454,7 +498,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cardano market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 24h chart</returns>
+        /// <returns>
+        /// Partial view that renders 24h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ADA24hChart()
         {
@@ -463,6 +509,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -471,7 +518,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cosmos market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 1h chart</returns>
+        /// <returns>
+        /// Partial view that renders 1h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ATOM1hChart()
         {
@@ -480,6 +529,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -488,7 +538,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cosmos market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 4h chart</returns>
+        /// <returns>
+        /// Partial view that renders 4h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ATOM4hChart()
         {
@@ -497,6 +549,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -505,7 +558,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cosmos market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 8h chart</returns>
+        /// <returns>
+        /// Partial view that renders 8h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ATOM8hChart()
         {
@@ -514,6 +569,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -522,7 +578,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Cosmos market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 24h chart</returns>
+        /// <returns>
+        /// Partial view that renders 24h chart.
+        /// </returns>
         [Authorize]
         public IActionResult ATOM24hChart()
         {
@@ -531,6 +589,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -539,7 +598,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Dogecoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 1h chart</returns>
+        /// <returns>
+        /// Partial view that renders 1h chart.
+        /// </returns>
         [Authorize]
         public IActionResult DOGE1hChart()
         {
@@ -548,6 +609,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -556,7 +618,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Dogecoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 4h chart</returns>
+        /// <returns>
+        /// Partial view that renders 4h chart.
+        /// </returns>
         [Authorize]
         public IActionResult DOGE4hChart()
         {
@@ -565,6 +629,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -573,7 +638,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Dogecoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 8h chart</returns>
+        /// <returns>
+        /// Partial view that renders 8h chart.
+        /// </returns>
         [Authorize]
         public IActionResult DOGE8hChart()
         {
@@ -582,6 +649,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -590,7 +658,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// Collects Dogecoin market data history for given cryptocurrency
         /// and prepares view bags for use in dynamic chart generation.
         /// </summary>
-        /// <returns>Partial view that renders 24h chart</returns>
+        /// <returns>
+        /// Partial view that renders 24h chart.
+        /// </returns>
         [Authorize]
         public IActionResult DOGE24hChart()
         {
@@ -599,12 +669,13 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
 
         /// <summary>
-        /// Receives user input form buy form. Validates amounts against users wallet.
+        /// Receives user input from buy form. Validates amounts against users wallet.
         /// If requested purchase amount plus optional margin is larger than euro wallet balance,
         /// then further process is stopped and view bag with error message is prepared.
         /// If requested purchase amount plus optional margin is smaller or equal to euro wallet balance,
@@ -614,7 +685,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="cryptoAmount">Calculated crypto amount</param>
         /// <param name="leverageRatio">Leverage multiplier selected by user</param>
         /// <param name="marginAmount">Calculated margin amount</param>
-        /// <returns>Bitcoin market view</returns>
+        /// <returns>
+        /// Bitcoin market view.
+        /// </returns>
         [HttpPost]
         public IActionResult OpenBitcoinPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
@@ -623,7 +696,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentEUR = currentBalances.EuroAmount;
             var currentBTC = currentBalances.BitcoinAmount;
 
-            marginAmount = marginAmount ?? "0";
+            marginAmount ??= "0";
             if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
             {
                 ViewBag.Error = "Insufficient funds for requested purchase!";
@@ -636,9 +709,9 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.BTC).Id
             };
 
@@ -660,7 +733,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="cryptoAmount">Calculated crypto amount</param>
         /// <param name="leverageRatio">Leverage multiplier selected by user</param>
         /// <param name="marginAmount">Calculated margin amount</param>
-        /// <returns>Etherium market view</returns>
+        /// <returns>
+        /// Etherium market view.
+        /// </returns>
         [HttpPost]
         public IActionResult OpenEtheriumPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
@@ -669,7 +744,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentEUR = currentBalances.EuroAmount;
             var currentETH = currentBalances.EtheriumAmount;
 
-            marginAmount = marginAmount ?? "0";
+            marginAmount ??= "0";
             if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
             {
                 ViewBag.Error = "Insufficient funds for requested purchase!";
@@ -682,9 +757,9 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ETH).Id
             };
 
@@ -706,7 +781,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="cryptoAmount">Calculated crypto amount</param>
         /// <param name="leverageRatio">Leverage multiplier selected by user</param>
         /// <param name="marginAmount">Calculated margin amount</param>
-        /// <returns>Cardano market view</returns>
+        /// <returns>
+        /// Cardano market view.
+        /// </returns>
         [HttpPost]
         public IActionResult OpenCardanoPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
@@ -715,7 +792,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentEUR = currentBalances.EuroAmount;
             var currentADA = currentBalances.CardanoAmount;
 
-            marginAmount = marginAmount ?? "0";
+            marginAmount ??= "0";
             if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
             {
                 ViewBag.Error = "Insufficient funds for requested purchase!";
@@ -728,9 +805,9 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ADA).Id
             };
 
@@ -752,7 +829,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="cryptoAmount">Calculated crypto amount</param>
         /// <param name="leverageRatio">Leverage multiplier selected by user</param>
         /// <param name="marginAmount">Calculated margin amount</param>
-        /// <returns>Cosmos market view</returns>
+        /// <returns>
+        /// Cosmos market view.
+        /// </returns>
         [HttpPost]
         public IActionResult OpenCosmosPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
@@ -761,7 +840,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentEUR = currentBalances.EuroAmount;
             var currentATOM = currentBalances.CosmosAmount;
 
-            marginAmount = marginAmount ?? "0";
+            marginAmount ??= "0";
             if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
             {
                 ViewBag.Error = "Insufficient funds for requested purchase!";
@@ -774,9 +853,9 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM).Id
             };
 
@@ -798,7 +877,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <param name="cryptoAmount">Calculated crypto amount</param>
         /// <param name="leverageRatio">Leverage multiplier selected by user</param>
         /// <param name="marginAmount">Calculated margin amount</param>
-        /// <returns>Dogecoin market view</returns>
+        /// <returns>
+        /// Dogecoin market view.
+        /// </returns>
         [HttpPost]
         public IActionResult OpenDogecoinPosition(string euroAmount, string cryptoAmount, string leverageRatio, string marginAmount)
         {
@@ -807,7 +888,7 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentEUR = currentBalances.EuroAmount;
             var currentDOGE = currentBalances.DogecoinAmount;
 
-            marginAmount = marginAmount ?? "0";
+            marginAmount ??= "0";
             if (currentEUR < (decimal.Parse(euroAmount) + decimal.Parse(marginAmount)))
             {
                 ViewBag.Error = "Insufficient funds for requested purchase!";
@@ -820,9 +901,9 @@ namespace CryptoInvestmentSimulator.Controllers
                 FiatAmount = decimal.Parse(euroAmount),
                 CryptoAmount = decimal.Parse(cryptoAmount),
                 Margin = decimal.Parse(marginAmount),
-                Leverage = DbKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
+                Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE).Id
             };
 
@@ -833,6 +914,16 @@ namespace CryptoInvestmentSimulator.Controllers
             return View("Dogecoin");
         }
 
+        /// <summary>
+        /// Collects all open positions for selected crpyptocurrency ordered by opening date descending.
+        /// Selects closeable position by users selected position number.
+        /// Calculates profits, adjusts users wallet balances and closes position.
+        /// </summary>
+        /// <param name="positionNumber">Position number when ordered by date descending.</param>
+        /// <param name="cryptoSymbol">Crypto symbol of selected position.</param>
+        /// <returns>
+        /// Specific crypto view.
+        /// </returns>
         [HttpPost]
         public IActionResult ClosePosition(string positionNumber, string cryptoSymbol)
         {
@@ -888,14 +979,15 @@ namespace CryptoInvestmentSimulator.Controllers
             var currentCryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, cryptoSymbol);
             walletProcedures.UpdateUsersWalletBalance(userId, cryptoSymbol, (currentCryptoBalance - positionToClose.CryptoAmount));
 
+            var cryptoSymbolEnum = InternalConversionHelper.StringToCryptoEnum(cryptoSymbol);
             var buyTimeUnitValue = investmentProcedures.GetPositionsUnitValue(positionToClose.Id);
-            var currentUnitValue = marketProcedures.GetLatestMarketData(StringToCryptoEnum(cryptoSymbol)).UnitValue;
+            var currentUnitValue = marketProcedures.GetLatestMarketData(cryptoSymbolEnum).UnitValue;
             var profitMultiplier = currentUnitValue / buyTimeUnitValue;
 
             decimal newBalance;
             decimal currentFiatBalance;
 
-            if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
+            if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                 newBalance = currentFiatBalance + positionToClose.FiatAmount + 
@@ -904,7 +996,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
-            else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
+            else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                 newBalance = currentFiatBalance + positionToClose.FiatAmount + 
@@ -913,7 +1005,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
                 walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
             }
-            else if (DbKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
+            else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
             {
                 currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                 newBalance = currentFiatBalance + positionToClose.FiatAmount + 
@@ -938,7 +1030,9 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Collects latest market data records from database for all supported cryptos.
         /// </summary>
-        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
+        /// <returns>
+        /// List of filled <see cref="MarketDataModel"/>s.
+        /// </returns>
         private static List<MarketDataModel> GetLatestMarketRecords()
         {
             var modelList = new List<MarketDataModel>
@@ -954,200 +1048,16 @@ namespace CryptoInvestmentSimulator.Controllers
         }
 
         /// <summary>
-        /// Makes a new market data request to CMC API for each supported crypto.
-        /// Places collected data into <see cref="MarketDataModel"/>s.
-        /// Makes a list of collected models.
+        /// Fills a <see cref="UserModel"/> with current users data.
         /// </summary>
-        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
-        public List<MarketDataModel> GetNewMarketData()
-        {
-            var modelList = new List<MarketDataModel>();
-
-            var btcFullData = GetCryptoToEuroData(CryptoEnum.BTC);
-            var btcMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.BTC.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(btcMDM);
-
-            var ethFullData = GetCryptoToEuroData(CryptoEnum.ETH);
-            var ethMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.ETH.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(ethMDM);
-
-            var adaFullData = GetCryptoToEuroData(CryptoEnum.ADA);
-            var adaMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.ADA.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(adaMDM);
-
-            var atomFullData = GetCryptoToEuroData(CryptoEnum.ATOM);
-            var atomMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.ATOM.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(atomMDM);
-
-            var dogeFullData = GetCryptoToEuroData(CryptoEnum.DOGE);
-            var dogeMDM = new MarketDataModel()
-            {
-                CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
-                CryptoSymbol = CryptoEnum.DOGE.ToString(),
-                FiatSymbol = FiatEnum.EUR.ToString(),
-            };
-            modelList.Add(dogeMDM);
-
-            return modelList;
-        }
-
-        /// <summary>
-        /// Makes a Coin Market Cap API request for specified cryptocurrency.
-        /// Executes request and deserializes response into request models.
-        /// </summary>
-        /// <param name="crypto">Data will be collected for this crypto.</param>
-        /// <returns>Filled <see cref="Root"/> response model</returns>
-        /// <exception cref="Exception"></exception>
-        private static Root GetCryptoToEuroData(CryptoEnum crypto)
-        {
-            var request = new RestRequest(CoinMarketCapApiConstants.LatestQuotesTest, Method.Get);
-
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("symbol", crypto.ToString());
-            request.AddParameter("convert", FiatEnum.EUR.ToString());
-            request.AddParameter("CMC_PRO_API_KEY", CoinMarketCapApiConstants.AccessKey);
-
-            var response = new RestClient().Execute(request);
-
-            if (!response.IsSuccessStatusCode || response.Content == null)
-            {
-                throw new Exception("Market data request has failed!");
-            }
-
-            var responseModel = JsonConvert.DeserializeObject<Root>(response.Content);
-
-            if (responseModel == null)
-            {
-                throw new Exception("Market data deserialization has failed!");
-            }
-
-            return responseModel;
-        }
-
-        /// <summary>
-        /// Iterates trough each model in received model list 
-        /// and calls insert procedure for each model to insert data into database.
-        /// </summary>
-        /// <param name="modelList">List of filled <see cref="MarketDataModel"/>s</param>
-        public void InsertMarketData(List<MarketDataModel> modelList)
-        {
-            foreach (var model in modelList)
-            {
-                marketProcedures.InsertNewMarketDataEntry(model);
-            }
-        }
-
-        public void LiquidatePositions()
-        {
-            var userIdList = userProcedures.GetAllVerifiedUserIds();
-
-            foreach(var userId in userIdList)
-            {
-                var activeLeveragedPositions = investmentProcedures.GetAllOpenLeveragedPositions(userId);
-
-                foreach (var position in activeLeveragedPositions)
-                {
-                    var currentUnitValue = marketProcedures.GetLatestMarketData(IntToCryptoEnum(position.CryptoId)).UnitValue;
-                    var profitMultiplier = currentUnitValue / position.UnitValue;
-
-                    decimal currentProfit;
-
-                    if (position.RatioId == 2)
-                    {
-                        currentProfit = ((position.FiatAmount * 2 * profitMultiplier) - (position.FiatAmount * 2));
-                    }
-                    else if (position.RatioId == 3)
-                    {
-                        currentProfit = ((position.FiatAmount * 5 * profitMultiplier) - (position.FiatAmount * 5));
-                    }
-                    else
-                    {
-                        currentProfit = ((position.FiatAmount * 10 * profitMultiplier) - (position.FiatAmount * 10));
-                    }
-
-                    if (currentProfit < (position.MarginAmount * 2 * -1))
-                    {
-                        var cryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, IntToCryptoEnum(position.CryptoId).ToString());
-                        walletProcedures.UpdateUsersWalletBalance(userId, IntToCryptoEnum(position.CryptoId).ToString(), (cryptoBalance - position.CryptoAmount));
-
-                        var fiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                        walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (fiatBalance + position.FiatAmount - currentProfit));
-
-                        investmentProcedures.UpdatePositionStatus(position.TransactionId, (int)StatusEnum.Liquidated);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Fills a user model for use in other methods.
-        /// </summary>
-        /// <returns>Filled user model</returns>
+        /// <returns>
+        /// Filled <see cref="UserModel"/>
+        /// </returns>
         private UserModel GetUserDetails()
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
             return userProcedures.GetUserDetails(email);
-        }
-
-        private CryptoEnum StringToCryptoEnum(string symbolString)
-        {
-            return symbolString switch
-            {
-                "BTC" => CryptoEnum.BTC,
-                "ETH" => CryptoEnum.ETH,
-                "ADA" => CryptoEnum.ADA,
-                "ATOM" => CryptoEnum.ATOM,
-                "DOGE" => CryptoEnum.DOGE,
-                _ => throw new ArgumentException(symbolString)
-            };
-        }
-
-        private CryptoEnum IntToCryptoEnum(int symbolKey)
-        {
-            return symbolKey switch
-            {
-                1 => CryptoEnum.BTC,
-                2 => CryptoEnum.ETH,
-                3 => CryptoEnum.ADA,
-                4 => CryptoEnum.ATOM,
-                5 => CryptoEnum.DOGE,
-                _ => throw new ArgumentException(nameof(symbolKey))
-            };
         }
     }
 }

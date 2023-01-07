@@ -1,14 +1,11 @@
-﻿@using CryptoInvestmentSimulator.Constants;
-@using CryptoInvestmentSimulator.Controllers;
-@using CryptoInvestmentSimulator.Database;
-@using CryptoInvestmentSimulator.Models.ViewModels;
-@using System.Security.Claims;
+﻿@using CryptoInvestmentSimulator.Models.ViewModels;
 @model UserModel
 
 @{
     ViewData["Title"] = "Home Page";
 
-    // Displays popup only for new users with default username
+    // Displays username creation modal (pop-up).
+    // Only for new users with default username.
     if (Model.Username == "NewUser"){
         await Html.RenderPartialAsync("_SetUsername");
     }

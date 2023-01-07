@@ -10,8 +10,10 @@ namespace CryptoInvestmentSimulator.Helpers
         /// Generates a random alpha-numeric key.
         /// Used and requested from user when portfolio is reset to avoid accidental reset.
         /// </summary>
-        /// <param name="length">Length of key</param>
-        /// <returns>Random alpha-numeric key</returns>
+        /// <param name="length">Length of key.</param>
+        /// <returns>
+        /// Random alpha-numeric key.
+        /// </returns>
         public static string GetRandomKey(int length)
         {
             string key = string.Empty;

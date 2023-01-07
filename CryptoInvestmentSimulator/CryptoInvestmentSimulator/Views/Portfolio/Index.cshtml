@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Portfolio Page";
 
+    // Reners required partial views in background.
     await Html.RenderPartialAsync("_EditDetails");
     await Html.RenderPartialAsync("_ConfirmReset");
 }
@@ -22,58 +23,36 @@
             <p> <strong>Email:</strong> @Model.Email </p>
             <p> <strong>Time zone:</strong> @Model.TimeZone </p>
 
-            <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
-            <button id="reset" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Reset portfolio</button>
+            <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDetailsModal">Edit</button>
+            <button id="reset" type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetPortfolioModal">Reset portfolio</button>
         </div>
 
-        @if (Model.Verified == 1)
-        {
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-6">
-                        <div id="walletTableZone"></div>
-                    </div>
-                    <div class="col-6">
-                        <p>Total earnings: @ViewBag.TotalEarnings</p>
-                        <p>PNL (Profit & Loss): @ViewBag.PNL</p>
-                    </div>
+        <div class="col-8">
+            <div class="row">
+                <div class="col-6">
+                    <div id="walletTableZone"></div>
+                </div>
+                <div class="col-6">
+                    <p>Total earnings: @ViewBag.TotalEarnings</p>
+                    <p>PNL (Profit & Loss): @ViewBag.PNL</p>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="col-8">
-                <div class="bg-danger">
-                    <h2>LOCKED</h2>
-                    <p>Please verify your email address to unlock your portfolio!</p>
-                    <ol>
-                        <li>Logout of Cryptocurrency Investment Simulator</li>
-                        <li>Go to the email asociated with this account</li>
-                        <li>Accept the verification email by clicking the button or opening link</li>
-                        <li>Reconnect to Cryptocurrency Investment Simulator</li>
-                    </ol>
-                </div>
-            </div>
-        }
+        </div>
     </div>
 
-    @if (Model.Verified == 1)
-    {
-        <div class="row">
-            <div class="col-4">
-                <div style="width: 100%; height: 100%;"> 
-                    <canvas id="myChart"></canvas> 
-                </div>
-            </div>
-
-            <div class="col-8">
-                <div id="investmentTableZone"></div>
+    <div class="row">
+        <div class="col-4">
+            <div style="width: 100%; height: 100%;"> 
+                <canvas id="myChart"></canvas> 
             </div>
         </div>
-    }
+
+        <div class="col-8">
+            <div id="investmentTableZone"></div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         const ctx = document.getElementById('myChart');
 
@@ -105,5 +84,4 @@
             }
         });
     </script>
-
 </div>

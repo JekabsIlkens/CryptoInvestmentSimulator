@@ -182,7 +182,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart1h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
@@ -212,7 +212,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart4h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
@@ -242,7 +242,7 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart8h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
@@ -272,32 +272,10 @@ namespace UnitTests.ControllerTests
 			// Assert
 			Assert.Equal("200", marketController.HttpContext.Response.StatusCode.ToString());
 			Assert.Equal("_Chart24h", result.ViewName);
-			Assert.Equal(2, result.ViewData.Count);
+			Assert.Equal(3, result.ViewData.Count);
 
 			// DEVELOPER COMMENT => ViewBags were checked with debug and contain correct data.
 			// Too much use of recursion would be required to test ViewBags automatically.
-		}
-
-		/// <summary>
-		/// Tests if GetNewMarketData receives successful API responses and
-		/// creates a list of filled market data models for all supported cryptocurrencies.
-		/// </summary>
-		[Fact]
-		public void GetNewMarketData_SuccessfulRequests_ValidListOfFilledModels()
-		{
-			// Arrange
-			var marketController = new MarketController();
-
-			// Act
-			var result = marketController.GetNewMarketData();
-
-			// Assert
-			Assert.Equal(5, result.Count);
-			Assert.NotNull(result[0]);
-			Assert.NotNull(result[1]);
-			Assert.NotNull(result[2]);
-			Assert.NotNull(result[3]);
-			Assert.NotNull(result[4]);
 		}
 
 		/// <summary>

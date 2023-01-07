@@ -16,13 +16,12 @@ namespace CryptoInvestmentSimulator.Database
         /// <summary>
         /// Collects all wallet balances into a <see cref="WalletModel"/> for given user.
         /// </summary> 
-        /// <param name="userId">User id / Walled owner</param>
-        /// <returns>Filled <see cref="WalletModel"/></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="userId">Wallet owner id.</param>
+        /// <returns>
+        /// Filled <see cref="WalletModel"/>.
+        /// </returns>
         public WalletModel GetUsersWalletBalances(int userId)
         {
-            if(userId < 1) throw new ArgumentException(nameof(userId));
-
             WalletModel walletModel = new WalletModel();
 
             using (var connection = context.GetConnection())
@@ -68,15 +67,14 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Collects a specified wallet balance for given user.
+        /// Collects a specific wallet balance for given user.
         /// </summary> 
-        /// <param name="userId">User id / Walled owner</param>
-        /// <returns>Current balance of wallet</returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="userId">Wallet owner id</param>
+        /// <returns>
+        /// Current balance of requested wallet.
+        /// </returns>
         public decimal GetSpecificWalletBalance(int userId, string symbol)
         {
-            if (userId < 1) throw new ArgumentException(nameof(userId));
-
             var currencyBalance = 0M;
 
             using (var connection = context.GetConnection())
@@ -102,14 +100,8 @@ namespace CryptoInvestmentSimulator.Database
         /// <param name="userId">Wallet owner</param>
         /// <param name="symbol">Target currency</param>
         /// <param name="newBalance">New balance</param>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         public void UpdateUsersWalletBalance(int userId, string symbol, decimal newBalance)
         {
-            if (userId < 1) throw new ArgumentException(nameof(userId));
-            if (string.IsNullOrWhiteSpace(symbol)) throw new ArgumentNullException(nameof(symbol));
-            if (newBalance < 0) throw new ArgumentException(nameof(newBalance));
-
             using (var connection = context.GetConnection())
             {
                 connection.Open();
@@ -118,10 +110,16 @@ namespace CryptoInvestmentSimulator.Database
             }
         }
 
-        public int GetUserWalletId(int userId, FiatEnum fiat)
+        /// <summary>
+        /// Collects a specified fiat wallets id for given user.
+        /// </summary>
+        /// <param name="userId">Wallet owner</param>
+        /// <param name="fiat">Fiat wallet symbol</param>
+        /// <returns>
+        /// Id of requested wallet.
+        /// </returns>
+        public int GetUserFiatWalletId(int userId, FiatEnum fiat)
         {
-            if (userId < 1) throw new ArgumentException(nameof(userId));
-
             var walletId = -1;
 
             using (var connection = context.GetConnection())

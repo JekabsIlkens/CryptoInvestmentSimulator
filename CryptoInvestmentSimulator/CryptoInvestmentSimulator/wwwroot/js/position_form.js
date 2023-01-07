@@ -1,4 +1,25 @@
 ﻿
+// Validates if entered euro amount is more than 5 euro.
+// Doubles as protection against SQL injections.
+$('#buyForm').on('submit', function ()
+{
+	if ($('#receivedEuro').val() < 5)
+	{
+		$('#buyAmountError').html("Position value cannot be smaller than 5 euro!");
+		return false;
+	}
+	else
+	{
+		$('#buyAmountError').html("");
+		return true;
+	}
+});
+
+// Limits euro amount input decimal places to two.
+$('receivedEuro').change(function () {
+	this.value = "" + parseFloat(this.value).toFixed(2);
+});
+
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	// Collects the dropdown select as a global variable.
@@ -35,17 +56,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 			// Calculates equivelant amount of crypto to users input in euro.
 			// Fills readonly crypto amount field.
-			var cryptoAmountResult = "" + (fiatAmountParsed / unitValueParsed);
+			var cryptoAmountResult = "" + (fiatAmountParsed / unitValueParsed).toFixed(6);
 			cryptoAmountInput.value = cryptoAmountResult;
 
 			// Each leverage ratio uses different devisor, sets calculated result as readonly margin input value.
 			if (("" + leverageRatioInput.value) == "1x") { calculatedMarginInput.value = "" + (0); }
 
-			if (("" + leverageRatioInput.value) == "2x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 2); }
+			if (("" + leverageRatioInput.value) == "2x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 2).toFixed(2); }
 
-			if (("" + leverageRatioInput.value) == "5x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 5); }
+			if (("" + leverageRatioInput.value) == "5x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 5).toFixed(2); }
 
-			if (("" + leverageRatioInput.value) == "10x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 10); }
+			if (("" + leverageRatioInput.value) == "10x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 10).toFixed(2); }
 		}
 		else
 		{
@@ -68,11 +89,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			// Each leverage ratio uses different devisor, sets calculated result as readonly margin input value.
 			if (("" + leverageRatioInput.value) == "1x") { calculatedMarginInput.value = "" + (0); }
 
-			if (("" + leverageRatioInput.value) == "2x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 2); }
+			if (("" + leverageRatioInput.value) == "2x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 2).toFixed(2); }
 
-			if (("" + leverageRatioInput.value) == "5x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 5); }
+			if (("" + leverageRatioInput.value) == "5x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 5).toFixed(2); }
 
-			if (("" + leverageRatioInput.value) == "10x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 10); }
+			if (("" + leverageRatioInput.value) == "10x") { calculatedMarginInput.value = "" + (fiatAmountParsed / 10).toFixed(2); }
 		}
 		else {
 			cryptoAmountInput.value = "" + 0;

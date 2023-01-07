@@ -122,5 +122,29 @@ namespace UnitTests.DatabaseTests
             // Assert
             Assert.NotEqual(openPositionsBefore.Count, openPositionsAfter.Count);
         }
+
+        /// <summary>
+        /// Tests if DeleteUsersPositions successfuly all positions owned by user.
+        /// </summary>
+        [Fact]
+        public void DeleteUsersPositions_UserWithPositions_AllPositionsDeleted()
+        {
+            // Arrange
+            var procedures = new InvestmentProcedures(mockContext);
+
+            var newPosition = ModelMock.GetOldBitcoinPositionWithoutLeverage();
+            newPosition.DateTime = DateTime.Now;
+            procedures.InsertNewPosition(newPosition);
+            var positionsBefore = procedures.GetAllOpenPositions(1);
+
+            // Act
+            procedures.DeleteUsersPositions(1);
+            var positionsAfter = procedures.GetAllOpenPositions(1);
+            mockServer.ShutDown();
+
+            // Assert
+            Assert.Equal(3, positionsBefore.Count);
+            Assert.Empty(positionsAfter);
+        }
     }
 }

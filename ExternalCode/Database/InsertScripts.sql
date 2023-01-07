@@ -37,6 +37,7 @@ INSERT INTO cisdb.status (status.name) VALUES ('Liquidated');
 
 
 /* All supported leverage ratios/multipliers */
+INSERT INTO cisdb.leverage_ratio (leverage_ratio.multiplier) VALUES (1);
 INSERT INTO cisdb.leverage_ratio (leverage_ratio.multiplier) VALUES (2);
 INSERT INTO cisdb.leverage_ratio (leverage_ratio.multiplier) VALUES (5);
 INSERT INTO cisdb.leverage_ratio (leverage_ratio.multiplier) VALUES (10);

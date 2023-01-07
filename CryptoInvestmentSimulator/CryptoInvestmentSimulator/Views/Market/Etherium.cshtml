@@ -8,7 +8,7 @@
 	<script src="~/js/charts/chart_switch.js"></script>
 	<script src="~/js/charts/eth_frames.js"></script>
 	<script src="~/js/leverage_ratios.js"></script>
-	<script src="~/js/transaction_form.js"></script>
+	<script src="~/js/position_form.js"></script>
 }
 
 <div class="text-center">
@@ -27,13 +27,14 @@
 		<div id="chartZone8h"></div>
 		<div id="chartZone24h"></div>
 
-		<form method="post" asp-controller="Market" asp-action="OpenEtheriumPosition">
+		<form id="buyForm" method="post" asp-controller="Market" asp-action="OpenEtheriumPosition">
 
 			<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
 				<div class="row">
 					<div class="col-6">
 						<label>Amount (EUR)</label>
-						<input id="receivedEuro" type="text" class="form-control" required="required" placeholder="0.000000" value="" name="euroAmount" />
+						<input id="receivedEuro" type="number" class="form-control" required="required" step='0.01' placeholder="0.00" value="" name="euroAmount" />
+						<p id="buyAmountError"></p>
 
 						<label>Amount (ETH)</label>
 						<input id="convertedCrypto" type="text" class="form-control" placeholder="0.000000" name="cryptoAmount" readonly />
@@ -42,8 +43,8 @@
 						<label for="leverage-ratio-select">Leverage</label>
 						<select id="leverage-ratio-select" type="text" class="form-control" name="leverageRatio"></select>
 
-						<label>Margin</label>
-						<input id="calculatedMargin" type="text" class="form-control" placeholder="0.000000" name="marginAmount" readonly />
+						<label>Margin (EUR)</label>
+						<input id="calculatedMargin" type="number" class="form-control" step='0.01' placeholder="0.00" name="marginAmount" readonly />
 					</div>
 				</div>
 			</div>

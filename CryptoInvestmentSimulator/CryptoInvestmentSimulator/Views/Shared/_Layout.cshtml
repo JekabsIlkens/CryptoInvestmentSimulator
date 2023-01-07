@@ -2,15 +2,18 @@
 @using CryptoInvestmentSimulator.Database
 @using System.Security.Claims
 @{
+    <!-- Collects currently logged in users verification status for navigation bar adjustments. -->
     var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
     var verified = false;
 
-    if (email == null) verified = false;    
+    if (email == null)
+    {
+        verified = false;
+    }
     else
     {
-        var context = new DatabaseContext(DatabaseConstants.Access);
-        var procedure = new UserProcedures(context);
-        verified = procedure.GetUserDetails(email).Verified == 1 ? true : false;
+        var userProcedures = new UserProcedures(new DatabaseContext(DatabaseConstants.Access));
+        verified = userProcedures.GetUserDetails(email).Verified == 1 ? true : false;
     }
 }
 
@@ -43,10 +46,6 @@
             <div class="container-fluid">
 
                 <h1 class="navbar-brand">CryptoInvestmentSimulator</h1>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
@@ -54,14 +53,16 @@
                         {
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
 
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Portfolio" asp-action="Index">Portfolio</a></li>
-
                             @if (verified)
                             {
+                                <li class="nav-item"><a class="nav-link text-dark" asp-controller="Portfolio" asp-action="Index">Portfolio</a></li>
                                 <li class="nav-item"><a class="nav-link text-dark" asp-controller="Market" asp-action="Index">Market</a></li>
                             }
                             else
                             {
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Portfolio</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Market</a>
                                 </li>
@@ -76,7 +77,6 @@
                         }                 
                     </ul>
                 </div>
-
             </div>
         </nav>
     </header>
@@ -91,7 +91,6 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

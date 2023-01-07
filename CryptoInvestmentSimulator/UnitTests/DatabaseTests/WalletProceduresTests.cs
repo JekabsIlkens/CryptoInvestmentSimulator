@@ -96,7 +96,7 @@ namespace UnitTests.DatabaseTests
             var procedures = new WalletProcedures(mockContext);
 
             // Act
-            var eurWalletId = procedures.GetUserWalletId(1, FiatEnum.EUR);
+            var eurWalletId = procedures.GetUserFiatWalletId(1, FiatEnum.EUR);
 
             // Assert
             Assert.Equal(1, eurWalletId);

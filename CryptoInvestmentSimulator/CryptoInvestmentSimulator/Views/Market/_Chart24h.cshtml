@@ -1,5 +1,15 @@
 ﻿
 <script>
+
+	// Function for adjusting date times to users time zone.
+	function addHours(hourChange, date = new Date()) {
+		date.setTime(date.getTime() + hourChange * 60 * 60 * 1000);
+
+		return date;
+	}
+
+	var timeZoneChange = @Html.Raw(Json.Serialize(ViewBag.TimeZoneChange));
+
 	// Collects time and price point arrays from ViewBag.
 	// Converts them into JavaScript compatible arrays.
 	// Generates new chart by using timeArray as x and priceArray as y.
@@ -14,6 +24,7 @@
 	var timeArray = [];
 	for (var i = 0; i < 60; i++) {
 		let date = new Date(times[i]);
+		addHours(timeZoneChange, date);
 		timeArray[i] = date.toLocaleTimeString();
 	}
 

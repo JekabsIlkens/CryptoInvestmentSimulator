@@ -3,6 +3,8 @@
 
 	const cryptoSymbols = ["BTC", "ETH", "ADA", "ATOM", "DOGE"];
 
+	// Collects ViewBag data into JS arrays.
+
 	var cryptoAmounts = @Html.Raw(Json.Serialize(ViewBag.CryptoAmounts));
 	var cryptoAmountsList = [];
 	for (let i = 0; i <= cryptoAmounts.length - 1; i++) {
@@ -14,6 +16,8 @@
 	for (let i = 0; i <= cryptosToEuro.length - 1; i++) {
 		cryptosToEuroList[i] = cryptosToEuro[i];
 	}
+
+	// Fills empty wallets table body with data.
 
 	var balancesBody = document.getElementById("balancesBody");
 

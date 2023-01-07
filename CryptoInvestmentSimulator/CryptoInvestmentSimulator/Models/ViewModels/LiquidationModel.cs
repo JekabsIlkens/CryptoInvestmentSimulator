@@ -2,7 +2,7 @@
 {
     public class LiquidationModel
     {
-        public int TransactionId { get; set; }
+        public int positionId { get; set; }
 
         public decimal FiatAmount { get; set; }
 

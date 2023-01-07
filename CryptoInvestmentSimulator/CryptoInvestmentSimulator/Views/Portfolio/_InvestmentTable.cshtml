@@ -1,6 +1,8 @@
 ﻿
 <script>
 
+	// Collects ViewBag data into JS arrays.
+
 	var dateTimes = @Html.Raw(Json.Serialize(ViewBag.DateTimes));
 	var dateTimesList = [];
 	for (let i = 0; i <= dateTimes.length - 1; i++) {
@@ -43,6 +45,8 @@
 		profitsList[i] = profits[i];
 	}
 
+	// Fills empty investments table body with data.
+
 	var investmentsBody = document.getElementById("investmentsBody");
 
 	for (let i = 0; i <= dateTimesList.length - 1; i++) {
@@ -78,6 +82,7 @@
 
 		let profitTd = document.createElement("td");
 
+		// Adds missing + symbol if trade is profitable.
 		if (profitsList[i] >= 0){
 			profitTd.innerHTML = "+" + profitsList[i];
 		}

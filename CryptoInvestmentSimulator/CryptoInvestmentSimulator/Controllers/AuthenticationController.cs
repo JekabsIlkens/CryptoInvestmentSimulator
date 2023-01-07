@@ -39,7 +39,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
         /// <summary>
         /// Triggers the logout process by destroying Auth0 and local session.
-        /// Returns user to the landing page.
+        /// After logout sends user to the landing page.
         /// </summary>
         [Authorize]
         public async Task Logout()

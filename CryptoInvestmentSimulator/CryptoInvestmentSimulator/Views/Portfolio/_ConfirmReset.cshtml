@@ -1,25 +1,28 @@
 ﻿@using CryptoInvestmentSimulator.Helpers;
 @{
+    // Generates a random alphanumeric key to be displayed above input form.
     var actualKey = ConfidenceHelper.GetRandomKey(8);
 }
 
-<!-- Portfolio reset popup form -->
-<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Portfolio reset modal (pop-up form). -->
+<div class="modal fade" id="resetPortfolioModal" tabindex="-1" role="dialog" aria-labelledby="resetPortfolioModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
-            <!-- Sends form data to ResetPortfolio method in Portfolio Controller -->
-            <form method="post" asp-controller="Portfolio" asp-action="ResetPortfolio">
+            <!-- Posts to PortfolioController/ResetPortfolio to begin reset process. -->
+            <form id="resetForm" method="post" asp-controller="Portfolio" asp-action="ResetPortfolio">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm portfolio reset:</h5>
+                    <h5 class="modal-title" id="resetPortfolioModalLongTitle">Confirm portfolio reset:</h5>
                 </div>
 
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Repeat the following key to confirm reset!</label>
-                        <input type="text" class="form-control" required="required" value="@actualKey" name="actualKey" readonly />
 
-                        <input id="target" type="text" class="form-control" required="required" value="" name="receivedKey" />
+                        <input id="actualKey" type="text" class="form-control" required="required" value="@actualKey" readonly />
+                        <input id="receivedKey" type="text" class="form-control" required="required" value="" />
+
+                        <p id="resetError"></p>
                     </div>
                 </div>
 
