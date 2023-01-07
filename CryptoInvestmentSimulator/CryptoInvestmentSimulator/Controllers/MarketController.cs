@@ -638,7 +638,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 Margin = decimal.Parse(marginAmount),
                 Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.BTC).Id
             };
 
@@ -684,7 +684,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 Margin = decimal.Parse(marginAmount),
                 Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ETH).Id
             };
 
@@ -730,7 +730,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 Margin = decimal.Parse(marginAmount),
                 Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ADA).Id
             };
 
@@ -776,7 +776,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 Margin = decimal.Parse(marginAmount),
                 Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.ATOM).Id
             };
 
@@ -822,7 +822,7 @@ namespace CryptoInvestmentSimulator.Controllers
                 Margin = decimal.Parse(marginAmount),
                 Leverage = DatabaseKeyConversionHelper.LeverageStringToDbKey(leverageRatio),
                 Status = (int)StatusEnum.Open,
-                Wallet = walletProcedures.GetUserWalletId(userId, FiatEnum.EUR),
+                Wallet = walletProcedures.GetUserFiatWalletId(userId, FiatEnum.EUR),
                 Data = marketProcedures.GetLatestMarketData(CryptoEnum.DOGE).Id
             };
 
