@@ -17,7 +17,12 @@ namespace CryptoInvestmentSimulator
         private static readonly MarketDataProcedures marketProcedures = new(context);
         private static readonly InvestmentProcedures investmentProcedures = new(context);
 
-        public void LiquidatePositions()
+        /// <summary>
+        /// Gets all open leveraged positions for each verified user.
+        /// Calculates current potential profits or losses for each position.
+        /// If losses are double the margin value - liquidates position and adjusts users wallet balances.
+        /// </summary>
+        public void LiquidateBadPositions()
         {
             var userIdList = userProcedures.GetAllVerifiedUserIds();
 
@@ -62,12 +67,12 @@ namespace CryptoInvestmentSimulator
         }
 
         /// <summary>
-        /// Iterates trough each model in received model list 
-        /// and calls insert procedure for each model to insert data into database.
+        /// Gets insertion ready market data model list and calls insert procedure
+        /// for each model to insert data into database.
         /// </summary>
-        public void InsertMarketData()
+        public void CollectLatestMarketData()
         {
-            var modelList = GetNewMarketData();
+            var modelList = GetInsertionReadyMarketData();
 
             foreach (var model in modelList)
             {
@@ -76,70 +81,71 @@ namespace CryptoInvestmentSimulator
         }
 
         /// <summary>
-        /// Makes a new market data request to CMC API for each supported crypto.
-        /// Places collected data into <see cref="MarketDataModel"/>s.
-        /// Makes a list of collected models.
+        /// Makes a new latest market data request to Coin Market Cap API for each supported cryptocurrency.
+        /// Processes collected data and fills a list of <see cref="MarketDataModel"/>s.
         /// </summary>
-        /// <returns>List of filled <see cref="MarketDataModel"/>s</returns>
-        private List<MarketDataModel> GetNewMarketData()
+        /// <returns>
+        /// List of filled <see cref="MarketDataModel"/>s
+        /// </returns>
+        private List<MarketDataModel> GetInsertionReadyMarketData()
         {
             var modelList = new List<MarketDataModel>();
 
-            var btcFullData = GetCryptoToEuroData(CryptoEnum.BTC);
+            var btcRawData = GetCryptoToFiatLatestQuote(CryptoEnum.BTC, FiatEnum.EUR);
             var btcMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(btcFullData.Data.Bitcoin.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(btcFullData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(btcRawData.Data.Bitcoin.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(btcRawData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(btcRawData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(btcMDM);
 
-            var ethFullData = GetCryptoToEuroData(CryptoEnum.ETH);
+            var ethRawData = GetCryptoToFiatLatestQuote(CryptoEnum.ETH, FiatEnum.EUR);
             var ethMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(ethFullData.Data.Etherium.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(ethFullData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(ethRawData.Data.Etherium.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(ethRawData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(ethRawData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ETH.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(ethMDM);
 
-            var adaFullData = GetCryptoToEuroData(CryptoEnum.ADA);
+            var adaRawData = GetCryptoToFiatLatestQuote(CryptoEnum.ADA, FiatEnum.EUR);
             var adaMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(adaFullData.Data.Cardano.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(adaFullData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(adaRawData.Data.Cardano.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(adaRawData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(adaRawData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ADA.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(adaMDM);
 
-            var atomFullData = GetCryptoToEuroData(CryptoEnum.ATOM);
+            var atomRawData = GetCryptoToFiatLatestQuote(CryptoEnum.ATOM, FiatEnum.EUR);
             var atomMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(atomFullData.Data.Cosmos.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(atomFullData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(atomRawData.Data.Cosmos.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(atomRawData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(atomRawData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ATOM.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
             };
             modelList.Add(atomMDM);
 
-            var dogeFullData = GetCryptoToEuroData(CryptoEnum.DOGE);
+            var dogeRawData = GetCryptoToFiatLatestQuote(CryptoEnum.DOGE, FiatEnum.EUR);
             var dogeMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(dogeFullData.Data.Dogecoin.Quote.Euro.Price),
-                Change24h = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
-                Change7d = FloatingPointHelper.FloatingPointToTwo(dogeFullData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
+                UnitValue = FloatingPointHelper.FloatingPointToFour(dogeRawData.Data.Dogecoin.Quote.Euro.Price),
+                Change24h = FloatingPointHelper.FloatingPointToTwo(dogeRawData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
+                Change7d = FloatingPointHelper.FloatingPointToTwo(dogeRawData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.DOGE.ToString(),
                 FiatSymbol = FiatEnum.EUR.ToString(),
             };
@@ -150,18 +156,22 @@ namespace CryptoInvestmentSimulator
 
         /// <summary>
         /// Makes a Coin Market Cap API request for specified cryptocurrency.
-        /// Executes request and deserializes response into request models.
+        /// Executes request and deserializes response into <see cref="Root"/> model.
         /// </summary>
-        /// <param name="crypto">Data will be collected for this crypto.</param>
-        /// <returns>Filled <see cref="Root"/> response model</returns>
-        /// <exception cref="Exception"></exception>
-        private static Root GetCryptoToEuroData(CryptoEnum crypto)
+        /// <param name="crypto">Cryptocurrency to collect data for.</param>
+        /// <returns>
+        /// Filled <see cref="Root"/> response model.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Thrown when request or deserialization fails.
+        /// </exception>
+        private static Root GetCryptoToFiatLatestQuote(CryptoEnum crypto, FiatEnum fiat)
         {
             var request = new RestRequest(CoinMarketCapApiConstants.LatestQuotesTest, Method.Get);
 
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("symbol", crypto.ToString());
-            request.AddParameter("convert", FiatEnum.EUR.ToString());
+            request.AddParameter("convert", fiat.ToString());
             request.AddParameter("CMC_PRO_API_KEY", CoinMarketCapApiConstants.AccessKey);
 
             var response = new RestClient().Execute(request);

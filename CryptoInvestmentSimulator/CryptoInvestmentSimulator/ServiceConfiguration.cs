@@ -7,10 +7,12 @@ namespace CryptoInvestmentSimulator
     public static class ServiceConfiguration
     {
         /// <summary>
-        /// Extension method that registers services for builder in Program.cs
+        /// Registers required services for program builder.
         /// </summary>
         /// <param name="serviceCollection"></param>
-        /// <returns><see cref="IServiceCollection"/></returns>
+        /// <returns>
+        /// <see cref="IServiceCollection"/> with registered services.
+        /// </returns>
         public static IServiceCollection RegisterServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddControllersWithViews();

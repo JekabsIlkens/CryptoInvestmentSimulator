@@ -5,27 +5,28 @@ internal class Program
     private static readonly GlobalOperations globalOperations = new();
 
     /// <summary>
-    /// Starts global timer on application launch and executes
-    /// market data retrieval and position liquidation methods on each elapsed interval.
+    /// Starts global timer on application launch
+    /// and executes all global operations every 2 minutes.
     /// </summary>
     static void OnStartedActions()
     {
         var timer = new System.Timers.Timer { Interval = 60000 };
-        timer.Elapsed += CollectMarketDataAndLiquidatePositions;
+        timer.Elapsed += ExecuteGlobalOperations;
         timer.Start();
     }
 
     /// <summary>
-    /// 
+    /// Executes latest market data collection.
+    /// Executes bad position liquidation.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="elapsedEvent"></param>
-    static void CollectMarketDataAndLiquidatePositions(object sender, System.Timers.ElapsedEventArgs elapsedEvent)
+    static void ExecuteGlobalOperations(object sender, System.Timers.ElapsedEventArgs elapsedEvent)
     {
-        globalOperations.InsertMarketData();
+        globalOperations.CollectLatestMarketData();
         Console.WriteLine($"New market data collected! Collection time: {DateTime.Now}");
 
-        // globalOperations.LiquidatePositions();
+        // globalOperations.LiquidateBadPositions();
         Console.WriteLine($"Poor positions liquidated! Liquidation time: {DateTime.Now}");
     }
 
