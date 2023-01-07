@@ -79,23 +79,16 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <summary>
         /// Performs confidence key match check and resets users portfolio.
         /// </summary>
-        /// <param name="actualKey">Expected key</param>
-        /// <param name="receivedKey">User input</param>
-        /// <returns>Portfolio view with user view model</returns>
+        /// <returns>
+        /// Portfolio view with user view model.
+        /// </returns>
         [HttpPost]
-        public IActionResult ResetPortfolio(string actualKey, string receivedKey)
+        public IActionResult ResetPortfolio()
         {
             var user = GetUserDetails();
 
-            if (actualKey == receivedKey)
-            {
-                // TODO: Add investment clear procedure
-                ResetUsersWallets(user.Id);
-
-                ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
-
-                return View("Index", user);
-            }
+            // TODO: Add investment clear procedure
+            ResetUsersWallets(user.Id);
 
             ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
 

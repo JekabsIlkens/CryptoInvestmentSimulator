@@ -54,7 +54,7 @@ internal class Program
 
         app.MapControllerRoute(name: "default", pattern: "{controller=Landing}/{action=Index}/{id?}");
 
-        app.Lifetime.ApplicationStarted.Register(OnStartedActions);
+        // app.Lifetime.ApplicationStarted.Register(OnStartedActions);
 
         app.Run();
     }
