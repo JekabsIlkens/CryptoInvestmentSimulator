@@ -95,7 +95,7 @@ namespace CryptoInvestmentSimulator
             var btcMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(btcRawData.Data.Bitcoin.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(btcRawData.Data.Bitcoin.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(btcRawData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(btcRawData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
@@ -107,7 +107,7 @@ namespace CryptoInvestmentSimulator
             var ethMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(ethRawData.Data.Etherium.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(ethRawData.Data.Etherium.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(ethRawData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(ethRawData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ETH.ToString(),
@@ -119,7 +119,7 @@ namespace CryptoInvestmentSimulator
             var adaMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(adaRawData.Data.Cardano.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(adaRawData.Data.Cardano.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(adaRawData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(adaRawData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ADA.ToString(),
@@ -131,7 +131,7 @@ namespace CryptoInvestmentSimulator
             var atomMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(atomRawData.Data.Cosmos.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(atomRawData.Data.Cosmos.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(atomRawData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(atomRawData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ATOM.ToString(),
@@ -143,7 +143,7 @@ namespace CryptoInvestmentSimulator
             var dogeMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToFour(dogeRawData.Data.Dogecoin.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(dogeRawData.Data.Dogecoin.Quote.Euro.Price),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(dogeRawData.Data.Dogecoin.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(dogeRawData.Data.Dogecoin.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.DOGE.ToString(),

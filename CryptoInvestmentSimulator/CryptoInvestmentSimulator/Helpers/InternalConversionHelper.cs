@@ -4,6 +4,14 @@ namespace CryptoInvestmentSimulator.Helpers
 {
     public static class InternalConversionHelper
     {
+        /// <summary>
+        /// Converts crypto symbol string to coresponding crypto enum.
+        /// </summary>
+        /// <param name="symbolString">Symbol string.</param>
+        /// <returns>
+        /// Matching crypto enum.
+        /// </returns>
+        /// <exception cref="ArgumentException"></exception>
         public static CryptoEnum StringToCryptoEnum(string symbolString)
         {
             return symbolString switch
@@ -17,19 +25,35 @@ namespace CryptoInvestmentSimulator.Helpers
             };
         }
 
-        public static CryptoEnum IntToCryptoEnum(int symbolKey)
+        /// <summary>
+        /// Converts integer to coresponding crypto enum.
+        /// </summary>
+        /// <param name="number">Number to convert.</param>
+        /// <returns>
+        /// Matching crypto enum.
+        /// </returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static CryptoEnum IntToCryptoEnum(int number)
         {
-            return symbolKey switch
+            return number switch
             {
                 1 => CryptoEnum.BTC,
                 2 => CryptoEnum.ETH,
                 3 => CryptoEnum.ADA,
                 4 => CryptoEnum.ATOM,
                 5 => CryptoEnum.DOGE,
-                _ => throw new ArgumentException(nameof(symbolKey))
+                _ => throw new ArgumentException(nameof(number))
             };
         }
 
+        /// <summary>
+        /// Converts users selected time zone to actual hour change value.
+        /// </summary>
+        /// <param name="timeZone">Selected time zone.</param>
+        /// <returns>
+        /// Hour change value, positive, zero or negative.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static int TimeZoneStringToChangeValue(string timeZone)
         {
             return timeZone switch

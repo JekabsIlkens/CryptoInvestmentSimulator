@@ -5,10 +5,12 @@ namespace CryptoInvestmentSimulator.Helpers
     public static class DatabaseKeyConversionHelper
     {
         /// <summary>
-        /// Converts string type time zone from into coresponding database key.
+        /// Converts string type time zone into coresponding database key.
         /// </summary>
-        /// <param name="timeZone">String time zone</param>
-        /// <returns>String time zone converted to its db key</returns>
+        /// <param name="timeZone">String time zone.</param>
+        /// <returns>
+        /// Time zone database primary key.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static int TimeZoneToDbKey(string timeZone)
         {
@@ -44,10 +46,12 @@ namespace CryptoInvestmentSimulator.Helpers
         }
 
         /// <summary>
-        /// Converts the key type time zone from database into coresponding string value.
+        /// Converts the database primary key of time zone into coresponding string value.
         /// </summary>
-        /// <param name="timeZone">Time zone key</param>
-        /// <returns>Key converted to string time zone</returns>
+        /// <param name="timeZone">Time zone primary key.</param>
+        /// <returns>
+        /// String time zone.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static string TimeZoneKeyToString(int timeZone)
         {
@@ -83,10 +87,12 @@ namespace CryptoInvestmentSimulator.Helpers
         }
 
         /// <summary>
-        /// Converts crypto symbol to coresponding database key.
+        /// Converts crypto symbol to coresponding database primary key.
         /// </summary>
-        /// <param name="crypto">Crypto symbol</param>
-        /// <returns>Database key for symbol</returns>
+        /// <param name="crypto">Crypto symbol.</param>
+        /// <returns>
+        /// Crypto symbol pripary key.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static int CryptoSymbolToDbKey(string crypto)
         {
@@ -102,10 +108,12 @@ namespace CryptoInvestmentSimulator.Helpers
         }
 
         /// <summary>
-        /// Converts database key to coresponding crypto symbol.
+        /// Converts the database primary key of crypto symbol intto coresponding symbol string.
         /// </summary>
-        /// <param name="crypto">Crypto database key</param>
-        /// <returns>Crypto symbol</returns>
+        /// <param name="crypto">Crypto database key.</param>
+        /// <returns>
+        /// Crypto symbol.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static string CryptoKeyToSymbol(int crypto)
         {
@@ -121,10 +129,12 @@ namespace CryptoInvestmentSimulator.Helpers
         }
 
         /// <summary>
-        /// Converts fiat symbol to coresponding database key.
+        /// Converts fiat symbol to coresponding database primary key.
         /// </summary>
-        /// <param name="fiat">Fiat symbol</param>
-        /// <returns>Database key for symbol</returns>
+        /// <param name="fiat">Fiat symbol.</param>
+        /// <returns>
+        /// Primary key of fiat symbol.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static int FiatSymbolToDbKey(string fiat)
         {
@@ -136,10 +146,12 @@ namespace CryptoInvestmentSimulator.Helpers
         }
 
         /// <summary>
-        /// Converts database key to coresponding fiat symbol.
+        /// Converts the database primary key of fiat symbol intto coresponding fiat string.
         /// </summary>
-        /// <param name="fiat">Fiat database key</param>
-        /// <returns>Fiat symbol</returns>
+        /// <param name="fiat">Fiat database key.</param>
+        /// <returns>
+        /// Fiat symbol.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static string FiatKeyToSymbol(int fiat)
         {
@@ -150,6 +162,14 @@ namespace CryptoInvestmentSimulator.Helpers
             };
         }
 
+        /// <summary>
+        /// Converts leverage string into coresponding databas primary key.
+        /// </summary>
+        /// <param name="leverageMultiplier">String leverage ratio</param>
+        /// <returns>
+        /// Primary key of leverage ratio.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static int LeverageStringToDbKey(string leverageMultiplier)
         {
             return leverageMultiplier switch
@@ -162,6 +182,14 @@ namespace CryptoInvestmentSimulator.Helpers
             };
         }
 
+        /// <summary>
+        /// Converts leverage ratio primary key into string value.
+        /// </summary>
+        /// <param name="ratioId">Leverage ratio primary key.</param>
+        /// <returns>
+        /// Leverage ratio string.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static string LeverageKeyToString(int ratioId)
         {
             return ratioId switch

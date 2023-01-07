@@ -7,9 +7,10 @@ namespace CryptoInvestmentSimulator.Helpers
         /// <summary>
         /// Converts C# DateTime to Database supported DateTime (ISO8601).
         /// </summary>
-        /// <param name="dateTime"></param>
-        /// <returns>DateTime in DB format as string</returns>
-        /// <example>2022-11-12 23:59:59</example>
+        /// <param name="dateTime">C# date time.</param>
+        /// <returns>
+        /// DateTime in DB format as string.
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static string ToDbFormatAsString(DateTime dateTime)
         {
