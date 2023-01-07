@@ -60,7 +60,7 @@ namespace CryptoInvestmentSimulator
                         var fiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                         walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (fiatBalance + position.FiatAmount - currentProfit));
 
-                        investmentProcedures.UpdatePositionStatus(position.TransactionId, (int)StatusEnum.Liquidated);
+                        investmentProcedures.UpdatePositionStatus(position.positionId, (int)StatusEnum.Liquidated);
                     }
                 }
             }

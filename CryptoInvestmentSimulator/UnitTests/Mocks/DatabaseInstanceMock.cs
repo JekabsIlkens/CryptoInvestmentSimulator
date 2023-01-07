@@ -33,7 +33,7 @@ namespace UnitTests.Mocks
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), DatabaseScriptMock.WalletTable);
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), DatabaseScriptMock.StatusTable);
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), DatabaseScriptMock.LeverageRatioTable);
-            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), DatabaseScriptMock.TransactionTable);
+            MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), DatabaseScriptMock.PositionTable);
 
             // Populates the static helper tables with required records.
             for (int i = -12; i <= 12; i++)
@@ -110,20 +110,20 @@ namespace UnitTests.Mocks
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), 
                 $"INSERT INTO wallet ({DatabaseConstants.WalletColumns}) VALUES ({dogeWallet})");
 
-            // Populates transaction table with records.
+            // Populates position table with records.
             var positionOne = ModelMock.GetOldBitcoinPositionWithoutLeverage();
             var formatedPosOneDate = DateTimeFormatHelper.ToDbFormatAsString(positionOne.DateTime);
             var withoutLeverage = $"'{formatedPosOneDate}', {positionOne.FiatAmount}, {positionOne.CryptoAmount}, {positionOne.Margin}, " +
                 $"{positionOne.Leverage}, {positionOne.Status}, {positionOne.Wallet}, {positionOne.Data}";
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"), 
-                $"INSERT INTO transaction ({DatabaseConstants.TransactionColumns}) VALUES ({withoutLeverage})");
+                $"INSERT INTO position ({DatabaseConstants.PositionColumns}) VALUES ({withoutLeverage})");
 
             var positionTwo = ModelMock.GetNewEtheriumPositionWithLeverage();
             var formatedPosTwoDate = DateTimeFormatHelper.ToDbFormatAsString(positionTwo.DateTime);
             var withLeverage = $"'{formatedPosTwoDate}', {positionTwo.FiatAmount}, {positionTwo.CryptoAmount}, {positionTwo.Margin}, " +
                 $"{positionTwo.Leverage}, {positionTwo.Status}, {positionTwo.Wallet}, {positionTwo.Data}";
             MySqlHelper.ExecuteNonQuery(dbServer.GetConnectionString("mockdb"),
-                $"INSERT INTO transaction ({DatabaseConstants.TransactionColumns}) VALUES ({withLeverage})");
+                $"INSERT INTO position ({DatabaseConstants.PositionColumns}) VALUES ({withLeverage})");
 
 
             return dbServer;

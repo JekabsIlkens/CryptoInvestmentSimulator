@@ -26,7 +26,7 @@ namespace CryptoInvestmentSimulator.Database
 			string valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, {positionModel.Margin}, " +
 					$"{positionModel.Leverage}, {positionModel.Status}, {positionModel.Wallet}, {positionModel.Data}";
 
-			string commandString = $"INSERT INTO transaction ({DatabaseConstants.TransactionColumns}) VALUES ({valuesString})";
+			string commandString = $"INSERT INTO position ({DatabaseConstants.PositionColumns}) VALUES ({valuesString})";
 
 			using (MySqlConnection connection = context.GetConnection())
 			{
@@ -51,13 +51,13 @@ namespace CryptoInvestmentSimulator.Database
 			{
 				connection.Open();
 				MySqlCommand command = new
-					($"SELECT transaction.transaction_id, wallet.user_id, market_data.crypto_id, market_data.crypto_id, transaction.date_time, transaction.fiat_amount, " +
-					$"transaction.crypto_amount, transaction.ratio_id, transaction.margin, transaction.status_id " +
-					$"FROM transaction " +
-					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +
-					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
-					$"WHERE wallet.user_id = {userId} AND transaction.status_id = 1 " +
-					$"ORDER BY transaction.date_time DESC",
+					($"SELECT position.position_id, wallet.user_id, market_data.crypto_id, market_data.crypto_id, position.date_time, position.fiat_amount, " +
+					$"position.crypto_amount, position.ratio_id, position.margin, position.status_id " +
+					$"FROM position " +
+					$"INNER JOIN wallet ON position.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN market_data ON position.data_id = market_data.data_id " +
+					$"WHERE wallet.user_id = {userId} AND position.status_id = 1 " +
+					$"ORDER BY position.date_time DESC",
 					connection);
 
 				using (var reader = command.ExecuteReader())
@@ -66,7 +66,7 @@ namespace CryptoInvestmentSimulator.Database
 					{
 						var model = new PositionModel
 						{
-							Id = (int)reader.GetValue(reader.GetOrdinal("transaction_id")),
+							Id = (int)reader.GetValue(reader.GetOrdinal("position_id")),
 							BoughtCrypto = (int)reader.GetValue(reader.GetOrdinal("crypto_id")),
 							DateTime = (DateTime)reader.GetValue(reader.GetOrdinal("date_time")),
 							FiatAmount = (decimal)reader.GetValue(reader.GetOrdinal("fiat_amount")),
@@ -99,13 +99,13 @@ namespace CryptoInvestmentSimulator.Database
 			{
 				connection.Open();
 				MySqlCommand command = new
-					($"SELECT transaction.transaction_id, wallet.user_id, market_data.crypto_id, transaction.date_time, transaction.fiat_amount, " +
-					$"transaction.crypto_amount, transaction.ratio_id, transaction.margin, transaction.status_id " +
-					$"FROM transaction " +
-					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +
-					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
-					$"WHERE wallet.user_id = {userId} AND market_data.crypto_id = {(int)crypto} AND transaction.status_id = 1 " +
-					$"ORDER BY transaction.date_time DESC", 
+					($"SELECT position.position_id, wallet.user_id, market_data.crypto_id, position.date_time, position.fiat_amount, " +
+					$"position.crypto_amount, position.ratio_id, position.margin, position.status_id " +
+					$"FROM position " +
+					$"INNER JOIN wallet ON position.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN market_data ON position.data_id = market_data.data_id " +
+					$"WHERE wallet.user_id = {userId} AND market_data.crypto_id = {(int)crypto} AND position.status_id = 1 " +
+					$"ORDER BY position.date_time DESC", 
 					connection);
 
 				using (var reader = command.ExecuteReader())
@@ -114,7 +114,7 @@ namespace CryptoInvestmentSimulator.Database
 					{
 						var model = new PositionModel
 						{
-							Id = (int)reader.GetValue(reader.GetOrdinal("transaction_id")),
+							Id = (int)reader.GetValue(reader.GetOrdinal("position_id")),
 							DateTime = (DateTime)reader.GetValue(reader.GetOrdinal("date_time")),
 							FiatAmount = (decimal)reader.GetValue(reader.GetOrdinal("fiat_amount")),
 							CryptoAmount = (decimal)reader.GetValue(reader.GetOrdinal("crypto_amount")),
@@ -145,12 +145,12 @@ namespace CryptoInvestmentSimulator.Database
 			{
 				connection.Open();
 				MySqlCommand command = new
-					($"SELECT wallet.user_id, transaction.transaction_id, transaction.fiat_amount, transaction.crypto_amount, " +
-					$"transaction.margin, transaction.ratio_id, market_data.unit_value, market_data.crypto_id " +
-					$"FROM transaction " +
-					$"INNER JOIN wallet ON transaction.wallet_id = wallet.wallet_id " +
-					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
-					$"WHERE wallet.user_id = {userId} AND transaction.status_id = 1",
+					($"SELECT wallet.user_id, position.position_id, position.fiat_amount, position.crypto_amount, " +
+					$"position.margin, position.ratio_id, market_data.unit_value, market_data.crypto_id " +
+					$"FROM position " +
+					$"INNER JOIN wallet ON position.wallet_id = wallet.wallet_id " +
+					$"INNER JOIN market_data ON position.data_id = market_data.data_id " +
+					$"WHERE wallet.user_id = {userId} AND position.status_id = 1",
 					connection);
 
 				using (var reader = command.ExecuteReader())
@@ -159,7 +159,7 @@ namespace CryptoInvestmentSimulator.Database
 					{
 						var model = new LiquidationModel
 						{
-							TransactionId = (int)reader.GetValue(reader.GetOrdinal("transaction_id")),
+							positionId = (int)reader.GetValue(reader.GetOrdinal("position_id")),
 							FiatAmount = (decimal)reader.GetValue(reader.GetOrdinal("fiat_amount")),
 							CryptoAmount = (decimal)reader.GetValue(reader.GetOrdinal("crypto_amount")),
 							MarginAmount = (decimal)reader.GetValue(reader.GetOrdinal("margin")),
@@ -191,10 +191,10 @@ namespace CryptoInvestmentSimulator.Database
 			{
 				connection.Open();
 				MySqlCommand command = new
-					($"SELECT transaction.transaction_id, market_data.unit_value " +
-					$"FROM transaction " +
-					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
-					$"WHERE transaction_id = {positionId}",
+					($"SELECT position.position_id, market_data.unit_value " +
+					$"FROM position " +
+					$"INNER JOIN market_data ON position.data_id = market_data.data_id " +
+					$"WHERE position_id = {positionId}",
 					connection);
 
 				using (var reader = command.ExecuteReader())
@@ -212,14 +212,14 @@ namespace CryptoInvestmentSimulator.Database
 		/// <summary>
 		/// Updates status of specific position to specified status.
 		/// </summary>
-		/// <param name="transactionId">Position to update.</param>
+		/// <param name="positionId">Position to update.</param>
 		/// <param name="newStatusId">New status id.</param>
-		public void UpdatePositionStatus(int transactionId, int newStatusId)
+		public void UpdatePositionStatus(int positionId, int newStatusId)
 		{
 			using (var connection = context.GetConnection())
 			{
 				connection.Open();
-				MySqlCommand command = new($"UPDATE transaction SET status_id = {newStatusId} WHERE transaction_id = {transactionId}", connection);
+				MySqlCommand command = new($"UPDATE position SET status_id = {newStatusId} WHERE position_id = {positionId}", connection);
 				command.ExecuteNonQuery();
 			}
 		}

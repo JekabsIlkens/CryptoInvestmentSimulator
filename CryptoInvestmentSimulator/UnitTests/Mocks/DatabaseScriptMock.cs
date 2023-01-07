@@ -69,25 +69,25 @@
             "`multiplier` int NOT NULL, " +
             "PRIMARY KEY (`ratio_id`))";
 
-        public static readonly string TransactionTable =
-            "CREATE TABLE `transaction` (" +
-            "`transaction_id` int NOT NULL AUTO_INCREMENT, " +
+        public static readonly string PositionTable =
+            "CREATE TABLE `position` (" +
+            "`position_id` int NOT NULL AUTO_INCREMENT, " +
             "`date_time` datetime NOT NULL, " +
-            "`fiat_amount` decimal(12,6) NOT NULL, " +
+            "`fiat_amount` decimal(12,2) NOT NULL, " +
             "`crypto_amount` decimal(12,6) NOT NULL, " +
-            "`margin` decimal(12,6) DEFAULT NULL, " +
-            "`ratio_id` int DEFAULT NULL, " +
+            "`margin` decimal(12,2) DEFAULT NULL, " +
+            "`ratio_id` int NOT NULL, " +
             "`status_id` int NOT NULL, " +
             "`wallet_id` int NOT NULL, " +
             "`data_id` int NOT NULL, " +
-            "PRIMARY KEY (`transaction_id`), " +
-            "KEY `fk_transaction_leverage_ratio1_idx` (`ratio_id`), " +
-            "KEY `fk_transaction_status1_idx` (`status_id`), " +
-            "KEY `fk_transaction_wallet1_idx` (`wallet_id`), " +
-            "KEY `fk_transaction_market_data1_idx` (`data_id`), " +
-            "CONSTRAINT `fk_transaction_leverage_ratio1` FOREIGN KEY (`ratio_id`) REFERENCES `leverage_ratio` (`ratio_id`), " +
-            "CONSTRAINT `fk_transaction_market_data1` FOREIGN KEY (`data_id`) REFERENCES `market_data` (`data_id`), " +
-            "CONSTRAINT `fk_transaction_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`), " +
-            "CONSTRAINT `fk_transaction_wallet1` FOREIGN KEY (`wallet_id`) REFERENCES `wallet` (`wallet_id`))";
+            "PRIMARY KEY (`position_id`), " +
+            "KEY `fk_position_leverage_ratio1_idx` (`ratio_id`), " +
+            "KEY `fk_position_status1_idx` (`status_id`), " +
+            "KEY `fk_position_wallet1_idx` (`wallet_id`), " +
+            "KEY `fk_position_market_data1_idx` (`data_id`), " +
+            "CONSTRAINT `fk_position_leverage_ratio1` FOREIGN KEY (`ratio_id`) REFERENCES `leverage_ratio` (`ratio_id`), " +
+            "CONSTRAINT `fk_position_market_data1` FOREIGN KEY (`data_id`) REFERENCES `market_data` (`data_id`), " +
+            "CONSTRAINT `fk_position_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`), " +
+            "CONSTRAINT `fk_position_wallet1` FOREIGN KEY (`wallet_id`) REFERENCES `wallet` (`wallet_id`))";
     }
 }

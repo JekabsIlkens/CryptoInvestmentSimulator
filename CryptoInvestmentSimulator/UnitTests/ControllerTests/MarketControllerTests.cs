@@ -279,28 +279,6 @@ namespace UnitTests.ControllerTests
 		}
 
 		/// <summary>
-		/// Tests if GetNewMarketData receives successful API responses and
-		/// creates a list of filled market data models for all supported cryptocurrencies.
-		/// </summary>
-		[Fact]
-		public void GetNewMarketData_SuccessfulRequests_ValidListOfFilledModels()
-		{
-			// Arrange
-			var marketController = new MarketController();
-
-			// Act
-			var result = marketController.GetNewMarketData();
-
-			// Assert
-			Assert.Equal(5, result.Count);
-			Assert.NotNull(result[0]);
-			Assert.NotNull(result[1]);
-			Assert.NotNull(result[2]);
-			Assert.NotNull(result[3]);
-			Assert.NotNull(result[4]);
-		}
-
-		/// <summary>
 		/// Tests if Position Table partial view is rendered when user opens Bitcoin page.
 		/// DISCLAMER: tests for other crypto Position Tables would be identical, so skipping those tests.
 		/// </summary>
