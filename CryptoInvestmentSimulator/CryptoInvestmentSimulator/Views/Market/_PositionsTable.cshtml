@@ -1,6 +1,8 @@
 ﻿
 <script>
 
+	// Collects ViewBag data and transforms it to JS arrays for display in table.
+
 	var dateTimes = @Html.Raw(Json.Serialize(ViewBag.DateTimes));
 	var dateTimesList = [];
 	for (let i = 0; i <= dateTimes.length - 1; i++) {
@@ -30,6 +32,8 @@
 	for (let i = 0; i <= marginAmounts.length - 1; i++) {
 		marginAmountsList[i] = marginAmounts[i];
 	}
+
+	// Populates positions table with collected data.
 
 	var positionsBody = document.getElementById("positionsBody");
 
@@ -65,6 +69,8 @@
 
 	var positionsCount = document.getElementById("positionsBody").childElementCount;
 
+	// Hides table from view if no positions are open.
+
 	if(positionsCount != 0)
 	{
 		document.getElementById("sell-form").style.display = "block";
@@ -78,6 +84,7 @@
 			positionSelect.appendChild(newOption);
 		}
 
+		// Determines which crypto page is open by by name in url.
 		var soldCrypto = document.getElementById("crypto-sold");
 		var cryptoPage = "" + window.location.href;
 
@@ -109,12 +116,15 @@
 	<tbody id="positionsBody"></tbody>
 </table>
 
+<!-- Position closing form where position number is selected and sent to Market/ClosePosition. -->
 <form id="sell-form" method="post" asp-controller="Market" asp-action="ClosePosition">
 	<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
 		<label for="position-number-select">Position</label>
 		<select id="position-number-select" type="text" class="form-control" name="positionNumber"></select>
 
 		<label style="display:none" for="crypto-sold">Crypto</label>
+
+		<!-- Sends a hidden crypto symbol value depending on which crpyto page is open. -->
 		<input style="display:none" id="crypto-sold" type="text" class="form-control" name="cryptoSymbol" readonly />
 
 		<button id="sell" type="submit" class="btn btn-danger">Sell</button>

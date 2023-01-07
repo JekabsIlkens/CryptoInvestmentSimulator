@@ -15,13 +15,12 @@ namespace CryptoInvestmentSimulator.Database
 			this.context = context ?? throw new ArgumentNullException(nameof(context));
 		}
 
+		/// <summary>
+		/// Inserts a filled <see cref="PositionModel"/> into database.
+		/// </summary>
+		/// <param name="positionModel">Filled position model.</param>
 		public void InsertNewPosition(PositionModel positionModel)
 		{
-			if (positionModel == null)
-			{
-				throw new ArgumentNullException(nameof(positionModel));
-			}
-
 			var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(positionModel.DateTime);
 
 			string valuesString = $"'{formattedDateTime}', {positionModel.FiatAmount}, {positionModel.CryptoAmount}, {positionModel.Margin}, " +
@@ -37,6 +36,13 @@ namespace CryptoInvestmentSimulator.Database
 			}
 		}
 
+		/// <summary>
+		/// Creates a list of all open positions for given user.
+		/// </summary>
+		/// <param name="userId">Position owner.</param>
+		/// <returns>
+		/// List of filled <see cref="PositionModel"/>s.
+		/// </returns>
 		public List<PositionModel> GetAllOpenPositions(int userId)
 		{
 			var modelList = new List<PositionModel>();
@@ -77,6 +83,14 @@ namespace CryptoInvestmentSimulator.Database
 			return modelList;
 		}
 
+		/// <summary>
+		/// Creates a list of all open positions for given user for specific cryptocurrency.
+		/// </summary>
+		/// <param name="userId">Position owner.</param>
+		/// <param name="crypto">Specified crypto.</param>
+		/// <returns>
+		/// List of filled <see cref="PositionModel"/>s.
+		/// </returns>
 		public List<PositionModel> GetAllOpenSpecificCryptoPositions(int userId, CryptoEnum crypto)
 		{
 			var modelList = new List<PositionModel>();
@@ -116,6 +130,13 @@ namespace CryptoInvestmentSimulator.Database
 			return modelList;
 		}
 
+		/// <summary>
+		/// Creates a list of all open leveraged positions for given user.
+		/// </summary>
+		/// <param name="userId">Position owner.</param>
+		/// <returns>
+		/// List of filled <see cref="LiquidationModel"/>s.
+		/// </returns>
 		public List<LiquidationModel> GetAllOpenLeveragedPositions(int userId)
 		{
 			var modelList = new List<LiquidationModel>();
@@ -158,9 +179,11 @@ namespace CryptoInvestmentSimulator.Database
 		/// <summary>
 		/// Returns the unit value of a given position (unit value at the time of opening position).
 		/// </summary>
-		/// <param name="transactionId">Specific transaction</param>
-		/// <returns>Unit value</returns>
-		public decimal GetPositionsUnitValue(int transactionId)
+		/// <param name="positionId">Specific position.</param>
+		/// <returns>
+		/// Unit value asociated with position.
+		/// </returns>
+		public decimal GetPositionsUnitValue(int positionId)
 		{
 			var unitValue = 0M;
 
@@ -171,7 +194,7 @@ namespace CryptoInvestmentSimulator.Database
 					($"SELECT transaction.transaction_id, market_data.unit_value " +
 					$"FROM transaction " +
 					$"INNER JOIN market_data ON transaction.data_id = market_data.data_id " +
-					$"WHERE transaction_id = {transactionId}",
+					$"WHERE transaction_id = {positionId}",
 					connection);
 
 				using (var reader = command.ExecuteReader())
@@ -186,10 +209,13 @@ namespace CryptoInvestmentSimulator.Database
 			return unitValue;
 		}
 
+		/// <summary>
+		/// Updates status of specific position to specified status.
+		/// </summary>
+		/// <param name="transactionId">Position to update.</param>
+		/// <param name="newStatusId">New status id.</param>
 		public void UpdatePositionStatus(int transactionId, int newStatusId)
 		{
-			if (transactionId < 1) throw new ArgumentException(nameof(transactionId));
-
 			using (var connection = context.GetConnection())
 			{
 				connection.Open();

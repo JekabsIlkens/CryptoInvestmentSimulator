@@ -16,17 +16,11 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Inserts received market data into database.
+        /// Inserts received <see cref="MarketDataModel"/> into database.
         /// </summary>
-        /// <param name="marketDataModel">Filled <see cref="MarketDataModel"/></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="marketDataModel">Filled <see cref="MarketDataModel"/>.</param>
         public void InsertNewMarketDataEntry(MarketDataModel marketDataModel)
         {
-            if (marketDataModel == null)
-            {
-                throw new ArgumentNullException(nameof(marketDataModel));
-            }
-
             var formattedDateTime = DateTimeFormatHelper.ToDbFormatAsString(marketDataModel.CollectionTime);
             var cryptoKey = DatabaseKeyConversionHelper.CryptoSymbolToDbKey(marketDataModel.CryptoSymbol);
             var fiatKey = DatabaseKeyConversionHelper.FiatSymbolToDbKey(marketDataModel.FiatSymbol);
@@ -43,10 +37,12 @@ namespace CryptoInvestmentSimulator.Database
         }
 
         /// <summary>
-        /// Collects the latest record of data for specified cryptocurrency.
+        /// Collects the latest data record for specified cryptocurrency.
         /// </summary>
-        /// <param name="crypto">Currency to collect data for</param>
-        /// <returns>Filled <see cref="MarketDataModel"/></returns>
+        /// <param name="crypto">Currency to collect data for.</param>
+        /// <returns>
+        /// Filled <see cref="MarketDataModel"/>.
+        /// </returns>
         public MarketDataModel GetLatestMarketData(CryptoEnum crypto)
         {
             MarketDataModel marketDataModel = new MarketDataModel();
@@ -93,18 +89,14 @@ namespace CryptoInvestmentSimulator.Database
         /// Collects specified amount of historical price points
         /// into an array for specified cryptocurrency.
         /// </summary>
-        /// <param name="crypto">Which crpto data</param>
-        /// <param name="rowCount">How many rows to return</param>
-        /// <param name="everyNth">Will use evert nth row</param>
-        /// <returns>Array of price points of type double</returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="crypto">Which crpto data.</param>
+        /// <param name="rowCount">How many rows to return.</param>
+        /// <param name="everyNth">Will use evert nth row.</param>
+        /// <returns>
+        /// Double array of price points.
+        /// </returns>
         public double[] GetPricePointHistory(CryptoEnum crypto, int rowCount, int everyNth)
         {
-            if (rowCount <= 0)
-            {
-                throw new ArgumentException($"Requested {rowCount} rows! Invalid!");
-            }
-
             double[] pricePoints = new double[rowCount];
 
             using (var connection = context.GetConnection())
@@ -137,18 +129,14 @@ namespace CryptoInvestmentSimulator.Database
         /// Collects specified amount of historical date/time points
         /// into an array for specified cryptocurrency.
         /// </summary>
-        /// <param name="crypto">Which crpto data</param>
-        /// <param name="rowCount">How many rows to return</param>
-        /// <param name="everyNth">Will use evert nth row</param>
-        /// <returns>Array of date/time points of type long</returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="crypto">Which crpto data.</param>
+        /// <param name="rowCount">How many rows to return.</param>
+        /// <param name="everyNth">Will use evert nth row.</param>
+        /// <returns>
+        /// Array of date/time points of type long.
+        /// </returns>
         public long[] GetTimePointHistory(CryptoEnum crypto, int rowCount, int everyNth)
         {
-            if (rowCount <= 0)
-            {
-                throw new ArgumentException($"Requested {rowCount} rows! Invalid!");
-            }
-
             long[] timePoints = new long[rowCount];
 
             using (var connection = context.GetConnection())
