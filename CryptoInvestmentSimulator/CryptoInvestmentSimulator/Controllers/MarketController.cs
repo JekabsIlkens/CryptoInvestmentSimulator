@@ -87,10 +87,12 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach(var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
                 ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
@@ -126,10 +128,12 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
                 ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
@@ -165,10 +169,12 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
                 ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
@@ -204,10 +210,12 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
                 ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
@@ -243,10 +251,12 @@ namespace CryptoInvestmentSimulator.Controllers
             string[] ratios = new string[length];
             string[] margins = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 fiatAmounts[count] = position.FiatAmount.ToString();
                 cryptoAmounts[count] = position.CryptoAmount.ToString();
                 ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
@@ -279,6 +289,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -298,6 +309,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -317,6 +329,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -336,6 +349,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -355,6 +369,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -374,6 +389,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -393,6 +409,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -412,6 +429,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -431,6 +449,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -450,6 +469,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -469,6 +489,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -488,6 +509,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -507,6 +529,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -526,6 +549,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -545,6 +569,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -564,6 +589,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }
@@ -583,6 +609,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart1h");
         }
@@ -602,6 +629,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart4h");
         }
@@ -621,6 +649,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart8h");
         }
@@ -640,6 +669,7 @@ namespace CryptoInvestmentSimulator.Controllers
 
             ViewBag.PricePoints = pricePoints;
             ViewBag.TimePoints = timePoints;
+            ViewBag.TimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
 
             return PartialView("_Chart24h");
         }

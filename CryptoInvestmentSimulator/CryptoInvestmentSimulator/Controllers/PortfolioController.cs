@@ -292,10 +292,12 @@ namespace CryptoInvestmentSimulator.Controllers
             var length = positionsList.Count;
             string[] dateTimes = new string[length];
 
+            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
             var count = 0;
             foreach (var position in positionsList)
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime);
+                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
                 count++;
             }
 
