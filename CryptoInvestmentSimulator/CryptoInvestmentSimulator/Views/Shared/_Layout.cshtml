@@ -23,7 +23,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"]</title>
+    <link rel="icon" href="https://i.postimg.cc/d0h42gh5/cis-favicon.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
@@ -47,25 +49,41 @@
 
                 <img class="navbar-brand" src="~/css/nav-logo.png" width="105" height="70">
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-3">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">                  
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav flex-grow-3">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
 
-                        <li class="nav-item"><a class="nav-link" asp-controller="Portfolio" asp-action="Index">Portfolio</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Market" asp-action="Index">Market</a></li>
+                            @if (verified)
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Portfolio" asp-action="Index">Portfolio</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Market" asp-action="Index">Market</a></li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Portfolio</a>
+                                </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Portfolio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Market</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Authentication" asp-action="Logout">Logout</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Authentication" asp-action="Login">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Authentication" asp-action="Register">Register</a></li>                 
-                    </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger" data-toggle="tooltip" data-placement="bottom" title="Verify your email!">Market</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Authentication" asp-action="Logout">Logout</a></li>                 
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav flex-grow-3"></ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Authentication" asp-action="Login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Authentication" asp-action="Register">Register</a></li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>

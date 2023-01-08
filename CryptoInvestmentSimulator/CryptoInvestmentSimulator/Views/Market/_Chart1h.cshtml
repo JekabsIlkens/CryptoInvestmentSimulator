@@ -37,17 +37,33 @@
 			datasets: [{
 				label: 'Euro',
 				data: priceArray1h,
-				borderWidth: 1
+				borderColor: '#7AB662',
+				borderWidth: 2,
+				tension: 0.2
 			}]
 		},
 		options: {
-			scales: {
-				y: {
-					beginAtZero: true
-				}
-			},
 			animation: {
 				duration: 0
+			},
+			plugins: {
+				legend: {
+					display: false
+				}
+			},
+			scales: {
+				x: {
+					grid: {
+						color: '#252A33',
+						borderColor: '#252A33'
+					}
+				},
+				y: {
+					grid: {
+						color: '#252A33',
+						borderColor: '#252A33'
+					}
+				}
 			}
 		}
 	});

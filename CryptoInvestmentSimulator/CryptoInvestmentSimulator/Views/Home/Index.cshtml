@@ -14,6 +14,46 @@
 <script src="~/js/pages/home.js"></script>
 
 <div class="text-center">
-    <h1 class="display-4">The Home Page</h1>
-    <p>To be continued...</p>
+    <div class="container">
+        <div class="row">           
+            <div class="col-12 text-start">
+
+                <h1>CRYPTOCURRENCY INVESTMENT SIMULATOR</h1>
+
+                @if (Model.Verified == 0)
+                {
+                    <h5 id="unverifiedHelp">We have sent you a verification email to unlock your portfolio and grant you access to the market!</h5>
+                }
+
+                <h4 id="homeSubtitle">Supported features:</h4>
+                <ul>
+                    <li>One type of fiat currency - Euro.</li>
+                    <li>Five different cryptocurrencies - Bitcoin, Etherium, Cardano, Cosmos and Dogecoin.</li>
+                    <li>Four different chart time frames - 1 hour, 4 hour, 8 hour and 24 hour.</li>
+                    <li>A latest market data refresh frequency of 2 minutes.</li>
+                </ul>
+
+                <h4 id="homeSubtitle">Wallets and initial capital</h4>
+                <p>A wallet for each supported currency gets automatically created for you.
+                We grant you a 5000 euro starting capital without the ability to add extra funds.               
+                In case you go bankrupt we offer a full reset option on the portfolio page which will
+                erase all your positions and reset your wallet balances back to the initial 5000 euro.</p>
+
+                <h4 id="homeSubtitle">Your profile details</h4>
+                <p>Once you have verified your email you will be able to view and edit your profile on the portfolio page.
+                You can choose a time zone which will accordingly affect the dates displayed on all pages (including charts).
+                When choosing an avatar image we recommend using a 150 by 150 pixel image for best results.</>
+
+                <h4 id="homeSubtitle">Leverage and margin rules</h4>
+                <ol>
+                    <li>A user opens a 100 euro position with 5x leverage.</li>
+                    <li>We calculate the margin which in this case would be 20 euro.</li>
+                    <li>Both the position amount and margin amount get subtracted from the users wallet and a new position is opened.</li>
+                    <li>Status of the leveraged position gets regularly checked.</li>
+                    <li>If the leveraged position is suffering a loss larger than 4 times the margin - position gets liquidated and user recieves what was left of the money without his margin stake.</li>
+                    <li>If a user closes the position manually - user takes all profit and recieves back the margin amount put at stake.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 </div>

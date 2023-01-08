@@ -11,15 +11,13 @@
 	<script src="~/js/position_form.js"></script>
 }
 
-<div class="text-center">
-
-	<h1 class="display-4">Dogecoin / Euro</h1>
+<div id="chart-container" class="text-center">
 
 		<!-- Buttons for switching chart time frames. -->
-		<button id="1h" type="button" class="btn btn-info">1H</button>
-		<button id="4h" type="button" class="btn btn-success">4H</button>
-		<button id="8h" type="button" class="btn btn-warning">8H</button>
-		<button id="24h" type="button" class="btn btn-danger">24H</button>
+		<button style="background-color: #7ab662" id="1h" type="button" class="btn">1H</button>
+		<button style="background-color: #a4975d" id="4h" type="button" class="btn">4H</button>
+		<button style="background-color: #d67056" id="8h" type="button" class="btn">8H</button>
+		<button style="background-color: #ff5050" id="24h" type="button" class="btn">24H</button>
 
 		<!-- Designated containers for each time frame chart. -->
 		<div id="chartZone1h"></div>
@@ -27,9 +25,12 @@
 		<div id="chartZone8h"></div>
 		<div id="chartZone24h"></div>
 
+</div>
+
+<div class="text-center">
 		<form id="buyForm" method="post" asp-controller="Market" asp-action="OpenDogecoinPosition">
 
-			<div class="form-group" style="border-top: solid 2px dimgrey; margin-top: 20px; padding-top: 20px;">
+			<div class="form-group">
 				<div class="row">
 					<div class="col-6">
 						<label>Amount (EUR)</label>
@@ -49,17 +50,16 @@
 				</div>
 			</div>
 
-			@if (ViewBag.Error != null)
-			{
-				<div><p>@ViewBag.Error</p></div>
-			}
+		@if (ViewBag.Error != null)
+		{
+			<div><p id="poorBalanceError">@ViewBag.Error</p></div>
+		}
 
-			<button id="buy" type="submit" class="btn btn-success">BUY</button>
-		</form>
+		<button id="buy" type="submit" class="btn btn-success">Buy</button>
+	</form>
+</div>
 
-	<!-- Navigates user back to market page. -->
-	<a class="text-danger" asp-controller="Market" asp-action="Index">Back</a>
-
+<div class="text-center">
+	<!-- Container where positions table partial view gets loaded. -->
 	<div id="activePositionZone"></div>
-
 </div>

@@ -1,3 +1,6 @@
+
+/* Page structure styling */
+
 html {
   font-size: 14px;
 }
@@ -19,6 +22,11 @@ body {
     color: #FFFFFF;
 }
 
+main.pb-3{
+    margin-left: -150px;
+    margin-right: -150px;
+}
+
 div.text-center {
     background-color: #191E28;
     border-radius: 10px;
@@ -26,6 +34,8 @@ div.text-center {
     padding: 20px;
     margin: 50px;
 }
+
+/* Navigation bar and footer styling */
 
 nav.navbar {
     background-color: #191E28 !important;
@@ -39,11 +49,14 @@ footer.footer {
 
 a.nav-link {
     color: #FFFFFF;
+    font-size: 18px;
 }
 
 a.nav-link:hover {
     color: #7AB662;
 }
+
+/* Big Become an investr button */
 
 #become {
     width: 50%;
@@ -60,11 +73,152 @@ a.nav-link:hover {
     color: #FFFFFF;
 }
 
+/* Highlights in text */
+
 strong {
     color: #7AB662;
 }
 
+/* Page specific styles for small details */
+
 div.text-start{
     text-align: left;
     padding-left: 90px;
+}
+
+#exception {
+    background-color: #242D38;
+    box-shadow: 0px 0px 0px #242D38;
+}
+
+#details-positions, 
+#wallet-data {
+    background-color: #191E28;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px #0e1216;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#details-positions {
+    margin-bottom: 40px;
+}
+
+#edit, 
+#buy {
+    border: solid 0px #FFFFFF;
+    border-radius: 5px;
+    background-color: #7AB662;
+}
+
+#reset, #sell {
+    border: solid 0px #FFFFFF;
+    border-radius: 5px;
+    background-color: #FF5050;
+}
+
+.text-danger {
+    color: #FF5050 !important;
+}
+
+.table {
+    background-color: #FFFFFF;
+    color: #191E28;
+}
+
+thead {
+    background-color: #7AB662;
+    border-radius: 5px;
+}
+
+div.modal-content {
+    background-color: #191E28;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+div.modal-footer button {
+    display: inline-block;
+    align-content: center;
+    width: 100%;
+}
+
+input[type=text] {
+    margin-bottom: 10px;
+}
+
+input[type=text]:focus, 
+textarea:focus {
+    box-shadow: 0 0 8px #7AB662;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+}
+
+#save, 
+#confirm, 
+#saveUsername {
+    background-color: #7AB662;
+    border: solid 0px #FFFFFF;
+    border-radius: 5px;
+}
+
+#time-zone-select, 
+#leverage-ratio-select {
+    margin-bottom: 14px;
+}
+
+label {
+    color: #7AB662;
+}
+
+#chart-button a {
+    background-color: #7AB662;
+    box-shadow: 10px 10px 15px #0e1216;
+    border-radius: 5px;
+    width: 10px;
+    padding: 20px;
+    text-decoration: none;
+    color: #FFFFFF !important;
+}
+
+#chart-button a:hover {
+    text-decoration: none;
+    color: #FFFFFF !important;
+}
+
+#chart-button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#sell{
+    margin-top: 15px;
+}
+
+#buy, #sell {
+    width: 150px;
+    font-weight: 600;
+}
+
+#chart-container button {
+    width: 100px !important;
+    border-radius: 5px !important;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+    margin-bottom: 15px;
+}
+
+#homeSubtitle {
+    color: #7AB662;
+}
+
+/* Error message style */
+
+#usernameError, 
+#resetError, 
+#avatarError, 
+#buyAmountError, 
+#poorBalanceError, 
+#unverifiedHelp {
+    color: #FF5050 !important;
 }
