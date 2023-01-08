@@ -5,7 +5,7 @@
 	Adds navigation buttons to chart views.
 -->
 
-<table class="table table-hover table-dark border-warning">
+<table class="table rounded rounded-5 overflow-hidden table-dark">
 	<thead>
 		<tr>
 			<th scope="col">#</th>
@@ -65,3 +65,21 @@
 		</tr>
 	</tbody>
 </table>
+
+<div class="row">
+	<div id="chart-button" class="col">
+		<a style="background-color: #7AB662" class="text-success" asp-controller="Market" asp-action="Bitcoin">BTC/EUR</a>
+	</div>
+	<div id="chart-button" class="col">
+		<a style="background-color: #62A4B6" class="text-success" asp-controller="Market" asp-action="Etherium">ETH/EUR</a>
+	</div>
+	<div id="chart-button" class="col">
+		<a style="background-color: #9E62B6" class="text-success" asp-controller="Market" asp-action="Cardano">ADA/EUR</a>
+	</div>
+	<div id="chart-button" class="col">
+		<a style="background-color: #7462B6" class="text-success" asp-controller="Market" asp-action="Cosmos">ATOM/EUR</a>
+	</div>
+	<div id="chart-button" class="col">
+		<a style="background-color: #B67462" class="text-success" asp-controller="Market" asp-action="Dogecoin">DOGE/EUR</a>
+	</div>
+</div>

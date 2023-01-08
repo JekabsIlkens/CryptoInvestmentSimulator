@@ -11,10 +11,8 @@
 <script src="~/js/time_zones.js"></script>
 <script src="~/js/pages/portfolio.js"></script>
 
-<div class="text-center">
-    <h1 class="display-4">Your Portfolio Page</h1>  
-
-    <div class="row">
+<div id="exception" class="text-center">  
+    <div id="details-positions" class="row">
         <div class="col-4">
             <img src="@Model.Avatar" width="150" height="150" />
 
@@ -23,8 +21,20 @@
             <p> <strong>Email:</strong> @Model.Email </p>
             <p> <strong>Time zone:</strong> @Model.TimeZone </p>
 
-            <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDetailsModal">Edit</button>
+            <button id="edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDetailsModal">Edit details</button>
             <button id="reset" type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetPortfolioModal">Reset portfolio</button>
+        </div>
+
+        <div class="col-8">
+            <div id="investmentTableZone"></div>
+        </div>
+    </div>
+
+    <div id="wallet-data" class="row">
+        <div class="col-4">
+            <div style="width: 100%; height: 100%;"> 
+                <canvas id="myChart"></canvas> 
+            </div>
         </div>
 
         <div class="col-8">
@@ -33,22 +43,49 @@
                     <div id="walletTableZone"></div>
                 </div>
                 <div class="col-6">
-                    <p>Total earnings: @ViewBag.TotalEarnings</p>
-                    <p>PNL (Profit & Loss): @ViewBag.PNL</p>
+                    <table class="table rounded rounded-5 overflow-hidden table-striped table-sm table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">Total earnings</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                @if (ViewBag.TotalEarnings > 0)
+                                {
+                                    <td style="color: #7AB662">@ViewBag.TotalEarnings</td>
+                                }
+                                else
+                                {
+                                    <td style="color: #FF5050">@ViewBag.TotalEarnings</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table rounded rounded-5 overflow-hidden table-striped table-sm table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">PNL (Profit & Loss)</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                @if (ViewBag.TotalEarnings > 0)
+                                {
+                                    <td style="color: #7AB662">@ViewBag.PNL</td>
+                                }
+                                else
+                                {
+                                    <td style="color: #FF5050">@ViewBag.PNL</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-4">
-            <div style="width: 100%; height: 100%;"> 
-                <canvas id="myChart"></canvas> 
-            </div>
-        </div>
-
-        <div class="col-8">
-            <div id="investmentTableZone"></div>
         </div>
     </div>
 
@@ -70,12 +107,12 @@
                     label: 'Wallet Dataset',
                     data: percentArray,
                     backgroundColor: [
-                        '#c9cbcf',
-                        '#ff9f40',
-                        '#36a2eb',
-                        '#ff6384',
-                        '#9966ff',
-                        '#4bc0c0'
+                        '#AEB1B7',
+                        '#7AB662',
+                        '#62A4B6',
+                        '#9E62B6',
+                        '#7462B6',
+                        '#B67462'
                     ],
                     hoverOffset: 2
                 }]
