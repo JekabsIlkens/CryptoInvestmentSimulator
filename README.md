@@ -1,5 +1,7 @@
 # **Cryptocurrency Investment Simulator**
 
+<img align="right" alt="CIS-LOGO" width="150px" src="https://i.postimg.cc/tTQJm5hY/cis-logo.png"/>
+
 **Goal:** College degree qualification project for University of Latvia <br/>
 **Framework:** ASP.NET Core 6 <br/>
 **Pattern:** Model-View-Controller <br/>
