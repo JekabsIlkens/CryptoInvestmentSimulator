@@ -20,30 +20,35 @@ namespace CryptoInvestmentSimulator
         /// <summary>
         /// Gets all open leveraged positions for each verified user.
         /// Calculates current potential profits or losses for each position.
-        /// If losses are double the margin value - liquidates position and adjusts users wallet balances.
+        /// If losses exceed margin amount 4 times - liquidates position and adjusts users wallet balances.
         /// </summary>
         public void LiquidateBadPositions()
         {
+            // Collects all users that are able to access the market.
             var userIdList = userProcedures.GetAllVerifiedUserIds();
 
+            // Collects a list of all open leveraged positions for each user
             foreach (var userId in userIdList)
             {
                 var activeLeveragedPositions = investmentProcedures.GetAllOpenLeveragedPositions(userId);
 
+                // Begins liquidation check for each position in collected positions list.
                 foreach (var position in activeLeveragedPositions)
                 {
                     var positionCryptoEnum = InternalConversionHelper.IntToCryptoEnum(position.CryptoId);
 
+                    // Gets the latest unit value for specific asset and calculates value used to determine profits.
                     var currentUnitValue = marketProcedures.GetLatestMarketData(positionCryptoEnum).UnitValue;
                     var profitMultiplier = currentUnitValue / position.UnitValue;
 
                     decimal currentProfit;
 
-                    if (position.RatioId == 2)
+                    // Filters which leverage the given position uses and calculates the current profit or loss.
+                    if (position.RatioId == (int)LeverageEnum.Two)
                     {
                         currentProfit = ((position.FiatAmount * 2 * profitMultiplier) - (position.FiatAmount * 2));
                     }
-                    else if (position.RatioId == 3)
+                    else if (position.RatioId == (int)LeverageEnum.Five)
                     {
                         currentProfit = ((position.FiatAmount * 5 * profitMultiplier) - (position.FiatAmount * 5));
                     }
@@ -52,14 +57,19 @@ namespace CryptoInvestmentSimulator
                         currentProfit = ((position.FiatAmount * 10 * profitMultiplier) - (position.FiatAmount * 10));
                     }
 
+                    // If the position is more than 4 times the margin amount begin liquidation process.
                     if (currentProfit < (position.MarginAmount * 2 * -1))
                     {
+                        // Removes positions crypto amount from users crypto wallet.
                         var cryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, positionCryptoEnum.ToString());
                         walletProcedures.UpdateUsersWalletBalance(userId, positionCryptoEnum.ToString(), (cryptoBalance - position.CryptoAmount));
 
+                        // Returns leftovers of euro amount to users fiat wallet.
+                        // Initial investment amount minus losses, without returning the margin.
                         var fiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
                         walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), (fiatBalance + position.FiatAmount - currentProfit));
 
+                        // Updates positions status to Liquidated.
                         investmentProcedures.UpdatePositionStatus(position.positionId, (int)StatusEnum.Liquidated);
                     }
                 }
@@ -87,7 +97,7 @@ namespace CryptoInvestmentSimulator
         /// <returns>
         /// List of filled <see cref="MarketDataModel"/>s
         /// </returns>
-        private List<MarketDataModel> GetInsertionReadyMarketData()
+        private static List<MarketDataModel> GetInsertionReadyMarketData()
         {
             var modelList = new List<MarketDataModel>();
 

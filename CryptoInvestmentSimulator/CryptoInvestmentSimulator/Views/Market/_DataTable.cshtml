@@ -2,7 +2,7 @@
 <!-- 
 	Creates a data table with all cryptocurrencies.
 	Uses recieved ViewBag to dynamically display table data for cryptocurrencies.
-	Adds navigation buttons to chart views.
+	Adds navigation buttons to each available chart view.
 -->
 
 <table class="table rounded rounded-5 overflow-hidden table-dark">
@@ -14,7 +14,6 @@
 			<th scope="col">Price per unit</th>
 			<th scope="col">Daily change</th>
 			<th scope="col">Weekly change</th>
-			<th scope="col">Chart</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -25,7 +24,6 @@
 			<td>@ViewBag.MarketData[0].UnitValue</td>
 			<td>@ViewBag.MarketData[0].Change24h%</td>
 			<td>@ViewBag.MarketData[0].Change7d%</td>
-			<td><a class="text-success" asp-controller="Market" asp-action="Bitcoin">BTC/EUR</a></td>
 		</tr>
 		<tr>
 			<th scope="row">2</th>
@@ -34,7 +32,6 @@
 			<td>@ViewBag.MarketData[1].UnitValue</td>
 			<td>@ViewBag.MarketData[1].Change24h%</td>
 			<td>@ViewBag.MarketData[1].Change7d%</td>
-			<td><a class="text-success" asp-controller="Market" asp-action="Etherium">ETH/EUR</a></td>
 		</tr>
 		<tr>
 			<th scope="row">3</th>
@@ -43,7 +40,6 @@
 			<td>@ViewBag.MarketData[2].UnitValue</td>
 			<td>@ViewBag.MarketData[2].Change24h%</td>
 			<td>@ViewBag.MarketData[2].Change7d%</td>
-			<td><a class="text-success" asp-controller="Market" asp-action="Cardano">ADA/EUR</a></td>
 		</tr>
 		<tr>
 			<th scope="row">4</th>
@@ -52,7 +48,6 @@
 			<td>@ViewBag.MarketData[3].UnitValue</td>
 			<td>@ViewBag.MarketData[3].Change24h%</td>
 			<td>@ViewBag.MarketData[3].Change7d%</td>
-			<td><a class="text-success" asp-controller="Market" asp-action="Cosmos">ATOM/EUR</a></td>
 		</tr>
 		<tr>
 			<th scope="row">5</th>
@@ -61,7 +56,6 @@
 			<td>@ViewBag.MarketData[4].UnitValue</td>
 			<td>@ViewBag.MarketData[4].Change24h%</td>
 			<td>@ViewBag.MarketData[4].Change7d%</td>
-			<td><a class="text-success" asp-controller="Market" asp-action="Dogecoin">DOGE/EUR</a></td>
 		</tr>
 	</tbody>
 </table>
