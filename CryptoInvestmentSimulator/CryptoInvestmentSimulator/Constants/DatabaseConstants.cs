@@ -4,7 +4,7 @@
     {
         // Database configuration and access constants.
         public static readonly string LocalAccess = "server=localhost;port=7770;database=cisdb;user=cisadmin;password=CISadminPASS";
-        public static readonly string AzureAccess = "Data Source=tcp:cryptocurrencyinvestmentsimulator-server.database.windows.net,1433;Initial Catalog=cryptocurrencyinvestmentsimulator-database;User Id=cryptocurrencyinvestmentsimulator-server-admin@cryptocurrencyinvestmentsimulator-server.database.windows.net;Password=1082AW182I7W4O1B$";
+        public static readonly string AzureAccess = "Server=MYSQL8002.site4now.net;Database=db_a92f3c_cisdb;Uid=a92f3c_cisdb;Pwd=CISroot123!";
 
         // Formatting constants.
         public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
