@@ -18,6 +18,7 @@ namespace CryptoInvestmentSimulator
             serviceCollection.AddControllersWithViews();
             serviceCollection.AddRouting(options => options.LowercaseUrls = true);
 
+            // Registers Auth0 service with domain, client id and access scopes.
             serviceCollection.AddAuth0WebAppAuthentication(options =>
             {
                 options.Domain = AuthenticationConstants.Auth0Domain;
@@ -25,6 +26,7 @@ namespace CryptoInvestmentSimulator
                 options.Scope = AuthenticationConstants.Auth0Scope;
             });
 
+            // Registers database context with access key from appsettings.json.
             serviceCollection.Add(new ServiceDescriptor(typeof(DatabaseContext), new DatabaseContext(DatabaseConstants.Access)));
 
             return serviceCollection;

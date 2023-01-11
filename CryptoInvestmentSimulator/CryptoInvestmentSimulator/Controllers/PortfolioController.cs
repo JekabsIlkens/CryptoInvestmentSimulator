@@ -26,29 +26,36 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var user = GetUserDetails();
+            try
+            {
+                var user = GetUserDetails();
 
-            // Data for wallet percentage split diagram.
-            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+                // Data for wallet percentage split diagram.
+                ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
 
-            // Additional statistics parameters.
-            ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
-            ViewBag.PNL = GetProfitAndLossMeasurement();
+                // Additional statistics parameters.
+                ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
+                ViewBag.PNL = GetProfitAndLossMeasurement();
 
-            // Data for balance amounts table.
-            ViewBag.CryptoAmounts = GetWalletTableCryptoAmounts();
-            ViewBag.CryptosToEuro = GetWalletTableCryptosToEuro();
-            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+                // Data for balance amounts table.
+                ViewBag.CryptoAmounts = GetWalletTableCryptoAmounts();
+                ViewBag.CryptosToEuro = GetWalletTableCryptosToEuro();
+                ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
 
-            // Data for active investments table.
-            ViewBag.Symbols = GetInvestmentTableSymbols();
-            ViewBag.DateTimes = GetInvestmentTableDateTimes();
-            ViewBag.FiatAmounts = GetInvestmentTableFiatAmounts();
-            ViewBag.CryptoAmounts = GetInvestmentTableCryptoAmounts();
-            ViewBag.Ratios = GetInvestmentTableRatios();
-            ViewBag.Margins = GetInvestmentTableMargins();
+                // Data for active investments table.
+                ViewBag.Symbols = GetInvestmentTableSymbols();
+                ViewBag.DateTimes = GetInvestmentTableDateTimes();
+                ViewBag.FiatAmounts = GetInvestmentTableFiatAmounts();
+                ViewBag.CryptoAmounts = GetInvestmentTableCryptoAmounts();
+                ViewBag.Ratios = GetInvestmentTableRatios();
+                ViewBag.Margins = GetInvestmentTableMargins();
 
-            return View("Index", user);
+                return View("Index", user);
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -64,19 +71,26 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult UpdateDetails(string username, string avatar, string timezone)
         {
-            var userId = GetUserDetails().Id;
+            try
+            {
+                var userId = GetUserDetails().Id;
 
-            var timeZoneKey = DatabaseKeyConversionHelper.TimeZoneToDbKey(timezone);
-            userProcedures.UpdateUsername(userId, username);
-            userProcedures.UpdateAvatar(userId, avatar);
-            userProcedures.UpdateTimeZone(userId, timeZoneKey);
+                var timeZoneKey = DatabaseKeyConversionHelper.TimeZoneToDbKey(timezone);
+                userProcedures.UpdateUsername(userId, username);
+                userProcedures.UpdateAvatar(userId, avatar);
+                userProcedures.UpdateTimeZone(userId, timeZoneKey);
 
-            var user = GetUserDetails();
-            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
-            ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
-            ViewBag.PNL = GetProfitAndLossMeasurement();
+                var user = GetUserDetails();
+                ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+                ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
+                ViewBag.PNL = GetProfitAndLossMeasurement();
 
-            return View("Index", user);
+                return View("Index", user);
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -89,16 +103,24 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult ResetPortfolio()
         {
-            var user = GetUserDetails();
+            try
+            {
+                var user = GetUserDetails();
 
-            ResetUsersWallets(user.Id);
-            investmentProcedures.DeleteUsersPositions(user.Id);
+                ResetUsersWallets(user.Id);
+                investmentProcedures.DeleteUsersPositions(user.Id);
 
-            ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
-            ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
-            ViewBag.PNL = GetProfitAndLossMeasurement();
+                ViewBag.WalletPercent = GetWalletPercentageSplit(user.Id);
+                ViewBag.TotalEarnings = GetFullPortfolioValueEuro() - 5000M;
+                ViewBag.PNL = GetProfitAndLossMeasurement();
 
-            return View("Index", user);
+                return View("Index", user);
+            }
+            catch
+            {
+                return View("Error");
+            }
+
         }
 
         /// <summary>
@@ -109,14 +131,21 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </returns>
         public IActionResult WalletTable()
         {
-            var userId = GetUserDetails().Id;
+            try
+            {
+                var userId = GetUserDetails().Id;
 
-            ViewBag.CryptoAmounts = GetWalletTableCryptoAmounts();
-            ViewBag.CryptosToEuro = GetWalletTableCryptosToEuro();
-            ViewBag.WalletPercent = GetWalletPercentageSplit(userId);
-            ViewBag.EuroAmount = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                ViewBag.CryptoAmounts = GetWalletTableCryptoAmounts();
+                ViewBag.CryptosToEuro = GetWalletTableCryptosToEuro();
+                ViewBag.WalletPercent = GetWalletPercentageSplit(userId);
+                ViewBag.EuroAmount = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
 
-            return PartialView("_WalletTable");
+                return PartialView("_WalletTable");
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -127,15 +156,22 @@ namespace CryptoInvestmentSimulator.Controllers
         /// </returns>
         public IActionResult InvestmentTable()
         {
-            ViewBag.Symbols = GetInvestmentTableSymbols();
-            ViewBag.DateTimes = GetInvestmentTableDateTimes();
-            ViewBag.FiatAmounts = GetInvestmentTableFiatAmounts();
-            ViewBag.CryptoAmounts = GetInvestmentTableCryptoAmounts();
-            ViewBag.Ratios = GetInvestmentTableRatios();
-            ViewBag.Margins = GetInvestmentTableMargins();
-            ViewBag.Profits = GetOpenPositionUnrealizedProfits();
+            try
+            {
+                ViewBag.Symbols = GetInvestmentTableSymbols();
+                ViewBag.DateTimes = GetInvestmentTableDateTimes();
+                ViewBag.FiatAmounts = GetInvestmentTableFiatAmounts();
+                ViewBag.CryptoAmounts = GetInvestmentTableCryptoAmounts();
+                ViewBag.Ratios = GetInvestmentTableRatios();
+                ViewBag.Margins = GetInvestmentTableMargins();
+                ViewBag.Profits = GetOpenPositionUnrealizedProfits();
 
-            return PartialView("_InvestmentTable");
+                return PartialView("_InvestmentTable");
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -495,9 +531,15 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <returns>
         /// Filled <see cref="UserModel"/>
         /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private UserModel GetUserDetails()
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (email == null || string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
 
             return userProcedures.GetUserDetails(email);
         }

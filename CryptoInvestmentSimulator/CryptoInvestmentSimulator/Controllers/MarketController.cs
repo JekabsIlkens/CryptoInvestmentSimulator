@@ -5,7 +5,6 @@ using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using System.Security.Claims;
 
 namespace CryptoInvestmentSimulator.Controllers
@@ -64,9 +63,16 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult DataTable()
         {
-            ViewBag.MarketData = GetLatestMarketRecords();
+            try
+            {
+                ViewBag.MarketData = GetLatestMarketRecords();
 
-            return PartialView("_DataTable");
+                return PartialView("_DataTable");
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -78,36 +84,43 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableBTC()
         {
-            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.BTC);
-            var length = positionsList.Count;
-
-            string[] dateTimes = new string[length];
-            string[] fiatAmounts = new string[length];
-            string[] cryptoAmounts = new string[length];
-            string[] ratios = new string[length];
-            string[] margins = new string[length];
-
-            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
-
-            var count = 0;
-            foreach(var position in positionsList)
+            try
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
-                fiatAmounts[count] = position.FiatAmount.ToString();
-                cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
-                margins[count] = position.Margin.ToString();
+                var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.BTC);
+                var length = positionsList.Count;
 
-                count++;
+                string[] dateTimes = new string[length];
+                string[] fiatAmounts = new string[length];
+                string[] cryptoAmounts = new string[length];
+                string[] ratios = new string[length];
+                string[] margins = new string[length];
+
+                var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
+                var count = 0;
+                foreach (var position in positionsList)
+                {
+                    dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
+                    fiatAmounts[count] = position.FiatAmount.ToString();
+                    cryptoAmounts[count] = position.CryptoAmount.ToString();
+                    ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                    margins[count] = position.Margin.ToString();
+
+                    count++;
+                }
+
+                ViewBag.DateTimes = dateTimes;
+                ViewBag.FiatAmounts = fiatAmounts;
+                ViewBag.CryptoAmounts = cryptoAmounts;
+                ViewBag.Ratios = ratios;
+                ViewBag.Margins = margins;
+
+                return PartialView("_PositionsTable");
             }
-
-            ViewBag.DateTimes = dateTimes;
-            ViewBag.FiatAmounts = fiatAmounts;
-            ViewBag.CryptoAmounts = cryptoAmounts;
-            ViewBag.Ratios = ratios;
-            ViewBag.Margins = margins;
-
-            return PartialView("_PositionsTable");
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -119,36 +132,43 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableETH()
         {
-            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ETH);
-            var length = positionsList.Count;
-
-            string[] dateTimes = new string[length];
-            string[] fiatAmounts = new string[length];
-            string[] cryptoAmounts = new string[length];
-            string[] ratios = new string[length];
-            string[] margins = new string[length];
-
-            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
-
-            var count = 0;
-            foreach (var position in positionsList)
+            try
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
-                fiatAmounts[count] = position.FiatAmount.ToString();
-                cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
-                margins[count] = position.Margin.ToString();
+                var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ETH);
+                var length = positionsList.Count;
 
-                count++;
+                string[] dateTimes = new string[length];
+                string[] fiatAmounts = new string[length];
+                string[] cryptoAmounts = new string[length];
+                string[] ratios = new string[length];
+                string[] margins = new string[length];
+
+                var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
+                var count = 0;
+                foreach (var position in positionsList)
+                {
+                    dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
+                    fiatAmounts[count] = position.FiatAmount.ToString();
+                    cryptoAmounts[count] = position.CryptoAmount.ToString();
+                    ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                    margins[count] = position.Margin.ToString();
+
+                    count++;
+                }
+
+                ViewBag.DateTimes = dateTimes;
+                ViewBag.FiatAmounts = fiatAmounts;
+                ViewBag.CryptoAmounts = cryptoAmounts;
+                ViewBag.Ratios = ratios;
+                ViewBag.Margins = margins;
+
+                return PartialView("_PositionsTable");
             }
-
-            ViewBag.DateTimes = dateTimes;
-            ViewBag.FiatAmounts = fiatAmounts;
-            ViewBag.CryptoAmounts = cryptoAmounts;
-            ViewBag.Ratios = ratios;
-            ViewBag.Margins = margins;
-
-            return PartialView("_PositionsTable");
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -160,36 +180,43 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableADA()
         {
-            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ADA);
-            var length = positionsList.Count;
-
-            string[] dateTimes = new string[length];
-            string[] fiatAmounts = new string[length];
-            string[] cryptoAmounts = new string[length];
-            string[] ratios = new string[length];
-            string[] margins = new string[length];
-
-            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
-
-            var count = 0;
-            foreach (var position in positionsList)
+            try
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
-                fiatAmounts[count] = position.FiatAmount.ToString();
-                cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
-                margins[count] = position.Margin.ToString();
+                var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ADA);
+                var length = positionsList.Count;
 
-                count++;
+                string[] dateTimes = new string[length];
+                string[] fiatAmounts = new string[length];
+                string[] cryptoAmounts = new string[length];
+                string[] ratios = new string[length];
+                string[] margins = new string[length];
+
+                var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
+                var count = 0;
+                foreach (var position in positionsList)
+                {
+                    dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
+                    fiatAmounts[count] = position.FiatAmount.ToString();
+                    cryptoAmounts[count] = position.CryptoAmount.ToString();
+                    ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                    margins[count] = position.Margin.ToString();
+
+                    count++;
+                }
+
+                ViewBag.DateTimes = dateTimes;
+                ViewBag.FiatAmounts = fiatAmounts;
+                ViewBag.CryptoAmounts = cryptoAmounts;
+                ViewBag.Ratios = ratios;
+                ViewBag.Margins = margins;
+
+                return PartialView("_PositionsTable");
             }
-
-            ViewBag.DateTimes = dateTimes;
-            ViewBag.FiatAmounts = fiatAmounts;
-            ViewBag.CryptoAmounts = cryptoAmounts;
-            ViewBag.Ratios = ratios;
-            ViewBag.Margins = margins;
-
-            return PartialView("_PositionsTable");
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -201,36 +228,43 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableATOM()
         {
-            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ATOM);
-            var length = positionsList.Count;
-
-            string[] dateTimes = new string[length];
-            string[] fiatAmounts = new string[length];
-            string[] cryptoAmounts = new string[length];
-            string[] ratios = new string[length];
-            string[] margins = new string[length];
-
-            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
-
-            var count = 0;
-            foreach (var position in positionsList)
+            try
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
-                fiatAmounts[count] = position.FiatAmount.ToString();
-                cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
-                margins[count] = position.Margin.ToString();
+                var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.ATOM);
+                var length = positionsList.Count;
 
-                count++;
+                string[] dateTimes = new string[length];
+                string[] fiatAmounts = new string[length];
+                string[] cryptoAmounts = new string[length];
+                string[] ratios = new string[length];
+                string[] margins = new string[length];
+
+                var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
+                var count = 0;
+                foreach (var position in positionsList)
+                {
+                    dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
+                    fiatAmounts[count] = position.FiatAmount.ToString();
+                    cryptoAmounts[count] = position.CryptoAmount.ToString();
+                    ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                    margins[count] = position.Margin.ToString();
+
+                    count++;
+                }
+
+                ViewBag.DateTimes = dateTimes;
+                ViewBag.FiatAmounts = fiatAmounts;
+                ViewBag.CryptoAmounts = cryptoAmounts;
+                ViewBag.Ratios = ratios;
+                ViewBag.Margins = margins;
+
+                return PartialView("_PositionsTable");
             }
-
-            ViewBag.DateTimes = dateTimes;
-            ViewBag.FiatAmounts = fiatAmounts;
-            ViewBag.CryptoAmounts = cryptoAmounts;
-            ViewBag.Ratios = ratios;
-            ViewBag.Margins = margins;
-
-            return PartialView("_PositionsTable");
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -242,36 +276,43 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult PositionsTableDOGE()
         {
-            var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.DOGE);
-            var length = positionsList.Count;
-
-            string[] dateTimes = new string[length];
-            string[] fiatAmounts = new string[length];
-            string[] cryptoAmounts = new string[length];
-            string[] ratios = new string[length];
-            string[] margins = new string[length];
-
-            var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
-
-            var count = 0;
-            foreach (var position in positionsList)
+            try
             {
-                dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
-                fiatAmounts[count] = position.FiatAmount.ToString();
-                cryptoAmounts[count] = position.CryptoAmount.ToString();
-                ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
-                margins[count] = position.Margin.ToString();
+                var positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(GetUserDetails().Id, CryptoEnum.DOGE);
+                var length = positionsList.Count;
 
-                count++;
+                string[] dateTimes = new string[length];
+                string[] fiatAmounts = new string[length];
+                string[] cryptoAmounts = new string[length];
+                string[] ratios = new string[length];
+                string[] margins = new string[length];
+
+                var usersTimeZoneChange = InternalConversionHelper.TimeZoneStringToChangeValue(GetUserDetails().TimeZone);
+
+                var count = 0;
+                foreach (var position in positionsList)
+                {
+                    dateTimes[count] = DateTimeFormatHelper.ToDbFormatAsString(position.DateTime.AddHours(usersTimeZoneChange + 2));
+                    fiatAmounts[count] = position.FiatAmount.ToString();
+                    cryptoAmounts[count] = position.CryptoAmount.ToString();
+                    ratios[count] = DatabaseKeyConversionHelper.LeverageKeyToString(position.Leverage);
+                    margins[count] = position.Margin.ToString();
+
+                    count++;
+                }
+
+                ViewBag.DateTimes = dateTimes;
+                ViewBag.FiatAmounts = fiatAmounts;
+                ViewBag.CryptoAmounts = cryptoAmounts;
+                ViewBag.Ratios = ratios;
+                ViewBag.Margins = margins;
+
+                return PartialView("_PositionsTable");
             }
-
-            ViewBag.DateTimes = dateTimes;
-            ViewBag.FiatAmounts = fiatAmounts;
-            ViewBag.CryptoAmounts = cryptoAmounts;
-            ViewBag.Ratios = ratios;
-            ViewBag.Margins = margins;
-
-            return PartialView("_PositionsTable");
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -927,104 +968,111 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult ClosePosition(string positionNumber, string cryptoSymbol)
         {
-            var userId = GetUserDetails().Id;
-
-            var positionsList = new List<PositionModel>();
-            var returnablePage = string.Empty;
-
-            if (cryptoSymbol == CryptoEnum.BTC.ToString())
+            try
             {
-                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.BTC);
-                returnablePage = "Bitcoin";
-            }
+                var userId = GetUserDetails().Id;
 
-            if (cryptoSymbol == CryptoEnum.ETH.ToString())
-            {
-                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ETH);
-                returnablePage = "Etherium";
-            }
+                var positionsList = new List<PositionModel>();
+                var returnablePage = string.Empty;
 
-            if (cryptoSymbol == CryptoEnum.ADA.ToString())
-            {
-                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ADA);
-                returnablePage = "Cardano";
-            }
-
-            if (cryptoSymbol == CryptoEnum.ATOM.ToString())
-            {
-                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ATOM);
-                returnablePage = "Cosmos";
-            }
-
-            if (cryptoSymbol == CryptoEnum.DOGE.ToString())
-            {
-                positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.DOGE);
-                returnablePage = "Dogecoin";
-            }
-
-            var positionToClose = new PositionModel();
-            var positionNumberInt = int.Parse(positionNumber);
-            var counter = 1;
-
-            foreach(var position in positionsList)
-            {
-                if(counter == positionNumberInt)
+                if (cryptoSymbol == CryptoEnum.BTC.ToString())
                 {
-                    positionToClose = position;
+                    positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.BTC);
+                    returnablePage = "Bitcoin";
                 }
 
-                counter++;
+                if (cryptoSymbol == CryptoEnum.ETH.ToString())
+                {
+                    positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ETH);
+                    returnablePage = "Etherium";
+                }
+
+                if (cryptoSymbol == CryptoEnum.ADA.ToString())
+                {
+                    positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ADA);
+                    returnablePage = "Cardano";
+                }
+
+                if (cryptoSymbol == CryptoEnum.ATOM.ToString())
+                {
+                    positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.ATOM);
+                    returnablePage = "Cosmos";
+                }
+
+                if (cryptoSymbol == CryptoEnum.DOGE.ToString())
+                {
+                    positionsList = investmentProcedures.GetAllOpenSpecificCryptoPositions(userId, CryptoEnum.DOGE);
+                    returnablePage = "Dogecoin";
+                }
+
+                var positionToClose = new PositionModel();
+                var positionNumberInt = int.Parse(positionNumber);
+                var counter = 1;
+
+                foreach (var position in positionsList)
+                {
+                    if (counter == positionNumberInt)
+                    {
+                        positionToClose = position;
+                    }
+
+                    counter++;
+                }
+
+                var currentCryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, cryptoSymbol);
+                walletProcedures.UpdateUsersWalletBalance(userId, cryptoSymbol, (currentCryptoBalance - positionToClose.CryptoAmount));
+
+                var cryptoSymbolEnum = InternalConversionHelper.StringToCryptoEnum(cryptoSymbol);
+                var buyTimeUnitValue = investmentProcedures.GetPositionsUnitValue(positionToClose.Id);
+                var currentUnitValue = marketProcedures.GetLatestMarketData(cryptoSymbolEnum).UnitValue;
+                var profitMultiplier = currentUnitValue / buyTimeUnitValue;
+
+                decimal newBalance;
+                decimal currentFiatBalance;
+
+                if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
+                {
+                    currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                    newBalance = currentFiatBalance + positionToClose.FiatAmount +
+                        ((positionToClose.FiatAmount * 2 * profitMultiplier) - (positionToClose.FiatAmount * 2)) +
+                        positionToClose.Margin;
+
+                    walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+                }
+                else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
+                {
+                    currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                    newBalance = currentFiatBalance + positionToClose.FiatAmount +
+                        ((positionToClose.FiatAmount * 5 * profitMultiplier) - (positionToClose.FiatAmount * 5)) +
+                        positionToClose.Margin;
+
+                    walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+                }
+                else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
+                {
+                    currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                    newBalance = currentFiatBalance + positionToClose.FiatAmount +
+                        ((positionToClose.FiatAmount * 10 * profitMultiplier) - (positionToClose.FiatAmount * 10)) +
+                        positionToClose.Margin;
+
+                    walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+                }
+                else
+                {
+                    currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
+                    newBalance = currentFiatBalance + (positionToClose.FiatAmount * profitMultiplier);
+
+                    walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+                }
+
+                investmentProcedures.UpdatePositionStatus(positionToClose.Id, (int)StatusEnum.Closed);
+
+                return View(returnablePage);
             }
-
-            var currentCryptoBalance = walletProcedures.GetSpecificWalletBalance(userId, cryptoSymbol);
-            walletProcedures.UpdateUsersWalletBalance(userId, cryptoSymbol, (currentCryptoBalance - positionToClose.CryptoAmount));
-
-            var cryptoSymbolEnum = InternalConversionHelper.StringToCryptoEnum(cryptoSymbol);
-            var buyTimeUnitValue = investmentProcedures.GetPositionsUnitValue(positionToClose.Id);
-            var currentUnitValue = marketProcedures.GetLatestMarketData(cryptoSymbolEnum).UnitValue;
-            var profitMultiplier = currentUnitValue / buyTimeUnitValue;
-
-            decimal newBalance;
-            decimal currentFiatBalance;
-
-            if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "2x")
+            catch
             {
-                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + positionToClose.FiatAmount + 
-                    ((positionToClose.FiatAmount * 2 * profitMultiplier) - (positionToClose.FiatAmount * 2)) +
-                    positionToClose.Margin;
-
-                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
+                return View("Error");
             }
-            else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "5x")
-            {
-                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + positionToClose.FiatAmount + 
-                    ((positionToClose.FiatAmount * 5 * profitMultiplier) - (positionToClose.FiatAmount * 5)) +
-                    positionToClose.Margin;
-
-                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
-            }
-            else if (DatabaseKeyConversionHelper.LeverageKeyToString(positionToClose.Leverage) == "10x")
-            {
-                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + positionToClose.FiatAmount + 
-                    ((positionToClose.FiatAmount * 10 * profitMultiplier) - (positionToClose.FiatAmount * 10)) +
-                    positionToClose.Margin;
-
-                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
-            }
-            else
-            {
-                currentFiatBalance = walletProcedures.GetSpecificWalletBalance(userId, FiatEnum.EUR.ToString());
-                newBalance = currentFiatBalance + (positionToClose.FiatAmount * profitMultiplier);
-
-                walletProcedures.UpdateUsersWalletBalance(userId, FiatEnum.EUR.ToString(), newBalance);
-            }
-
-            investmentProcedures.UpdatePositionStatus(positionToClose.Id, (int)StatusEnum.Closed);
-
-            return View(returnablePage);
         }
 
         /// <summary>
@@ -1053,9 +1101,15 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <returns>
         /// Filled <see cref="UserModel"/>
         /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private UserModel GetUserDetails()
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (email == null || string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
 
             return userProcedures.GetUserDetails(email);
         }

@@ -2,6 +2,7 @@
 using CryptoInvestmentSimulator.Enums;
 using CryptoInvestmentSimulator.Helpers;
 using CryptoInvestmentSimulator.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MySql.Data.MySqlClient;
 
 namespace CryptoInvestmentSimulator.Database

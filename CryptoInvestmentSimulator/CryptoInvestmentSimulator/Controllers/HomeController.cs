@@ -23,12 +23,19 @@ namespace CryptoInvestmentSimulator.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            NewUserCheck();
-            EmailVerificationCheck();
+            try
+            {
+                NewUserCheck();
+                EmailVerificationCheck();
 
-            var user = GetCurrentUserDetails();
+                var user = GetCurrentUserDetails();
 
-            return View("Index", user);
+                return View("Index", user);
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -41,13 +48,20 @@ namespace CryptoInvestmentSimulator.Controllers
         [HttpPost]
         public IActionResult SetUsername(string username)
         {
-            var userId = GetCurrentUserDetails().Id;
+            try
+            {
+                var userId = GetCurrentUserDetails().Id;
 
-            userProcedures.UpdateUsername(userId, username);
+                userProcedures.UpdateUsername(userId, username);
 
-            var updatedUser = GetCurrentUserDetails();
+                var updatedUser = GetCurrentUserDetails();
 
-            return View("Index", updatedUser);
+                return View("Index", updatedUser);
+            }
+            catch
+            {
+                return View("Error");
+            }
         }
 
         /// <summary>
@@ -94,9 +108,15 @@ namespace CryptoInvestmentSimulator.Controllers
         /// <returns>
         /// Filled <see cref="UserModel"/>
         /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private UserModel GetCurrentUserDetails()
         {
             var email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if(email == null || string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
 
             return userProcedures.GetUserDetails(email);
         }

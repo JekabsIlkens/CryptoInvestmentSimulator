@@ -101,7 +101,9 @@ namespace CryptoInvestmentSimulator
         {
             var modelList = new List<MarketDataModel>();
 
-            var btcRawData = GetCryptoToFiatLatestQuote(CryptoEnum.BTC, FiatEnum.EUR);
+            // Collects raw request data as it's named and structured in json response.
+            // Collects only data necessary for market_data table. Formats unit value to six floating points and growth to percent.
+            var btcRawData = GetCryptoToFiatLatestQuote(CryptoEnum.BTC, FiatEnum.EUR);           
             var btcMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
@@ -113,6 +115,8 @@ namespace CryptoInvestmentSimulator
             };
             modelList.Add(btcMDM);
 
+            // Collects raw request data as it's named and structured in json response.
+            // Collects only data necessary for market_data table. Formats unit value to six floating points and growth to percent.
             var ethRawData = GetCryptoToFiatLatestQuote(CryptoEnum.ETH, FiatEnum.EUR);
             var ethMDM = new MarketDataModel()
             {
@@ -125,6 +129,8 @@ namespace CryptoInvestmentSimulator
             };
             modelList.Add(ethMDM);
 
+            // Collects raw request data as it's named and structured in json response.
+            // Collects only data necessary for market_data table. Formats unit value to six floating points and growth to percent.
             var adaRawData = GetCryptoToFiatLatestQuote(CryptoEnum.ADA, FiatEnum.EUR);
             var adaMDM = new MarketDataModel()
             {
@@ -137,6 +143,8 @@ namespace CryptoInvestmentSimulator
             };
             modelList.Add(adaMDM);
 
+            // Collects raw request data as it's named and structured in json response.
+            // Collects only data necessary for market_data table. Formats unit value to six floating points and growth to percent.
             var atomRawData = GetCryptoToFiatLatestQuote(CryptoEnum.ATOM, FiatEnum.EUR);
             var atomMDM = new MarketDataModel()
             {
@@ -149,6 +157,8 @@ namespace CryptoInvestmentSimulator
             };
             modelList.Add(atomMDM);
 
+            // Collects raw request data as it's named and structured in json response.
+            // Collects only data necessary for market_data table. Formats unit value to six floating points and growth to percent.
             var dogeRawData = GetCryptoToFiatLatestQuote(CryptoEnum.DOGE, FiatEnum.EUR);
             var dogeMDM = new MarketDataModel()
             {
@@ -179,11 +189,13 @@ namespace CryptoInvestmentSimulator
         {
             var request = new RestRequest(CoinMarketCapApiConstants.LatestQuotesTest, Method.Get);
 
+            // Prepares request header and parameters with necessary values.
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("symbol", crypto.ToString());
             request.AddParameter("convert", fiat.ToString());
             request.AddParameter("CMC_PRO_API_KEY", CoinMarketCapApiConstants.AccessKey);
 
+            // Executes API call and collects response.
             var response = new RestClient().Execute(request);
 
             if (!response.IsSuccessStatusCode || response.Content == null)
@@ -191,6 +203,7 @@ namespace CryptoInvestmentSimulator
                 throw new Exception("Market data request has failed!");
             }
 
+            // Deserializes json object into pre-prepared request models.
             var responseModel = JsonConvert.DeserializeObject<Root>(response.Content);
 
             if (responseModel == null)

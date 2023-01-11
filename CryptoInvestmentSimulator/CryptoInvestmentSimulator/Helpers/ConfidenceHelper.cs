@@ -4,6 +4,7 @@ namespace CryptoInvestmentSimulator.Helpers
 {
     public static class ConfidenceHelper
     {
+        // All alphanumeric characters to pass as allowed characters to RNGCryptoServiceProvider.
         const string alphaNumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
         /// <summary>
@@ -16,9 +17,14 @@ namespace CryptoInvestmentSimulator.Helpers
         /// </returns>
         public static string GetRandomKey(int length)
         {
+            if(length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
             string key = string.Empty;
 
-            // Need a new instance of RNGCryptoServiceProvider
+            // New instance of RNGCryptoServiceProvider is required.
             #pragma warning disable SYSLIB0023
             using (var rngProvider = new RNGCryptoServiceProvider())
             {
