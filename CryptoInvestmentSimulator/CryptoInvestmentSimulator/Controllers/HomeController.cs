@@ -9,7 +9,7 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly DatabaseContext context = new (DatabaseConstants.Access);
+        private static readonly DatabaseContext context = new (DatabaseConstants.AzureAccess);
         private static readonly UserProcedures userProcedures = new (context);
 
         /// <summary>

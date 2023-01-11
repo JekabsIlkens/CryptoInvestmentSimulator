@@ -11,7 +11,7 @@ namespace CryptoInvestmentSimulator.Controllers
 {
     public class PortfolioController : Controller
     {
-        private static readonly DatabaseContext context = new(DatabaseConstants.Access);
+        private static readonly DatabaseContext context = new(DatabaseConstants.AzureAccess);
         private static readonly UserProcedures userProcedures = new(context);
         private static readonly WalletProcedures walletProcedures = new(context);
         private static readonly MarketDataProcedures marketProcedures = new(context);

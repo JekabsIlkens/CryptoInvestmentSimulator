@@ -1,8 +1,16 @@
 using CryptoInvestmentSimulator;
+using CryptoInvestmentSimulator.Constants;
+using CryptoInvestmentSimulator.Database;
 
 internal class Program
 {
+    public IConfiguration Configuration { get; }
     private static readonly GlobalOperations globalOperations = new();
+
+    public Program(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
 
     /// <summary>
     /// Starts global timer on application launch
@@ -34,6 +42,11 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.RegisterServices();
+
+        var configuration = builder.Configuration;
+        var value = configuration.GetValue<string>("ConnectionStrings:defaultConnection");
+
+        builder.Services.Add(new ServiceDescriptor(typeof(DatabaseContext), new DatabaseContext(value)));
 
         var app = builder.Build();
 

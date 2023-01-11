@@ -25,7 +25,7 @@ namespace CryptoInvestmentSimulator
                 options.Scope = AuthenticationConstants.Auth0Scope;
             });
 
-            serviceCollection.Add(new ServiceDescriptor(typeof(DatabaseContext), new DatabaseContext(DatabaseConstants.Access)));
+            // serviceCollection.Add(new ServiceDescriptor(typeof(DatabaseContext), new DatabaseContext(DatabaseConstants.AzureAccess)));
 
             return serviceCollection;
         }

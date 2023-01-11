@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:22918",
+      "applicationUrl": "https://cryptocurrencyinvestmentsimulator.azurewebsites.net",
       "sslPort": 44333
     }
   },
@@ -12,7 +12,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7777;http://localhost:5555",
+      "applicationUrl": "https://cryptocurrencyinvestmentsimulator.azurewebsites.net;https://cryptocurrencyinvestmentsimulator.azurewebsites.net",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

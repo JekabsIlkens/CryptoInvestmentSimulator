@@ -3,7 +3,8 @@
     public static class DatabaseConstants
     {
         // Database configuration and access constants.
-        public static readonly string Access = "server=localhost;port=7770;database=cisdb;user=cisadmin;password=CISadminPASS";
+        public static readonly string LocalAccess = "server=localhost;port=7770;database=cisdb;user=cisadmin;password=CISadminPASS";
+        public static readonly string AzureAccess = "Data Source=tcp:cryptocurrencyinvestmentsimulator-server.database.windows.net,1433;Initial Catalog=cryptocurrencyinvestmentsimulator-database;User Id=cryptocurrencyinvestmentsimulator-server-admin@cryptocurrencyinvestmentsimulator-server.database.windows.net;Password=1082AW182I7W4O1B$";
 
         // Formatting constants.
         public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
