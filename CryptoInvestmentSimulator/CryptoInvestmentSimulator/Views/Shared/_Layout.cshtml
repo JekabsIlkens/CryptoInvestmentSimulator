@@ -49,6 +49,7 @@
 
                 <img class="navbar-brand" src="~/css/nav-logo.png" width="105" height="70">
 
+                <!-- Adjusts available navigation buttonds depending on authentication and varification status. -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">                  
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -89,6 +90,7 @@
         </nav>
     </header>
 
+    <!-- Renders rest of the body from separate view files. -->
     <div class="container">
         <main role="main" class="pb-3">@RenderBody()</main>
     </div>

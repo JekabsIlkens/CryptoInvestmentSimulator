@@ -52,6 +52,7 @@
 
                         <tbody>
                             <tr>
+                                <!-- Adjusts color of data depending on posittivity of number. -->
                                 @if (ViewBag.TotalEarnings > 0)
                                 {
                                     <td style="color: #7AB662">@ViewBag.TotalEarnings</td>
@@ -73,6 +74,7 @@
 
                         <tbody>
                             <tr>
+                                <!-- Adjusts color of data depending on posittivity of number. -->
                                 @if (ViewBag.TotalEarnings > 0)
                                 {
                                     <td style="color: #7AB662">@ViewBag.PNL</td>
@@ -89,6 +91,7 @@
         </div>
     </div>
 
+    <!-- Collects wallet percentages from view bag and passes them as datasets to chart.js. -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('myChart');
