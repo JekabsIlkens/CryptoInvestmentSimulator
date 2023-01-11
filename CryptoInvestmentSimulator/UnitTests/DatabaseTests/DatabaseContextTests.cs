@@ -30,7 +30,7 @@ namespace UnitTests.DatabaseTests
         public void GetConnection_ConnectionStringValid_Success()
         {
             // Arrange
-            var databaseContext = new DatabaseContext(DatabaseConstants.Access);
+            var databaseContext = new DatabaseContext(DatabaseConstants.ProductionAccess);
 
             // Act
             var result = databaseContext.GetConnection();

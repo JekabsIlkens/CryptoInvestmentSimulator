@@ -1,6 +1,5 @@
 ﻿using Auth0.AspNetCore.Authentication;
 using CryptoInvestmentSimulator.Constants;
-using CryptoInvestmentSimulator.Database;
 
 namespace CryptoInvestmentSimulator
 {
@@ -25,9 +24,6 @@ namespace CryptoInvestmentSimulator
                 options.ClientId = AuthenticationConstants.Auth0ClientId;
                 options.Scope = AuthenticationConstants.Auth0Scope;
             });
-
-            // Registers database context with access key from appsettings.json.
-            serviceCollection.Add(new ServiceDescriptor(typeof(DatabaseContext), new DatabaseContext(DatabaseConstants.Access)));
 
             return serviceCollection;
         }

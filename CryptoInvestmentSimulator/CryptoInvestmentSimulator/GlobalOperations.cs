@@ -11,11 +11,12 @@ namespace CryptoInvestmentSimulator
 {
     public class GlobalOperations
     {
-        private static readonly DatabaseContext context = new(DatabaseConstants.Access);
+        private static readonly DatabaseContext context = new(DatabaseConstants.ProductionAccess);
         private static readonly UserProcedures userProcedures = new(context);
         private static readonly WalletProcedures walletProcedures = new(context);
         private static readonly MarketDataProcedures marketProcedures = new(context);
         private static readonly InvestmentProcedures investmentProcedures = new(context);
+        public static Random valueMocker = new();
 
         /// <summary>
         /// Gets all open leveraged positions for each verified user.
@@ -107,7 +108,7 @@ namespace CryptoInvestmentSimulator
             var btcMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToSix(btcRawData.Data.Bitcoin.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(btcRawData.Data.Bitcoin.Quote.Euro.Price * valueMocker.Next(15000, 16001)),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(btcRawData.Data.Bitcoin.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(btcRawData.Data.Bitcoin.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.BTC.ToString(),
@@ -121,7 +122,7 @@ namespace CryptoInvestmentSimulator
             var ethMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToSix(ethRawData.Data.Etherium.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(ethRawData.Data.Etherium.Quote.Euro.Price * valueMocker.Next(1000, 1501)),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(ethRawData.Data.Etherium.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(ethRawData.Data.Etherium.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ETH.ToString(),
@@ -135,7 +136,7 @@ namespace CryptoInvestmentSimulator
             var adaMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToSix(adaRawData.Data.Cardano.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(adaRawData.Data.Cardano.Quote.Euro.Price * valueMocker.Next(1, 4)),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(adaRawData.Data.Cardano.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(adaRawData.Data.Cardano.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ADA.ToString(),
@@ -149,7 +150,7 @@ namespace CryptoInvestmentSimulator
             var atomMDM = new MarketDataModel()
             {
                 CollectionTime = DateTime.Now,
-                UnitValue = FloatingPointHelper.FloatingPointToSix(atomRawData.Data.Cosmos.Quote.Euro.Price),
+                UnitValue = FloatingPointHelper.FloatingPointToSix(atomRawData.Data.Cosmos.Quote.Euro.Price * valueMocker.Next(10, 16)),
                 Change24h = FloatingPointHelper.FloatingPointToTwo(atomRawData.Data.Cosmos.Quote.Euro.PercentChange24h) * 100,
                 Change7d = FloatingPointHelper.FloatingPointToTwo(atomRawData.Data.Cosmos.Quote.Euro.PercentChange7d) * 100,
                 CryptoSymbol = CryptoEnum.ATOM.ToString(),

@@ -1,8 +1,15 @@
 using CryptoInvestmentSimulator;
+using CryptoInvestmentSimulator.Database;
 
 internal class Program
 {
+    public IConfiguration Configuration { get; }
     private static readonly GlobalOperations globalOperations = new();
+
+    public Program(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
 
     /// <summary>
     /// Starts global timer on application launch
@@ -10,7 +17,7 @@ internal class Program
     /// </summary>
     static void OnStartedActions()
     {
-        var timer = new System.Timers.Timer { Interval = 60000 };
+        var timer = new System.Timers.Timer { Interval = 120000 };
         timer.Elapsed += ExecuteGlobalOperations;
         timer.Start();
     }
@@ -26,7 +33,7 @@ internal class Program
         globalOperations.CollectLatestMarketData();
         Console.WriteLine($"New market data collected! Collection time: {DateTime.Now}");
 
-        // globalOperations.LiquidateBadPositions();
+        globalOperations.LiquidateBadPositions();
         Console.WriteLine($"Poor positions liquidated! Liquidation time: {DateTime.Now}");
     }
 
@@ -34,6 +41,11 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.RegisterServices();
+
+        // Registers database context with access key from appsettings.json.
+        var configuration = builder.Configuration;
+        var value = configuration.GetValue<string>("ConnectionStrings:defaultConnection");
+        builder.Services.Add(new ServiceDescriptor(typeof(DatabaseContext), new DatabaseContext(value)));
 
         var app = builder.Build();
 
@@ -54,7 +66,7 @@ internal class Program
 
         app.MapControllerRoute(name: "default", pattern: "{controller=Landing}/{action=Index}/{id?}");
 
-        // app.Lifetime.ApplicationStarted.Register(OnStartedActions);
+        app.Lifetime.ApplicationStarted.Register(OnStartedActions);
 
         app.Run();
     }

@@ -12,7 +12,7 @@
     }
     else
     {
-        var userProcedures = new UserProcedures(new DatabaseContext(DatabaseConstants.Access));
+        var userProcedures = new UserProcedures(new DatabaseContext(DatabaseConstants.ProductionAccess));
         verified = userProcedures.GetUserDetails(email).Verified == 1 ? true : false;
     }
 }

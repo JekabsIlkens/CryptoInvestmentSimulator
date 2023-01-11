@@ -3,7 +3,8 @@
     public static class DatabaseConstants
     {
         // Database configuration and access constants.
-        public static readonly string Access = "server=localhost;port=7770;database=cisdb;user=cisadmin;password=CISadminPASS";
+        public static readonly string LocalAccess = "server=localhost;port=7770;database=cisdb;user=cisadmin;password=CISadminPASS";
+        public static readonly string ProductionAccess = "Server=MYSQL8002.site4now.net;Database=db_a92f3c_cisdb;Uid=a92f3c_cisdb;Pwd=CISroot123!";
 
         // Formatting constants.
         public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
