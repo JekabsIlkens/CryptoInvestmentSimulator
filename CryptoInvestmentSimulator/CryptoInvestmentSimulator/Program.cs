@@ -26,7 +26,7 @@ internal class Program
         globalOperations.CollectLatestMarketData();
         Console.WriteLine($"New market data collected! Collection time: {DateTime.Now}");
 
-        // globalOperations.LiquidateBadPositions();
+        globalOperations.LiquidateBadPositions();
         Console.WriteLine($"Poor positions liquidated! Liquidation time: {DateTime.Now}");
     }
 
@@ -54,7 +54,7 @@ internal class Program
 
         app.MapControllerRoute(name: "default", pattern: "{controller=Landing}/{action=Index}/{id?}");
 
-        // app.Lifetime.ApplicationStarted.Register(OnStartedActions);
+        app.Lifetime.ApplicationStarted.Register(OnStartedActions);
 
         app.Run();
     }
