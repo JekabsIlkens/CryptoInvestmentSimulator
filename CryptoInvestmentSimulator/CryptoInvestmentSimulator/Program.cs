@@ -10,7 +10,7 @@ internal class Program
     /// </summary>
     static void OnStartedActions()
     {
-        var timer = new System.Timers.Timer { Interval = 60000 };
+        var timer = new System.Timers.Timer { Interval = 120000 };
         timer.Elapsed += ExecuteGlobalOperations;
         timer.Start();
     }
